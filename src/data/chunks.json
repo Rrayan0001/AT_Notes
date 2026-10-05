@@ -1,0 +1,1594 @@
+{
+  "manifest": {
+    "version": 1,
+    "sourceHash": "e9e20a683c9a4f0f9a8e1ff683cbfbffa55fe2f75f1c26898bc0526a2963d871",
+    "embeddingModel": "nomic-embed-text-v1.5",
+    "dim": 0,
+    "count": 162,
+    "builtAt": "2026-09-30T17:30:48.561Z"
+  },
+  "chunks": [
+    {
+      "id": "c000",
+      "page": 1,
+      "heading": "HTTP",
+      "sectionPath": [
+        "HTTP"
+      ],
+      "text": "- It operates on port `80` by default.\n- Plain text, unencrypted.\n- Still used for non-sensitive websites (no security Concern).\n\n- Simple, Fast (Speed), Compatibility",
+      "embedText": "Page 1 > HTTP >  > - It operates on port `80` by default.\n- Plain text, unencrypted.\n- Still used for non-sensitive websites (no security Concern).\n\n- Simple, Fast (Speed), Compatibility"
+    },
+    {
+      "id": "c001",
+      "page": 1,
+      "heading": "HTTPS",
+      "sectionPath": [
+        "HTTPS"
+      ],
+      "text": "- Operates on `443`\n- Uses SSL/TLS for encryption\n- Attackers can capture traffic, but can't read message.\n\n- Data Encryption, User Trust, SEO Benefits.\n- No data tampering, Supports HTTP/2",
+      "embedText": "Page 1 > HTTPS >  > - Operates on `443`\n- Uses SSL/TLS for encryption\n- Attackers can capture traffic, but can't read message.\n\n- Data Encryption, User Trust, SEO Benefits.\n- No data tampering, Supports HTTP/2"
+    },
+    {
+      "id": "c002",
+      "page": 2,
+      "heading": "HTTPS over HTTP",
+      "sectionPath": [
+        "HTTPS over HTTP"
+      ],
+      "text": "> Margin note (handwritten in Devanagari/Hindi, top-right of page): `३ घंटे पढ़ाई`\n> (transliteration: \"3 ghante padhai\" — \"3 hours of study\")\n- Data security • User Trust • Protection from Hackers\n- Better Search Engine Ranking\n- Compliance with Standards • Improved Performance.\n\n- Bit Control\n- Transmission mode\n- Converts data into Signals",
+      "embedText": "Page 2 > HTTPS over HTTP >  > > Margin note (handwritten in Devanagari/Hindi, top-right of page): `३ घंटे पढ़ाई`\n> (transliteration: \"3 ghante padhai\" — \"3 hours of study\")\n- Data security • User Trust • Protection from Hackers\n- Better Search Engine Ranking\n- Compliance with Standards • Improved Performance.\n\n- Bit Control\n- Transmission mode\n- Converts data into Signals"
+    },
+    {
+      "id": "c003",
+      "page": 3,
+      "heading": "Hub",
+      "sectionPath": [
+        "Hub"
+      ],
+      "text": "- Works at the physical layer of OSI model.\n- Used to setup LAN\n- Has multiple ports\n- Star topology.\n\n- cheaper than switches\n- works good for small networks\n\n- Issues with broadcast\n- No memory\n- Runs in half duplex",
+      "embedText": "Page 3 > Hub >  > - Works at the physical layer of OSI model.\n- Used to setup LAN\n- Has multiple ports\n- Star topology.\n\n- cheaper than switches\n- works good for small networks\n\n- Issues with broadcast\n- No memory\n- Runs in half duplex"
+    },
+    {
+      "id": "c004",
+      "page": 3,
+      "heading": "Switch",
+      "sectionPath": [
+        "Switch"
+      ],
+      "text": "- Unlike hub, Switch has memory\n- Stores MACI address\n- Layer 2 device. (Data Link Layer)\n- It can perform unicasting, multicasting and broadcasting.\n- It stores MAC Address and interface port.\n- Full duplex and more efficient with security",
+      "embedText": "Page 3 > Switch >  > - Unlike hub, Switch has memory\n- Stores MACI address\n- Layer 2 device. (Data Link Layer)\n- It can perform unicasting, multicasting and broadcasting.\n- It stores MAC Address and interface port.\n- Full duplex and more efficient with security"
+    },
+    {
+      "id": "c005",
+      "page": 4,
+      "heading": "Router",
+      "sectionPath": [
+        "Router"
+      ],
+      "text": "- Router is a networking device that forwards data packets between Computer networks.\n- A router is Connected to atleast two networks, LANs / WANs and its ISP network\n- It is layer 3 device (Network Layer)\n- Stores routing table.\n- Decisions are taken based on IP address\n- Full duplex, LAN, WAN and MAN",
+      "embedText": "Page 4 > Router >  > - Router is a networking device that forwards data packets between Computer networks.\n- A router is Connected to atleast two networks, LANs / WANs and its ISP network\n- It is layer 3 device (Network Layer)\n- Stores routing table.\n- Decisions are taken based on IP address\n- Full duplex, LAN, WAN and MAN"
+    },
+    {
+      "id": "c006",
+      "page": 4,
+      "heading": "Linux Commands",
+      "sectionPath": [
+        "Linux Commands"
+      ],
+      "text": "```\npwd, ls, cd, .., mkdir, touch, clear.\n```",
+      "embedText": "Page 4 > Linux Commands >  > ```\npwd, ls, cd, .., mkdir, touch, clear.\n```"
+    },
+    {
+      "id": "c007",
+      "page": 4,
+      "heading": "Subnetting and CIDR",
+      "sectionPath": [
+        "Subnetting and CIDR"
+      ],
+      "text": "- A network has 2 parts, network part and host part names the main group and host part are specific '' phone or computer.\nSubnetting Takes bits from the host part and turns them into network bits. Basically splitting big group into smaller working groups.",
+      "embedText": "Page 4 > Subnetting and CIDR >  > - A network has 2 parts, network part and host part names the main group and host part are specific '' phone or computer.\nSubnetting Takes bits from the host part and turns them into network bits. Basically splitting big group into smaller working groups."
+    },
+    {
+      "id": "c008",
+      "page": 5,
+      "heading": "Classless Inter - Domain Routing (CIDR)",
+      "sectionPath": [
+        "Classless Inter - Domain Routing (CIDR)"
+      ],
+      "text": "- It replaces old and Classful Subnet masks like `255.255.255.0` with a Short Slash number like `/24`.",
+      "embedText": "Page 5 > Classless Inter - Domain Routing (CIDR) >  > - It replaces old and Classful Subnet masks like `255.255.255.0` with a Short Slash number like `/24`."
+    },
+    {
+      "id": "c009",
+      "page": 5,
+      "heading": "DHCP",
+      "sectionPath": [
+        "DHCP"
+      ],
+      "text": "- Assigns IP automatically\n- Provides Subnet masks and Configures the default gateway for communication.\n- Supplies DNS Server addresses\n- Gives IP from an address pool and the Settings are delivered as options for a fixed lease time.\n- Windows Data Center, Server Manager, Powershell, Windows DataCenter Core ADDS, Linux ~~All~~",
+      "embedText": "Page 5 > DHCP >  > - Assigns IP automatically\n- Provides Subnet masks and Configures the default gateway for communication.\n- Supplies DNS Server addresses\n- Gives IP from an address pool and the Settings are delivered as options for a fixed lease time.\n- Windows Data Center, Server Manager, Powershell, Windows DataCenter Core ADDS, Linux ~~All~~"
+    },
+    {
+      "id": "c010",
+      "page": 6,
+      "heading": "Windows Data center & Server",
+      "sectionPath": [
+        "Windows Data center & Server"
+      ],
+      "text": "- Server 2019 is a versatile operating system bridging on environments with Azure Services,\n    - Enhanced Security\n    - Hyper Converged Infrastructure.\n- Server 2022 is built on strong foundations of 2019 with Azure hybrid integration, Windows Server 2022 | Data center and Azure Edition, Virtual Machines (VMs).\n    - Standard Edition\n        - 2 VMs, Storage Replica : 1\n        - Basic Security features\n        - Small to medium\n    - Datacenter Edition\n        - Unlimited VMs\n        - SDN: (Software defined Networking)\n        - 2 Storage Replica\n        - Enhanced security\n        - Hyper-V (server role)\n> Sep 18, '24",
+      "embedText": "Page 6 > Windows Data center & Server >  > - Server 2019 is a versatile operating system bridging on environments with Azure Services,\n    - Enhanced Security\n    - Hyper Converged Infrastructure.\n- Server 2022 is built on strong foundations of 2019 with Azure hybrid integration, Windows Server 2022 | Data center and Azure Edition, Virtual Machines (VMs).\n    - Standard Edition\n        - 2 VMs, Storage Replica : 1\n        - Basic Security features\n        - Small to medium\n    - Datacenter Edition\n        - Unlimited VMs\n        - SDN: (Software defined Networking)\n        - 2 Storage Replica\n        - Enhanced security\n        - Hyper-V (server role)\n> Sep 18, '24"
+    },
+    {
+      "id": "c011",
+      "page": 7,
+      "heading": "Alt + F2 + Ctrl",
+      "sectionPath": [
+        "Alt + F2 + Ctrl"
+      ],
+      "text": "- ⇒ terminal in redhat\n- ⇒ username & password.\n- `ip a`\n- ⇒ get ip address\n- ⇒ enter in PUTY terminal\n    - y enter username & pw\n        - `root`\n        - `root.123`\n    - `192.168.159.123`\n```\nCat, sort, uniq, | (pipe), grep, sed\n```\n- Sort `deserts.txt` | `uniq`",
+      "embedText": "Page 7 > Alt + F2 + Ctrl >  > - ⇒ terminal in redhat\n- ⇒ username & password.\n- `ip a`\n- ⇒ get ip address\n- ⇒ enter in PUTY terminal\n    - y enter username & pw\n        - `root`\n        - `root.123`\n    - `192.168.159.123`\n```\nCat, sort, uniq, | (pipe), grep, sed\n```\n- Sort `deserts.txt` | `uniq`"
+    },
+    {
+      "id": "c012",
+      "page": 7,
+      "heading": "Computer Architecture",
+      "sectionPath": [
+        "Computer Architecture"
+      ],
+      "text": "- CPU\n- RAM\n- Rom\n- Cache memory.\n- virtual Memory\n- Multiprocessing\n- Multi threading",
+      "embedText": "Page 7 > Computer Architecture >  > - CPU\n- RAM\n- Rom\n- Cache memory.\n- virtual Memory\n- Multiprocessing\n- Multi threading"
+    },
+    {
+      "id": "c013",
+      "page": 8,
+      "heading": "Page 8",
+      "sectionPath": [],
+      "text": "```\n                       OS\n                    /       \\\n               Kernel       Shell\n            Kernel\n          /    |     \\\n Monolithic Microkernel  Hybrid\n Kernel.                 Microkernel.\n```\n\n- kernel mode\n- User mode\n```\nUser\n ↓\nShell/Bash\n ↓\nKernel\n```\n\n- Debian\n- Ubuntu\n- Linux mint\n- RHEL\n- Fedora\n- Arch.\n- `/bin` - `ls`, `cp`, `mkdir`\n- `/sbin` - administrative tasks `ifconfig`, `reboot`\n- `/etc` - Configuration files `/etc/passwd`, `/etc/fstab`\n- `/home` - `/home/alice`, `/home/bob`\n- `/root` - Home directory for root (superuser)\n- `/usr` - user programs, libraries, doc (`/usr/bin`, `/usr/lib`)",
+      "embedText": "Page 8 >  > ```\n                       OS\n                    /       \\\n               Kernel       Shell\n            Kernel\n          /    |     \\\n Monolithic Microkernel  Hybrid\n Kernel.                 Microkernel.\n```\n\n- kernel mode\n- User mode\n```\nUser\n ↓\nShell/Bash\n ↓\nKernel\n```\n\n- Debian\n- Ubuntu\n- Linux mint\n- RHEL\n- Fedora\n- Arch.\n- `/bin` - `ls`, `cp`, `mkdir`\n- `/sbin` - administrative tasks `ifconfig`, `reboot`\n- `/etc` - Configuration files `/etc/passwd`, `/etc/fstab`\n- `/home` - `/home/alice`, `/home/bob`\n- `/root` - Home directory for root (superuser)\n- `/usr` - user programs, libraries, doc (`/usr/bin`, `/usr/lib`)"
+    },
+    {
+      "id": "c014",
+      "page": 9,
+      "heading": "Users and Groups",
+      "sectionPath": [
+        "Users and Groups"
+      ],
+      "text": "- Admin & Root): `UID = GID = 0`\n- System user: `UID` and `GID` is assigned from `1` to `999`\n- Normal user: `UID` and `GID` is assigned from `1000` or greater",
+      "embedText": "Page 9 > Users and Groups >  > - Admin & Root): `UID = GID = 0`\n- System user: `UID` and `GID` is assigned from `1` to `999`\n- Normal user: `UID` and `GID` is assigned from `1000` or greater"
+    },
+    {
+      "id": "c015",
+      "page": 9,
+      "heading": "Commands: chmod 777 file, chown",
+      "sectionPath": [
+        "Commands: chmod 777 file, chown"
+      ],
+      "text": "```\n- Sudo   useradd, groupadd, userdel, usermod, chgrp.\n- sudo   -i\n- groupadd  marketing -team  -f\n- cat     /etc/group\n- groups james.\n- Sudo   passwd root\n- Service  --status -all\n```\nLinux hardening makes a linux System more [trut-] Secure. It involves changing settings and removing things that attackers could use to break in. This includes strong passwords, limiting who can use powerful commands, keeping software updated and turning off features you don't need.",
+      "embedText": "Page 9 > Commands: chmod 777 file, chown >  > ```\n- Sudo   useradd, groupadd, userdel, usermod, chgrp.\n- sudo   -i\n- groupadd  marketing -team  -f\n- cat     /etc/group\n- groups james.\n- Sudo   passwd root\n- Service  --status -all\n```\nLinux hardening makes a linux System more [trut-] Secure. It involves changing settings and removing things that attackers could use to break in. This includes strong passwords, limiting who can use powerful commands, keeping software updated and turning off features you don't need."
+    },
+    {
+      "id": "c016",
+      "page": 10,
+      "heading": "Page 10",
+      "sectionPath": [],
+      "text": "- `man ls`, `info ls`\n- `gzip`, `bzip2`, `XZ` `*.bz2`",
+      "embedText": "Page 10 >  > - `man ls`, `info ls`\n- `gzip`, `bzip2`, `XZ` `*.bz2`"
+    },
+    {
+      "id": "c017",
+      "page": 10,
+      "heading": "Zip & tar",
+      "sectionPath": [
+        "Zip & tar"
+      ],
+      "text": "- `zip <archive>.zip` / `unzip -R folder`\n- `tar -cf <name>.tar  file1  file2`\n- `tar -xf <name>.tar`\n- `tar -cjf riddles.tar.bz2 riddles`\n- `tar -cJf riddles.tar.xz riddles`\n- Curl, wget, ping, host, ifconfig.",
+      "embedText": "Page 10 > Zip & tar >  > - `zip <archive>.zip` / `unzip -R folder`\n- `tar -cf <name>.tar  file1  file2`\n- `tar -xf <name>.tar`\n- `tar -cjf riddles.tar.bz2 riddles`\n- `tar -cJf riddles.tar.xz riddles`\n- Curl, wget, ping, host, ifconfig."
+    },
+    {
+      "id": "c018",
+      "page": 10,
+      "heading": "Bash",
+      "sectionPath": [
+        "Bash"
+      ],
+      "text": "```bash\n#!/bin/bash\nphrase = \"Hello\"\nCount = 1             while [\nif [ Count -eq 17\nthen                 -eq\n   echo $phrase       -ne\nelse                 -le, -lt\n   echo \"Get out\"     -ge, -gt\nfi                   -z, !=, -=\n```\n```\nalias greet3= './script.sh 3'\n```",
+      "embedText": "Page 10 > Bash >  > ```bash\n#!/bin/bash\nphrase = \"Hello\"\nCount = 1             while [\nif [ Count -eq 17\nthen                 -eq\n   echo $phrase       -ne\nelse                 -le, -lt\n   echo \"Get out\"     -ge, -gt\nfi                   -z, !=, -=\n```\n```\nalias greet3= './script.sh 3'\n```"
+    },
+    {
+      "id": "c019",
+      "page": 11,
+      "heading": "Page 11",
+      "sectionPath": [],
+      "text": "- Bash Scripts Can execute any terminal command and script.",
+      "embedText": "Page 11 >  > - Bash Scripts Can execute any terminal command and script."
+    },
+    {
+      "id": "c020",
+      "page": 11,
+      "heading": "Github",
+      "sectionPath": [
+        "Github"
+      ],
+      "text": "- Repos, Readme, MPs, LICENSE, CODE-of-CONDUCT",
+      "embedText": "Page 11 > Github >  > - Repos, Readme, MPs, LICENSE, CODE-of-CONDUCT"
+    },
+    {
+      "id": "c021",
+      "page": 11,
+      "heading": "Open Source",
+      "sectionPath": [
+        "Open Source"
+      ],
+      "text": "- Improving your Coding skills\n- Better Communicator and Collaborator\n- Job : Searching and Career.",
+      "embedText": "Page 11 > Open Source >  > - Improving your Coding skills\n- Better Communicator and Collaborator\n- Job : Searching and Career."
+    },
+    {
+      "id": "c022",
+      "page": 12,
+      "heading": "TCP (Transmission Control Protocol)",
+      "sectionPath": [
+        "TCP (Transmission Control Protocol)"
+      ],
+      "text": "- `HTTP`, `HTTPS`, `FTP`, `SMTP` — byte stream\n- Connection-oriented protocol\n- Reliable and ordered data delivery\n- Higher overhead but high accuracy.",
+      "embedText": "Page 12 > TCP (Transmission Control Protocol) >  > - `HTTP`, `HTTPS`, `FTP`, `SMTP` — byte stream\n- Connection-oriented protocol\n- Reliable and ordered data delivery\n- Higher overhead but high accuracy."
+    },
+    {
+      "id": "c023",
+      "page": 12,
+      "heading": "UDP (User Datagram Protocol)",
+      "sectionPath": [
+        "UDP (User Datagram Protocol)"
+      ],
+      "text": "- `DNS`, `DHCP/VoIP`, Streaming — Independent messages\n- Fast, Connectionless and lightweight\n- No reliability and guarantee of delivery of order\n- Low overhead and high speed.\n\n- User input\n```\nUser input\n   ↓\nLocal Cache check\n   ↓\nDNS Resolver Query\n   ↓\nRoot server Query\n   ↓\nTLD Server Response  →  Authoritative Server Response (Actual IP)  ↑  Final Response\n```",
+      "embedText": "Page 12 > UDP (User Datagram Protocol) >  > - `DNS`, `DHCP/VoIP`, Streaming — Independent messages\n- Fast, Connectionless and lightweight\n- No reliability and guarantee of delivery of order\n- Low overhead and high speed.\n\n- User input\n```\nUser input\n   ↓\nLocal Cache check\n   ↓\nDNS Resolver Query\n   ↓\nRoot server Query\n   ↓\nTLD Server Response  →  Authoritative Server Response (Actual IP)  ↑  Final Response\n```"
+    },
+    {
+      "id": "c024",
+      "page": 13,
+      "heading": "Structure of DNS",
+      "sectionPath": [
+        "Structure of DNS"
+      ],
+      "text": "- Root:\n    - Topmost level of DNS hierachy represented by .dot, starting point of domain resolution.\n- TLDs:\n    - Includes .com, .org, .net, .edu, helps Categorize domains by purpose or region.\n- Second-level domains:\n    - Appears before TLD (example in example.com)\n    - Uniquely identifies a domain under a TLD.\n- Subdomains:\n    - Extensions of the main domain used for organization like WWW, mail, blog\n- Hostnames:\n    - Identifies specific servers or devices within a domain: like web1, mail server, ftp\n    - Maps to actual IP address using DNS records.",
+      "embedText": "Page 13 > Structure of DNS >  > - Root:\n    - Topmost level of DNS hierachy represented by .dot, starting point of domain resolution.\n- TLDs:\n    - Includes .com, .org, .net, .edu, helps Categorize domains by purpose or region.\n- Second-level domains:\n    - Appears before TLD (example in example.com)\n    - Uniquely identifies a domain under a TLD.\n- Subdomains:\n    - Extensions of the main domain used for organization like WWW, mail, blog\n- Hostnames:\n    - Identifies specific servers or devices within a domain: like web1, mail server, ftp\n    - Maps to actual IP address using DNS records."
+    },
+    {
+      "id": "c025",
+      "page": 14,
+      "heading": "Types of domains",
+      "sectionPath": [
+        "Types of domains"
+      ],
+      "text": "1. Generic Domains (gTLDs)\n    - general purpose use like `.com`, `.org`, `.net`\n    - Used for Commercial, organizational and educational purposes.\n2. Country code Domains (ccTLDs)\n    - To specific countries like `.in` (India), `.us` (USA), `.uk` (UK), `.jp` (Japan).\n3. Reverse DNS:\n    - These domains are used to map IP addresses back to domain names, PTR records",
+      "embedText": "Page 14 > Types of domains >  > 1. Generic Domains (gTLDs)\n    - general purpose use like `.com`, `.org`, `.net`\n    - Used for Commercial, organizational and educational purposes.\n2. Country code Domains (ccTLDs)\n    - To specific countries like `.in` (India), `.us` (USA), `.uk` (UK), `.jp` (Japan).\n3. Reverse DNS:\n    - These domains are used to map IP addresses back to domain names, PTR records"
+    },
+    {
+      "id": "c026",
+      "page": 14,
+      "heading": "Domain Name Server",
+      "sectionPath": [
+        "Domain Name Server"
+      ],
+      "text": "- Stores DNS records and resolves domain names into IP addresses.\n- Stores DNS records such as A, AAAA, MX, CNAME, NS and PTR.",
+      "embedText": "Page 14 > Domain Name Server >  > - Stores DNS records and resolves domain names into IP addresses.\n- Stores DNS records such as A, AAAA, MX, CNAME, NS and PTR."
+    },
+    {
+      "id": "c027",
+      "page": 15,
+      "heading": "Page 15",
+      "sectionPath": [],
+      "text": "> Margin note: 440",
+      "embedText": "Page 15 >  > > Margin note: 440"
+    },
+    {
+      "id": "c028",
+      "page": 15,
+      "heading": "DNS Lookup",
+      "sectionPath": [
+        "DNS Lookup"
+      ],
+      "text": "- DNS Resolver: Initiates the DNS query from Client Side\n- Forwards it to DNS Servers to get the IP address.\n- Recurisve Query: A query where the resolver fetches the Complete answer on behalf of the Client.\n    - Performs full lookup across multiple DNS Servers if needed.\n- Iterative Query: A query where the server provides the best information it has or referral\n- Non-recursive Query: A query where the answer is already available in cache or authoritative Server.",
+      "embedText": "Page 15 > DNS Lookup >  > - DNS Resolver: Initiates the DNS query from Client Side\n- Forwards it to DNS Servers to get the IP address.\n- Recurisve Query: A query where the resolver fetches the Complete answer on behalf of the Client.\n    - Performs full lookup across multiple DNS Servers if needed.\n- Iterative Query: A query where the server provides the best information it has or referral\n- Non-recursive Query: A query where the answer is already available in cache or authoritative Server."
+    },
+    {
+      "id": "c029",
+      "page": 16,
+      "heading": "DNS Caching",
+      "sectionPath": [
+        "DNS Caching"
+      ],
+      "text": "Temporarly storing DNS recods to reduce repeated queries and improve resolution efficency.",
+      "embedText": "Page 16 > DNS Caching >  > Temporarly storing DNS recods to reduce repeated queries and improve resolution efficency."
+    },
+    {
+      "id": "c030",
+      "page": 16,
+      "heading": "TTL (Time -to- Live).",
+      "sectionPath": [
+        "TTL (Time -to- Live)."
+      ],
+      "text": "TTL defines the duration for which a DNS record is Considered valid in cache.\n- A: IPv4\n- CNAME: alias one domain to another domain\n- Mx: Mail Server\n- TXT: Text information",
+      "embedText": "Page 16 > TTL (Time -to- Live). >  > TTL defines the duration for which a DNS record is Considered valid in cache.\n- A: IPv4\n- CNAME: alias one domain to another domain\n- Mx: Mail Server\n- TXT: Text information"
+    },
+    {
+      "id": "c031",
+      "page": 16,
+      "heading": "IPv4 Private Ranges",
+      "sectionPath": [
+        "IPv4 Private Ranges"
+      ],
+      "text": "- ClassA (`NHHH`): 1 to 126 (127 Setback)\n    - `10.255.255.255`\n- ClassB (`NNHH`): 128 to 191\n    - `172.16.255.255`\n- class C (`NNNH`): 192 to 223\n    - `192.168.0.0`\n    - `192.168.0.255`",
+      "embedText": "Page 16 > IPv4 Private Ranges >  > - ClassA (`NHHH`): 1 to 126 (127 Setback)\n    - `10.255.255.255`\n- ClassB (`NNHH`): 128 to 191\n    - `172.16.255.255`\n- class C (`NNNH`): 192 to 223\n    - `192.168.0.0`\n    - `192.168.0.255`"
+    },
+    {
+      "id": "c032",
+      "page": 17,
+      "heading": "Page 17",
+      "sectionPath": [],
+      "text": "> Date: 31/\n> Margin note: `10.000`, `172.16.0.0` ~~to~~, `192-168.0.0`",
+      "embedText": "Page 17 >  > > Date: 31/\n> Margin note: `10.000`, `172.16.0.0` ~~to~~, `192-168.0.0`"
+    },
+    {
+      "id": "c033",
+      "page": 17,
+      "heading": "AD - DS",
+      "sectionPath": [
+        "AD - DS"
+      ],
+      "text": "Active Directory Domain Services is Microsoft's foundational on-premises directory service that acts as the Central hub for managing users, Computers, and peripheral devices on an organization's network.\nRunning as a Server role on ~~Windows~~ Server, its primary function is Identity and Access Management (IAM) verifying who a user is (authentication) and Controlling what data or resources they are allowed to access (authorization).\n\n- Centralized Authentication & Authorization\n- Hierarchical Resource Management.\n- High availability & Replication\n- Class A : `10.0.0.0` to `10.255.255.255`\n- class B : `172.16.0.0` to `172.31.255.255`\n- Class C: `192.168.0.0` to `192.168.255.255`",
+      "embedText": "Page 17 > AD - DS >  > Active Directory Domain Services is Microsoft's foundational on-premises directory service that acts as the Central hub for managing users, Computers, and peripheral devices on an organization's network.\nRunning as a Server role on ~~Windows~~ Server, its primary function is Identity and Access Management (IAM) verifying who a user is (authentication) and Controlling what data or resources they are allowed to access (authorization).\n\n- Centralized Authentication & Authorization\n- Hierarchical Resource Management.\n- High availability & Replication\n- Class A : `10.0.0.0` to `10.255.255.255`\n- class B : `172.16.0.0` to `172.31.255.255`\n- Class C: `192.168.0.0` to `192.168.255.255`"
+    },
+    {
+      "id": "c034",
+      "page": 18,
+      "heading": "VPN (Virtual Private Network)",
+      "sectionPath": [
+        "VPN (Virtual Private Network)"
+      ],
+      "text": "- point to point tunelling\n- Encapsulation.",
+      "embedText": "Page 18 > VPN (Virtual Private Network) >  > - point to point tunelling\n- Encapsulation."
+    },
+    {
+      "id": "c035",
+      "page": 18,
+      "heading": "Express route",
+      "sectionPath": [
+        "Express route"
+      ],
+      "text": "Dedicated connection with high speed (Gbps)\nVPN is a security tool that establishes a protected, encrypted connection between your device and the internet.\n```text\nYou  ->  VPN client ~~~~~~~~~>  VPN server\n                                      |\n                                      v\n                                   Internet\n```\n- Data Encryption\n    - Tunneling\n- IP Masking\n- Destination\n- Public Wi-Fi security\n    - Location Spoofing\n- Bypassing Censorship\n- Data Privacy.",
+      "embedText": "Page 18 > Express route >  > Dedicated connection with high speed (Gbps)\nVPN is a security tool that establishes a protected, encrypted connection between your device and the internet.\n```text\nYou  ->  VPN client ~~~~~~~~~>  VPN server\n                                      |\n                                      v\n                                   Internet\n```\n- Data Encryption\n    - Tunneling\n- IP Masking\n- Destination\n- Public Wi-Fi security\n    - Location Spoofing\n- Bypassing Censorship\n- Data Privacy."
+    },
+    {
+      "id": "c036",
+      "page": 19,
+      "heading": "Tunneling Protocols",
+      "sectionPath": [
+        "Tunneling Protocols"
+      ],
+      "text": "1. Wireguard\n2. Open VPN\n3. IPsec",
+      "embedText": "Page 19 > Tunneling Protocols >  > 1. Wireguard\n2. Open VPN\n3. IPsec"
+    },
+    {
+      "id": "c037",
+      "page": 19,
+      "heading": "Encapsulation methods",
+      "sectionPath": [
+        "Encapsulation methods"
+      ],
+      "text": "1. IP in IP (IPsec, GRE)\n2. Ethernet -over-IP (L2TP, SSTP)\n3. UDP/TCP Session (Wireguard, Open VPN).",
+      "embedText": "Page 19 > Encapsulation methods >  > 1. IP in IP (IPsec, GRE)\n2. Ethernet -over-IP (L2TP, SSTP)\n3. UDP/TCP Session (Wireguard, Open VPN)."
+    },
+    {
+      "id": "c038",
+      "page": 19,
+      "heading": "Class C",
+      "sectionPath": [
+        "Class C"
+      ],
+      "text": "```text\n192.168.15.0/24\n```\n- 24 bits = network bits\n    - > Margin note: `NWHH`\n- 8 bits = host bits\n```text\n2^8 = 256 hosts\nValid hosts = 256 -2 = 254\n```\n\n```text\n2^n equal to or greater than N\nh = number of bits to convert from host to network bits\nN = number of subnets required\n```",
+      "embedText": "Page 19 > Class C >  > ```text\n192.168.15.0/24\n```\n- 24 bits = network bits\n    - > Margin note: `NWHH`\n- 8 bits = host bits\n```text\n2^8 = 256 hosts\nValid hosts = 256 -2 = 254\n```\n\n```text\n2^n equal to or greater than N\nh = number of bits to convert from host to network bits\nN = number of subnets required\n```"
+    },
+    {
+      "id": "c039",
+      "page": 20,
+      "heading": "Page 20",
+      "sectionPath": [],
+      "text": "```text\n2^n = 4\n2^2 = 4\nh = 2\n```\n> Margin notes: `1-126`, `128-191`, `192-223`, `224-239`, `240-255`\nTotal network bits = `24 + 2 = 26`\nto get Custom Subnet mask, make all 26 bits as 1 from left to right.\n```text\n11111111. 11111111. 14111111. 11000000\n   to binary\n255.255.255.192\n```\nBlock size in 4th octet = `256-192 = 64p`\n`IPs = 0.64,128,192`\n```text\n192.168.15.0/26\n192.168.15.64/26\n192.168.15.128/26\n192.168.15.192/26\n```\n\n```text\n192.168.15.00000000  -> 192.168.15.0   -> network ID\n192.168.15.00000001  -> 192.168.15.1   -> 1st valid\n192.168.15.00111110  -> 192.168.15.62  -> last valid\n```",
+      "embedText": "Page 20 >  > ```text\n2^n = 4\n2^2 = 4\nh = 2\n```\n> Margin notes: `1-126`, `128-191`, `192-223`, `224-239`, `240-255`\nTotal network bits = `24 + 2 = 26`\nto get Custom Subnet mask, make all 26 bits as 1 from left to right.\n```text\n11111111. 11111111. 14111111. 11000000\n   to binary\n255.255.255.192\n```\nBlock size in 4th octet = `256-192 = 64p`\n`IPs = 0.64,128,192`\n```text\n192.168.15.0/26\n192.168.15.64/26\n192.168.15.128/26\n192.168.15.192/26\n```\n\n```text\n192.168.15.00000000  -> 192.168.15.0   -> network ID\n192.168.15.00000001  -> 192.168.15.1   -> 1st valid\n192.168.15.00111110  -> 192.168.15.62  -> last valid\n```"
+    },
+    {
+      "id": "c040",
+      "page": 21,
+      "heading": "Page 21",
+      "sectionPath": [],
+      "text": "```text\n192.168.15.00 111111  -> 192.168.15.63 -> broadcast\n```",
+      "embedText": "Page 21 >  > ```text\n192.168.15.00 111111  -> 192.168.15.63 -> broadcast\n```"
+    },
+    {
+      "id": "c041",
+      "page": 21,
+      "heading": "Remote Desktop Protocol, SSH",
+      "sectionPath": [
+        "Remote Desktop Protocol, SSH"
+      ],
+      "text": "- (Windows)\n- (Linux)",
+      "embedText": "Page 21 > Remote Desktop Protocol, SSH >  > - (Windows)\n- (Linux)"
+    },
+    {
+      "id": "c042",
+      "page": 21,
+      "heading": "Azure AD, Entra ID.",
+      "sectionPath": [
+        "Azure AD, Entra ID."
+      ],
+      "text": "Express routes lets you extend your on-premises networks into Microsoft Cloud Services over a secure, private connection via connectivity provider rather than Crossing public internet. It uses dynamic Border Gateway Protocol (BGP) routing to exchange route prefixes between your local infrastructure and Azure.\n\n- No public Internet\n- High speed\n- Steady performance.\n* Simplex\n* Half duplex\n* Full duplex",
+      "embedText": "Page 21 > Azure AD, Entra ID. >  > Express routes lets you extend your on-premises networks into Microsoft Cloud Services over a secure, private connection via connectivity provider rather than Crossing public internet. It uses dynamic Border Gateway Protocol (BGP) routing to exchange route prefixes between your local infrastructure and Azure.\n\n- No public Internet\n- High speed\n- Steady performance.\n* Simplex\n* Half duplex\n* Full duplex"
+    },
+    {
+      "id": "c043",
+      "page": 22,
+      "heading": "Cloud Fundamentals",
+      "sectionPath": [
+        "Cloud Fundamentals"
+      ],
+      "text": "Renting Computing resources (Servers, storage, etc...) over the internet instead of owning physical hardware.",
+      "embedText": "Page 22 > Cloud Fundamentals >  > Renting Computing resources (Servers, storage, etc...) over the internet instead of owning physical hardware."
+    },
+    {
+      "id": "c044",
+      "page": 22,
+      "heading": "Key characteristics of Cloud",
+      "sectionPath": [
+        "Key characteristics of Cloud"
+      ],
+      "text": "- On demand Self Service\n- Broad Network Access\n- Resource Pooling\n- Rapid Elasticity\n- Measured Service\n- High Availability\n- Global Reach\n- Integrated Devops Tools",
+      "embedText": "Page 22 > Key characteristics of Cloud >  > - On demand Self Service\n- Broad Network Access\n- Resource Pooling\n- Rapid Elasticity\n- Measured Service\n- High Availability\n- Global Reach\n- Integrated Devops Tools"
+    },
+    {
+      "id": "c045",
+      "page": 23,
+      "heading": "Benefits of cloud Adoption",
+      "sectionPath": [
+        "Benefits of cloud Adoption"
+      ],
+      "text": "- Scalability - (Vertical, Horizontal) Capacity to grow\n- Elasticity - Scalability on real-time demand\n- Reliability - Redundancy across data Centers\n- Cost optimization - CapEx to OpEx\n\n| Manage: | Provides: | Examples: |\n| --- | --- | --- |\n| OS, middleware, applications and data | Physical hardware, data Centers, Servers and virtualization | Google Compute Engine, Amazon EC2, Microsoft Azure Virtual Machine |\n\nPaaS offers a ready to use cloud environment designed for developers to build, test and run applications.",
+      "embedText": "Page 23 > Benefits of cloud Adoption >  > - Scalability - (Vertical, Horizontal) Capacity to grow\n- Elasticity - Scalability on real-time demand\n- Reliability - Redundancy across data Centers\n- Cost optimization - CapEx to OpEx\n\n| Manage: | Provides: | Examples: |\n| --- | --- | --- |\n| OS, middleware, applications and data | Physical hardware, data Centers, Servers and virtualization | Google Compute Engine, Amazon EC2, Microsoft Azure Virtual Machine |\n\nPaaS offers a ready to use cloud environment designed for developers to build, test and run applications."
+    },
+    {
+      "id": "c046",
+      "page": 24,
+      "heading": "Page 24",
+      "sectionPath": [],
+      "text": "| Manage: | Provides: | Example: |\n| --- | --- | --- |\n| Custom application code and data. | Servers, operating Systems, databases and development tools. | Google App Engine, AWS Elastic Beanstalk |",
+      "embedText": "Page 24 >  > | Manage: | Provides: | Example: |\n| --- | --- | --- |\n| Custom application code and data. | Servers, operating Systems, databases and development tools. | Google App Engine, AWS Elastic Beanstalk |"
+    },
+    {
+      "id": "c047",
+      "page": 24,
+      "heading": "Software as a Service (Saas)",
+      "sectionPath": [
+        "Software as a Service (Saas)"
+      ],
+      "text": "It delivers fully developed, ready to use Software applications accessed over the Web!\n| Manage: | Provides: | Example: |\n| --- | --- | --- |\n| Just your user account | Everything from the account application code to the Security | Salesforce, Microsoft 365, Google Workspace. |",
+      "embedText": "Page 24 > Software as a Service (Saas) >  > It delivers fully developed, ready to use Software applications accessed over the Web!\n| Manage: | Provides: | Example: |\n| --- | --- | --- |\n| Just your user account | Everything from the account application code to the Security | Salesforce, Microsoft 365, Google Workspace. |"
+    },
+    {
+      "id": "c048",
+      "page": 25,
+      "heading": "Types of cloud",
+      "sectionPath": [
+        "Types of cloud"
+      ],
+      "text": "1. Public Cloud: CSP own and operate data Centers, multiple Customers (Tenants) share the same physical infrastructure\n2. Private Cloud: Infrastructure dedicated to a single organization.\n3. Hybrid Cloud: Combines both. Connected via VPN or Azure Express Route.",
+      "embedText": "Page 25 > Types of cloud >  > 1. Public Cloud: CSP own and operate data Centers, multiple Customers (Tenants) share the same physical infrastructure\n2. Private Cloud: Infrastructure dedicated to a single organization.\n3. Hybrid Cloud: Combines both. Connected via VPN or Azure Express Route."
+    },
+    {
+      "id": "c049",
+      "page": 25,
+      "heading": "Shared Responsibility Model",
+      "sectionPath": [
+        "Shared Responsibility Model"
+      ],
+      "text": "The responsibility split moves like a sliding scale as you go from `Iaas → PaaS → SaaS`\n- Always Azure's Job: physical data center, security, physical network, hardware.\n- Always your Job: your data, your access/identity management and end point devices.",
+      "embedText": "Page 25 > Shared Responsibility Model >  > The responsibility split moves like a sliding scale as you go from `Iaas → PaaS → SaaS`\n- Always Azure's Job: physical data center, security, physical network, hardware.\n- Always your Job: your data, your access/identity management and end point devices."
+    },
+    {
+      "id": "c050",
+      "page": 26,
+      "heading": "* CORE Azure Services",
+      "sectionPath": [
+        "* CORE Azure Services"
+      ],
+      "text": "1) Compute - VMs, App Services, Containers, Functions.\n    full control to zero management.\n    - VMs (Iaas)\n    - App Services (PaaS for hosting web apps/APIs)\n    - Containers (ACR/AKs)\n    - functions (Serverless)\n2) Networking\n    > Margin note: VM Scale Sets\n    - Virtual Networks (VNets) — private isolated network\n    - Load Balancers (Distributing incoming traffic)\n    - VPN Gateway (encrypted tunnel over internet)\n    - Express Route (a private dedicated physical connection).\n    - Azure Front Door, Azure DNS\n3) Storage\n    - Blob storage (images, videos, backups/logs)\n    - File storage (file stores by SMB protocol).\n    - Queue storage (Decoupling producer and consumer)\n    - Disk storage (HDD, SSD)",
+      "embedText": "Page 26 > * CORE Azure Services >  > 1) Compute - VMs, App Services, Containers, Functions.\n    full control to zero management.\n    - VMs (Iaas)\n    - App Services (PaaS for hosting web apps/APIs)\n    - Containers (ACR/AKs)\n    - functions (Serverless)\n2) Networking\n    > Margin note: VM Scale Sets\n    - Virtual Networks (VNets) — private isolated network\n    - Load Balancers (Distributing incoming traffic)\n    - VPN Gateway (encrypted tunnel over internet)\n    - Express Route (a private dedicated physical connection).\n    - Azure Front Door, Azure DNS\n3) Storage\n    - Blob storage (images, videos, backups/logs)\n    - File storage (file stores by SMB protocol).\n    - Queue storage (Decoupling producer and consumer)\n    - Disk storage (HDD, SSD)"
+    },
+    {
+      "id": "c051",
+      "page": 27,
+      "heading": "Page 27",
+      "sectionPath": [],
+      "text": "4) Databases:\n- Azure SQL Database (fully managed SQL database with ACID transactions).\n- Cosmos DB (globally distributed, multi-model NoSQL database).\n5) Identity:\n- Azure Active Directory (Microsoft Entra ID) (Authentication)\n- Role Based Access Control (Authorization)",
+      "embedText": "Page 27 >  > 4) Databases:\n- Azure SQL Database (fully managed SQL database with ACID transactions).\n- Cosmos DB (globally distributed, multi-model NoSQL database).\n5) Identity:\n- Azure Active Directory (Microsoft Entra ID) (Authentication)\n- Role Based Access Control (Authorization)"
+    },
+    {
+      "id": "c052",
+      "page": 27,
+      "heading": "* Azure Architecture & Infrastructure",
+      "sectionPath": [
+        "* Azure Architecture & Infrastructure"
+      ],
+      "text": "1) Regions:\n- Regions (Central India, East US)\n- Availability Zones (Physical datacenters within a region)\n- Resource Groups (All the resources for a project)",
+      "embedText": "Page 27 > * Azure Architecture & Infrastructure >  > 1) Regions:\n- Regions (Central India, East US)\n- Availability Zones (Physical datacenters within a region)\n- Resource Groups (All the resources for a project)"
+    },
+    {
+      "id": "c053",
+      "page": 28,
+      "heading": "Page 28",
+      "sectionPath": [],
+      "text": "2) Subscriptions and Management Groups:\n- Subscription (billing and access)\n- Management Groups (Grouping all subscriptions under one management group)\n```text\nManagement Group -> Subscription -> Resource\n                     Resource  <- Groups\n```\n3) Resource Manager (ARM) Concepts:\n- Azure Resource Manager (ARM)\n- ARM templates (Json files define Iaas)\n- Idempotency (deploying twice produces Same not duplicates).",
+      "embedText": "Page 28 >  > 2) Subscriptions and Management Groups:\n- Subscription (billing and access)\n- Management Groups (Grouping all subscriptions under one management group)\n```text\nManagement Group -> Subscription -> Resource\n                     Resource  <- Groups\n```\n3) Resource Manager (ARM) Concepts:\n- Azure Resource Manager (ARM)\n- ARM templates (Json files define Iaas)\n- Idempotency (deploying twice produces Same not duplicates)."
+    },
+    {
+      "id": "c054",
+      "page": 28,
+      "heading": "* Security, Privacy, Compliance and Trust",
+      "sectionPath": [
+        "* Security, Privacy, Compliance and Trust"
+      ],
+      "text": "1) Azure Security Center / Microsoft Defender:\nUnified security management system that assesses your azure resources, give you a Secure Score.",
+      "embedText": "Page 28 > * Security, Privacy, Compliance and Trust >  > 1) Azure Security Center / Microsoft Defender:\nUnified security management system that assesses your azure resources, give you a Secure Score."
+    },
+    {
+      "id": "c055",
+      "page": 29,
+      "heading": "Page 29",
+      "sectionPath": [],
+      "text": "> __/__/___\n- Cloud Security Posture Management (`CSPM`)\n    - (Scans for weaknesses)\n- Cloud Workflow Protection (`CWP`). (detects active threats on running resources)",
+      "embedText": "Page 29 >  > > __/__/___\n- Cloud Security Posture Management (`CSPM`)\n    - (Scans for weaknesses)\n- Cloud Workflow Protection (`CWP`). (detects active threats on running resources)"
+    },
+    {
+      "id": "c056",
+      "page": 29,
+      "heading": "2) Network Security Groups (NSGs)",
+      "sectionPath": [
+        "2) Network Security Groups (NSGs)"
+      ],
+      "text": "A virtual firewall that filters inbound / outbound traffic to resources within a VNet, using allow / deny rules based on IP, port and protocol.",
+      "embedText": "Page 29 > 2) Network Security Groups (NSGs) >  > A virtual firewall that filters inbound / outbound traffic to resources within a VNet, using allow / deny rules based on IP, port and protocol."
+    },
+    {
+      "id": "c057",
+      "page": 29,
+      "heading": "3) Compliance Offerings (ISO, GDPR, HIPAA)",
+      "sectionPath": [
+        "3) Compliance Offerings (ISO, GDPR, HIPAA)"
+      ],
+      "text": "- `ISO 27001` (information security management)\n- `GDPR` (data privacy, protection of personal data)\n- `HIPAA` (protecting health information)",
+      "embedText": "Page 29 > 3) Compliance Offerings (ISO, GDPR, HIPAA) >  > - `ISO 27001` (information security management)\n- `GDPR` (data privacy, protection of personal data)\n- `HIPAA` (protecting health information)"
+    },
+    {
+      "id": "c058",
+      "page": 29,
+      "heading": "4) Azure Governance Tools",
+      "sectionPath": [
+        "4) Azure Governance Tools"
+      ],
+      "text": "- Azure Policy\n- Azure Blueprints (`ARM` templates without manual assignment).",
+      "embedText": "Page 29 > 4) Azure Governance Tools >  > - Azure Policy\n- Azure Blueprints (`ARM` templates without manual assignment)."
+    },
+    {
+      "id": "c059",
+      "page": 30,
+      "heading": "Azure - pricing, SLA",
+      "sectionPath": [
+        "Azure - pricing, SLA"
+      ],
+      "text": "- Pricing Calculator.\n- `TCO` (Total cost of Ownership) Calculator\n- Service Level Agreements (SLAs)\n- Cost Management and Budgeting\n\n- private preview (early access)\n- Public preview (open, no SLA)\n- General Availability (backed by SLA for prod)\n- Depreciation (end of life date)",
+      "embedText": "Page 30 > Azure - pricing, SLA >  > - Pricing Calculator.\n- `TCO` (Total cost of Ownership) Calculator\n- Service Level Agreements (SLAs)\n- Cost Management and Budgeting\n\n- private preview (early access)\n- Public preview (open, no SLA)\n- General Availability (backed by SLA for prod)\n- Depreciation (end of life date)"
+    },
+    {
+      "id": "c060",
+      "page": 30,
+      "heading": "Azure Monitor, Log Analytics, Application Insights",
+      "sectionPath": [
+        "Azure Monitor, Log Analytics, Application Insights"
+      ],
+      "text": "Azure monitor. (metrics + logs)\n- Log Analytics (Query engine (`KQL`)).\n- Application Insights (`APM`)\n- Service ~~Health~~, Azure Advisor\n    - Health",
+      "embedText": "Page 30 > Azure Monitor, Log Analytics, Application Insights >  > Azure monitor. (metrics + logs)\n- Log Analytics (Query engine (`KQL`)).\n- Application Insights (`APM`)\n- Service ~~Health~~, Azure Advisor\n    - Health"
+    },
+    {
+      "id": "c061",
+      "page": 31,
+      "heading": "Page 31",
+      "sectionPath": [],
+      "text": "*(This page is blank in the scan.)*",
+      "embedText": "Page 31 >  > *(This page is blank in the scan.)*"
+    },
+    {
+      "id": "c062",
+      "page": 32,
+      "heading": "3) Storage",
+      "sectionPath": [
+        "3) Storage"
+      ],
+      "text": "- `S3` (Simple storage Service)\n- `EBS` (Elastic Block Store) (Disk)\n- Elastic File System (`EFS`)\n- Glacier (low cost storage for archiving data you rarely acess)",
+      "embedText": "Page 32 > 3) Storage >  > - `S3` (Simple storage Service)\n- `EBS` (Elastic Block Store) (Disk)\n- Elastic File System (`EFS`)\n- Glacier (low cost storage for archiving data you rarely acess)"
+    },
+    {
+      "id": "c063",
+      "page": 32,
+      "heading": "4) Databases",
+      "sectionPath": [
+        "4) Databases"
+      ],
+      "text": "- `RDS` (Relational Database Service)\n- DynamoDB (NoSQL)\n- Aurora (Aws own high performance engine compatible with MySQL, PostgreSQL)",
+      "embedText": "Page 32 > 4) Databases >  > - `RDS` (Relational Database Service)\n- DynamoDB (NoSQL)\n- Aurora (Aws own high performance engine compatible with MySQL, PostgreSQL)"
+    },
+    {
+      "id": "c064",
+      "page": 32,
+      "heading": "5) Identity & Access",
+      "sectionPath": [
+        "5) Identity & Access"
+      ],
+      "text": "- `IAM` (Identity and Access Management)\n- Policies (Json documents for permissions)\n- `MFA` (multi factor Authentication)",
+      "embedText": "Page 32 > 5) Identity & Access >  > - `IAM` (Identity and Access Management)\n- Policies (Json documents for permissions)\n- `MFA` (multi factor Authentication)"
+    },
+    {
+      "id": "c065",
+      "page": 33,
+      "heading": "AWS Architecture & Infrastructure",
+      "sectionPath": [
+        "AWS Architecture & Infrastructure"
+      ],
+      "text": "1. Resource & Hierarchy\n    - ~~Account~~\n    - `AWS Account` (All resources one account)\n    - `AWS organizations` (multiple accounts under one umbrella)\n    - Organizational Units (`OUs`) (grouping accounts with organization to apply different policies).\n2. High Availability & Fault Tolerance Design\n    - High Availability (spreading resources across multiple Availability zones within a region)\n    - Fault Tolerance (Redundancy at every layer, zero disruption even during a failure).\n3. Elasticity & Scalability\n    - Scalability (`Auto Scaling groups`)\n    - Elasticity (expand / shrink down)\n    - Vertical vs Horizontal Scaling (AWS strongly favors horizontal scaling via `ASG` + `ELB` for production workloads)",
+      "embedText": "Page 33 > AWS Architecture & Infrastructure >  > 1. Resource & Hierarchy\n    - ~~Account~~\n    - `AWS Account` (All resources one account)\n    - `AWS organizations` (multiple accounts under one umbrella)\n    - Organizational Units (`OUs`) (grouping accounts with organization to apply different policies).\n2. High Availability & Fault Tolerance Design\n    - High Availability (spreading resources across multiple Availability zones within a region)\n    - Fault Tolerance (Redundancy at every layer, zero disruption even during a failure).\n3. Elasticity & Scalability\n    - Scalability (`Auto Scaling groups`)\n    - Elasticity (expand / shrink down)\n    - Vertical vs Horizontal Scaling (AWS strongly favors horizontal scaling via `ASG` + `ELB` for production workloads)"
+    },
+    {
+      "id": "c066",
+      "page": 34,
+      "heading": "Security & Compliance",
+      "sectionPath": [
+        "Security & Compliance"
+      ],
+      "text": "1. AWS shared Responsibility Model\n    - Aws job (data centers, hardware)\n    - Your job (depends on the Service type, network controls, `IAM` configuration)\n2. IAM best practices\n    - Principle of least privilege (grant only what's needed)\n    - Never use the ~~root~~ account for daily tasks/\n    - Use roles instead of long-lived access keys\n    - Enable `MFA`\n    - Rotate credentials regularly\n3. Security Groups & NACLs (Access Control List)\n| Security Groups | Network ACL |\n| --- | --- |\n| Instance level | Subnet level |\n| Stateful | Stateless |\n| Allow rules only | Allow and deny rules |\n| All rules evaluated together | Rules evaluated in order |",
+      "embedText": "Page 34 > Security & Compliance >  > 1. AWS shared Responsibility Model\n    - Aws job (data centers, hardware)\n    - Your job (depends on the Service type, network controls, `IAM` configuration)\n2. IAM best practices\n    - Principle of least privilege (grant only what's needed)\n    - Never use the ~~root~~ account for daily tasks/\n    - Use roles instead of long-lived access keys\n    - Enable `MFA`\n    - Rotate credentials regularly\n3. Security Groups & NACLs (Access Control List)\n| Security Groups | Network ACL |\n| --- | --- |\n| Instance level | Subnet level |\n| Stateful | Stateless |\n| Allow rules only | Allow and deny rules |\n| All rules evaluated together | Rules evaluated in order |"
+    },
+    {
+      "id": "c067",
+      "page": 35,
+      "heading": "Pricing & Support",
+      "sectionPath": [
+        "Pricing & Support"
+      ],
+      "text": "1. Pricing philosophy\n    - On-demand (pay-as-you-go)\n    - Reserved Instances (High discount)\n    - Spot Instances (bidding on unused spare compute)\n    - Savings Plans (Similar to RIs but more flexible)\n2. Aws pricing Calculate\n    - Pricing Calculator\n    - `TCO` (Total Cost of ownership)\n3. SLA\n    - `S3` Standard (`99.99%`)\n    - `EC2` - `99.9%`. (multiple `AZs`)\n    - Single (`Az` deployments)\n4. Support plans\n    - Basic (Free, no tech support)\n    - Developer (low fee, email support)\n    - Business (% of usage, faster response)\n    - Enterprise (% of usage, dedicated support with fastest response)",
+      "embedText": "Page 35 > Pricing & Support >  > 1. Pricing philosophy\n    - On-demand (pay-as-you-go)\n    - Reserved Instances (High discount)\n    - Spot Instances (bidding on unused spare compute)\n    - Savings Plans (Similar to RIs but more flexible)\n2. Aws pricing Calculate\n    - Pricing Calculator\n    - `TCO` (Total Cost of ownership)\n3. SLA\n    - `S3` Standard (`99.99%`)\n    - `EC2` - `99.9%`. (multiple `AZs`)\n    - Single (`Az` deployments)\n4. Support plans\n    - Basic (Free, no tech support)\n    - Developer (low fee, email support)\n    - Business (% of usage, faster response)\n    - Enterprise (% of usage, dedicated support with fastest response)"
+    },
+    {
+      "id": "c068",
+      "page": 36,
+      "heading": "Monitoring & Management",
+      "sectionPath": [
+        "Monitoring & Management"
+      ],
+      "text": "1. Cloud watch\n    - Metrics\n    - Logs\n    - Alarms\n2. Cloud Trail\n    - Auditing (who did what, when and from where)\n    - Governance\n3. Trusted Advisor (Cost, Security, Performance Recommendations)\n\nConnects two separate Virtual Private Clouds, so resources can talk to each other using internal private IP addresses without going over the public internet",
+      "embedText": "Page 36 > Monitoring & Management >  > 1. Cloud watch\n    - Metrics\n    - Logs\n    - Alarms\n2. Cloud Trail\n    - Auditing (who did what, when and from where)\n    - Governance\n3. Trusted Advisor (Cost, Security, Performance Recommendations)\n\nConnects two separate Virtual Private Clouds, so resources can talk to each other using internal private IP addresses without going over the public internet"
+    },
+    {
+      "id": "c069",
+      "page": 37,
+      "heading": "DBA",
+      "sectionPath": [
+        "Databases",
+        "DBA"
+      ],
+      "text": "Database is Structured Collection of data.\n\n- Atomicity (All or Nothing)\n- Consistency (Valid state to Valid state)\n- Isolation (Transactions don't interfere)\n- Durability (Permanent once Committed)\n\n1. Relational\n    - Uses `SQL`\n    - `MySQL`, `PostgreSQL`\n2. NoSQL\n    - Unstructured / semi structured\n    - key-pair, graph databases, column, document\n    - Object oriented, Network database (child with multiple parents), Hierachical (Tree)\n    - Cloud, Centralized databases.",
+      "embedText": "Page 37 > Databases > DBA >  > Database is Structured Collection of data.\n\n- Atomicity (All or Nothing)\n- Consistency (Valid state to Valid state)\n- Isolation (Transactions don't interfere)\n- Durability (Permanent once Committed)\n\n1. Relational\n    - Uses `SQL`\n    - `MySQL`, `PostgreSQL`\n2. NoSQL\n    - Unstructured / semi structured\n    - key-pair, graph databases, column, document\n    - Object oriented, Network database (child with multiple parents), Hierachical (Tree)\n    - Cloud, Centralized databases."
+    },
+    {
+      "id": "c070",
+      "page": 38,
+      "heading": "Datatypes",
+      "sectionPath": [
+        "Datatypes"
+      ],
+      "text": "- `VARCHAR2`, `NVARCHAR,`\n- `NUMBER`, `INT, DECIMAL, NUMERIC(p,s)`\n- Binary - float\n- Binary - double\n\n- `UNIQUE`, `NOTNULL`\n- `PRIMARY KEY`, `FOREIGN KEY`\n- `DEFAULT`, `CHECK`",
+      "embedText": "Page 38 > Datatypes >  > - `VARCHAR2`, `NVARCHAR,`\n- `NUMBER`, `INT, DECIMAL, NUMERIC(p,s)`\n- Binary - float\n- Binary - double\n\n- `UNIQUE`, `NOTNULL`\n- `PRIMARY KEY`, `FOREIGN KEY`\n- `DEFAULT`, `CHECK`"
+    },
+    {
+      "id": "c071",
+      "page": 38,
+      "heading": "DDL (Data Definition Language)",
+      "sectionPath": [
+        "DDL (Data Definition Language)"
+      ],
+      "text": "- `Create`, `Alter`, `Truncate`, `Drop`",
+      "embedText": "Page 38 > DDL (Data Definition Language) >  > - `Create`, `Alter`, `Truncate`, `Drop`"
+    },
+    {
+      "id": "c072",
+      "page": 38,
+      "heading": "DML (Data Manipulation Language)",
+      "sectionPath": [
+        "DML (Data Manipulation Language)"
+      ],
+      "text": "- `Insert`, `Update`, `Delete`.",
+      "embedText": "Page 38 > DML (Data Manipulation Language) >  > - `Insert`, `Update`, `Delete`."
+    },
+    {
+      "id": "c073",
+      "page": 38,
+      "heading": "DCL (Data Control Language)",
+      "sectionPath": [
+        "DCL (Data Control Language)"
+      ],
+      "text": "- `Grant`, `Revoke` (To, From/In)",
+      "embedText": "Page 38 > DCL (Data Control Language) >  > - `Grant`, `Revoke` (To, From/In)"
+    },
+    {
+      "id": "c074",
+      "page": 39,
+      "heading": "TCL (Transaction Control Language)",
+      "sectionPath": [
+        "TCL (Transaction Control Language)"
+      ],
+      "text": "- `Commit`, `Savepoint`, `Rollback`.",
+      "embedText": "Page 39 > TCL (Transaction Control Language) >  > - `Commit`, `Savepoint`, `Rollback`."
+    },
+    {
+      "id": "c075",
+      "page": 39,
+      "heading": "Normalization",
+      "sectionPath": [
+        "Normalization"
+      ],
+      "text": "It is the process of structuring data in a database.\n1. `1NF`:\n    - Atomicity (Single Attribute)\n2. `2NF`:\nPrime / key attributes : attributes of relation which exist in at least one of the possible candidate keys.\nNon prime: doesn't exist in any of the possible candidate keys\nThe table shall not possess partial dependency\n```\nPA --> NPA (X,Y)\n```",
+      "embedText": "Page 39 > Normalization >  > It is the process of structuring data in a database.\n1. `1NF`:\n    - Atomicity (Single Attribute)\n2. `2NF`:\nPrime / key attributes : attributes of relation which exist in at least one of the possible candidate keys.\nNon prime: doesn't exist in any of the possible candidate keys\nThe table shall not possess partial dependency\n```\nPA --> NPA (X,Y)\n```"
+    },
+    {
+      "id": "c076",
+      "page": 40,
+      "heading": "3NF",
+      "sectionPath": [
+        "3NF"
+      ],
+      "text": "- No transitive dependency and is in Second form\n```\nNPA --> NPA (X)\n```",
+      "embedText": "Page 40 > 3NF >  > - No transitive dependency and is in Second form\n```\nNPA --> NPA (X)\n```"
+    },
+    {
+      "id": "c077",
+      "page": 40,
+      "heading": "BCNF (Boyce Codd)",
+      "sectionPath": [
+        "BCNF (Boyce Codd)"
+      ],
+      "text": "- Should be in third form\n- Every `RAs` attribute of functional dependencies should depend on the Super key of that particular table.\n\nComponents:\n1. Entity (real world object / concept) (Rectangle)\n2. Attribute (properties) (oval)\n3. Relationship (connection) (diamond)\n\n1. One to one (`1:1`)\n2. One to Many (`1:my`)\n3. Many to many (`my:my`)",
+      "embedText": "Page 40 > BCNF (Boyce Codd) >  > - Should be in third form\n- Every `RAs` attribute of functional dependencies should depend on the Super key of that particular table.\n\nComponents:\n1. Entity (real world object / concept) (Rectangle)\n2. Attribute (properties) (oval)\n3. Relationship (connection) (diamond)\n\n1. One to one (`1:1`)\n2. One to Many (`1:my`)\n3. Many to many (`my:my`)"
+    },
+    {
+      "id": "c078",
+      "page": 41,
+      "heading": "Database Architecture",
+      "sectionPath": [
+        "Database Architecture"
+      ],
+      "text": "It is the structural design and methodology, Spanning conceptual, logical and physical\n1. 1 tier: The database **sits** directly on the Client machine (uses for local dev).\n2. 2 tier (Client-Server): Direct Communication occurs ~~between~~ between the client and server\n3. 3 tier: The industry standard for webapps. It separates the client / presentation layer, Business logic layer and Database layer.\n\n- External level (view level) what users see\n- Conceptual level (logical level) what data stored\n- Internal level (physical) how data is stored\n\n- Query processor (parse, optimize , execute)\n- Storage Manager (Data storage, retrieval)\n- Data modelling ( how data is-organized, manipulated)\n- Distributed Architecture (replication, availability)",
+      "embedText": "Page 41 > Database Architecture >  > It is the structural design and methodology, Spanning conceptual, logical and physical\n1. 1 tier: The database **sits** directly on the Client machine (uses for local dev).\n2. 2 tier (Client-Server): Direct Communication occurs ~~between~~ between the client and server\n3. 3 tier: The industry standard for webapps. It separates the client / presentation layer, Business logic layer and Database layer.\n\n- External level (view level) what users see\n- Conceptual level (logical level) what data stored\n- Internal level (physical) how data is stored\n\n- Query processor (parse, optimize , execute)\n- Storage Manager (Data storage, retrieval)\n- Data modelling ( how data is-organized, manipulated)\n- Distributed Architecture (replication, availability)"
+    },
+    {
+      "id": "c079",
+      "page": 42,
+      "heading": "DBA tasks",
+      "sectionPath": [
+        "DBA tasks"
+      ],
+      "text": "DBAs are responsible for the performance, integrity and security of data systems.\n1. Database Design and development\n2. Performance Monitoring and Tuning\n3. Security Administration\n4. Backup and Recovery\n5. Installation and Upgrades\n6. Data migration and Maintenance\n7. Troubleshooting.\n\n1. High Availability and Disaster Recovery\n    - Data Guard management\n    - oracle `RAC` (real application clusters)\n    - Flashback Technologies\n2. Performable tuning and optimizations\n    - `SQL` Tuning\n    - Instance Tuning\n    - Wait Event Analysis",
+      "embedText": "Page 42 > DBA tasks >  > DBAs are responsible for the performance, integrity and security of data systems.\n1. Database Design and development\n2. Performance Monitoring and Tuning\n3. Security Administration\n4. Backup and Recovery\n5. Installation and Upgrades\n6. Data migration and Maintenance\n7. Troubleshooting.\n\n1. High Availability and Disaster Recovery\n    - Data Guard management\n    - oracle `RAC` (real application clusters)\n    - Flashback Technologies\n2. Performable tuning and optimizations\n    - `SQL` Tuning\n    - Instance Tuning\n    - Wait Event Analysis"
+    },
+    {
+      "id": "c080",
+      "page": 43,
+      "heading": "3) Backup and Recovery (RMAN)",
+      "sectionPath": [
+        "3) Backup and Recovery (RMAN)"
+      ],
+      "text": "- Advanced RMAN operations\n- Database Duplication / Cloning\n- Data Pump & Transportable Tablespaces\n-",
+      "embedText": "Page 43 > 3) Backup and Recovery (RMAN) >  > - Advanced RMAN operations\n- Database Duplication / Cloning\n- Data Pump & Transportable Tablespaces\n-"
+    },
+    {
+      "id": "c081",
+      "page": 43,
+      "heading": "4) Advanced Security and Auditing",
+      "sectionPath": [
+        "4) Advanced Security and Auditing"
+      ],
+      "text": "- Database Vault\n- Data Masking and Encryption\n- Unified Auditing",
+      "embedText": "Page 43 > 4) Advanced Security and Auditing >  > - Database Vault\n- Data Masking and Encryption\n- Unified Auditing"
+    },
+    {
+      "id": "c082",
+      "page": 43,
+      "heading": "5) Infrastructure and Patching",
+      "sectionPath": [
+        "5) Infrastructure and Patching"
+      ],
+      "text": "- Patch Management\n- Upgrades and Migrations\n- Capacity Planning",
+      "embedText": "Page 43 > 5) Infrastructure and Patching >  > - Patch Management\n- Upgrades and Migrations\n- Capacity Planning"
+    },
+    {
+      "id": "c083",
+      "page": 43,
+      "heading": "Advanced DBA roles",
+      "sectionPath": [
+        "Advanced DBA roles"
+      ],
+      "text": "- Cloud DBA (RDS, Azure SQL)\n- Development DBA (Design databases, data models)\n- Production DBA",
+      "embedText": "Page 43 > Advanced DBA roles >  > - Cloud DBA (RDS, Azure SQL)\n- Development DBA (Design databases, data models)\n- Production DBA"
+    },
+    {
+      "id": "c084",
+      "page": 44,
+      "heading": "CIA triad",
+      "sectionPath": [
+        "CIA triad"
+      ],
+      "text": "It is a foundational cybersecurity model designed to guide info security policies within an organization.\nIt ensures data is protected from unauthorized access, kept accurate and trustworthy and accessible\n\ndata accessible to authorized individuals\n- encryption\n- Strong authentication (MFA)\n- Strict ACL\n\nInfo is accurate, Consistent and trustworthy.\nTechniques:\n- file permissions\n- version control\n- Checksums\n- Digital Signatures",
+      "embedText": "Page 44 > CIA triad >  > It is a foundational cybersecurity model designed to guide info security policies within an organization.\nIt ensures data is protected from unauthorized access, kept accurate and trustworthy and accessible\n\ndata accessible to authorized individuals\n- encryption\n- Strong authentication (MFA)\n- Strict ACL\n\nInfo is accurate, Consistent and trustworthy.\nTechniques:\n- file permissions\n- version control\n- Checksums\n- Digital Signatures"
+    },
+    {
+      "id": "c085",
+      "page": 45,
+      "heading": "Availability",
+      "sectionPath": [
+        "Availability"
+      ],
+      "text": "Authorized users have reliable and timely access to data and resources when needed\n- Data backups\n- Firewalls and proxy servers\n- Disaster recovery and incident response\n- DDoS (Distributed Dos)",
+      "embedText": "Page 45 > Availability >  > Authorized users have reliable and timely access to data and resources when needed\n- Data backups\n- Firewalls and proxy servers\n- Disaster recovery and incident response\n- DDoS (Distributed Dos)"
+    },
+    {
+      "id": "c086",
+      "page": 45,
+      "heading": "Comman attacks",
+      "sectionPath": [
+        "Comman attacks"
+      ],
+      "text": "- Phishing: Fraud emails / messages that come from trusted sources to steal Credentials, banking details (Spear, whale)\n- Malware: Malicious Software designed to access, damage or steal data from devices\n- Ransomware: A type of malware that encrypts a victim's files, with attackers demanding ransom payment for decryption",
+      "embedText": "Page 45 > Comman attacks >  > - Phishing: Fraud emails / messages that come from trusted sources to steal Credentials, banking details (Spear, whale)\n- Malware: Malicious Software designed to access, damage or steal data from devices\n- Ransomware: A type of malware that encrypts a victim's files, with attackers demanding ransom payment for decryption"
+    },
+    {
+      "id": "c087",
+      "page": 46,
+      "heading": "Page 46",
+      "sectionPath": [],
+      "text": "- Social Engineering: Manipulating individuals into performing actions, often through impersonation\n- Denial of Service (DoS): Flooding a System, Server or network with artificial traffic to overload resources, making it unavailable\n- Man in the Middle (MITM): Attackers insert themselves into a two party conversation, intercepting data between an user and an application, often on unsecured public Wi-fi\n- SQL Injection: Inserting malicious code into a Server that uses SQL, forcing it to reveal sensitive info from its database.\n- Password Attacks: Attempting to crack or steal passwords through brute force, dictionary attacks, Credential stuffing.",
+      "embedText": "Page 46 >  > - Social Engineering: Manipulating individuals into performing actions, often through impersonation\n- Denial of Service (DoS): Flooding a System, Server or network with artificial traffic to overload resources, making it unavailable\n- Man in the Middle (MITM): Attackers insert themselves into a two party conversation, intercepting data between an user and an application, often on unsecured public Wi-fi\n- SQL Injection: Inserting malicious code into a Server that uses SQL, forcing it to reveal sensitive info from its database.\n- Password Attacks: Attempting to crack or steal passwords through brute force, dictionary attacks, Credential stuffing."
+    },
+    {
+      "id": "c088",
+      "page": 47,
+      "heading": "Page 47",
+      "sectionPath": [],
+      "text": "- Spoofing and DNS spoofing: Disguising communication from an unknown source as being from a trusted one, such as using a fake website to trick users.\n- Zero day exploits: Attacking a network vulnerability that has been announced but for which a patch or solution is not yet available\n- Insider threats: Security risks originating from within the organization",
+      "embedText": "Page 47 >  > - Spoofing and DNS spoofing: Disguising communication from an unknown source as being from a trusted one, such as using a fake website to trick users.\n- Zero day exploits: Attacking a network vulnerability that has been announced but for which a patch or solution is not yet available\n- Insider threats: Security risks originating from within the organization"
+    },
+    {
+      "id": "c089",
+      "page": 47,
+      "heading": "Encryption",
+      "sectionPath": [
+        "Encryption"
+      ],
+      "text": "- plaintext to cipher text using Algs and keys\n- Stolen data useless to unauthorized users\n- Key component of modern Security protocols\n- b Symmetric Encryption: Uses same key for encryption and decryption (private)\n2) Asymmetric Encryption: Uses ~~public~~ for encryption and private for decryption",
+      "embedText": "Page 47 > Encryption >  > - plaintext to cipher text using Algs and keys\n- Stolen data useless to unauthorized users\n- Key component of modern Security protocols\n- b Symmetric Encryption: Uses same key for encryption and decryption (private)\n2) Asymmetric Encryption: Uses ~~public~~ for encryption and private for decryption"
+    },
+    {
+      "id": "c090",
+      "page": 48,
+      "heading": "Unlabelled list",
+      "sectionPath": [
+        "Unlabelled list"
+      ],
+      "text": "- Local, Site, Domain, OL\n- FSMO (Flexible single Master operation)\n- Primary -> Secondary zone\n    - (R&W) — (Read only)\n- DHCP (67,68)\n- Windows disk partitioning\n- `MBR, GPT, BIOS, UEFI`\n- Start, stop, configure windows Service (service Console)\n- `useradd, groupadd, chgrp, usermod, chmod g+r`\n- Linux disk partitions (fdisk, parted)\n- Linux FS RHEL (XFS), ext4, BtrFS, f2Fs\n- Windows -> Linux (Samba)\n- Azure LRS, ZRS, GRS\n- Ping - ICMP",
+      "embedText": "Page 48 > Unlabelled list >  > - Local, Site, Domain, OL\n- FSMO (Flexible single Master operation)\n- Primary -> Secondary zone\n    - (R&W) — (Read only)\n- DHCP (67,68)\n- Windows disk partitioning\n- `MBR, GPT, BIOS, UEFI`\n- Start, stop, configure windows Service (service Console)\n- `useradd, groupadd, chgrp, usermod, chmod g+r`\n- Linux disk partitions (fdisk, parted)\n- Linux FS RHEL (XFS), ext4, BtrFS, f2Fs\n- Windows -> Linux (Samba)\n- Azure LRS, ZRS, GRS\n- Ping - ICMP"
+    },
+    {
+      "id": "c091",
+      "page": 49,
+      "heading": "Introduction to Scripting & Automation",
+      "sectionPath": [
+        "Introduction to Scripting & Automation"
+      ],
+      "text": "- ICMP (Ping)\n- `getmac`\n- `arp -a`\n- `pathping` IPaddr/ `tracert` IPaddr\n- `nslookup` domain\n- `Get-NetIPConfiguration`\n- `netstat -ano`",
+      "embedText": "Page 49 > Introduction to Scripting & Automation >  > - ICMP (Ping)\n- `getmac`\n- `arp -a`\n- `pathping` IPaddr/ `tracert` IPaddr\n- `nslookup` domain\n- `Get-NetIPConfiguration`\n- `netstat -ano`"
+    },
+    {
+      "id": "c092",
+      "page": 49,
+      "heading": "Ubuntu",
+      "sectionPath": [
+        "Ubuntu"
+      ],
+      "text": "- `whoami` && `pwd` (active user and working directory)\n- `ls -la /var/log` (Permissions and hidden files)\n- `uptime` && `free -h` (System uptime and resource utilizn)",
+      "embedText": "Page 49 > Ubuntu >  > - `whoami` && `pwd` (active user and working directory)\n- `ls -la /var/log` (Permissions and hidden files)\n- `uptime` && `free -h` (System uptime and resource utilizn)"
+    },
+    {
+      "id": "c093",
+      "page": 50,
+      "heading": "1.1 Importance of scripting in IT infrastructure",
+      "sectionPath": [
+        "1.1 Importance of scripting in IT infrastructure"
+      ],
+      "text": "- Some operations in data Center, cloud\n- Physical Infra, Virtual Infra, Cloud Infra\n\n- Network (Routers, switches, Firewalls)\n- Storage (NAS, SAN)\n- Physical Servers\n\n- Hypervisors\n    - OS level (VMware workstation, Virtual Box)\n    - Bare metal (RHEV, ESXI, Xen)\n\n- Public (AWS, Azure, GCP)\n- Private (cloud stack, Openstack)",
+      "embedText": "Page 50 > 1.1 Importance of scripting in IT infrastructure >  > - Some operations in data Center, cloud\n- Physical Infra, Virtual Infra, Cloud Infra\n\n- Network (Routers, switches, Firewalls)\n- Storage (NAS, SAN)\n- Physical Servers\n\n- Hypervisors\n    - OS level (VMware workstation, Virtual Box)\n    - Bare metal (RHEV, ESXI, Xen)\n\n- Public (AWS, Azure, GCP)\n- Private (cloud stack, Openstack)"
+    },
+    {
+      "id": "c094",
+      "page": 51,
+      "heading": "Page 51",
+      "sectionPath": [],
+      "text": "Instead of admin manually Checking disk usage on 50 servers every morning, a 10 line script can SSH into each one, Check usage, email a report (2hr - 30 seconds)\n- Python (requests for API, boto3 for AWS, Parcmiko (SSH))\n- Shell (Bash) - native to Linux/mac OS\n- Powershell (Windows)",
+      "embedText": "Page 51 >  > Instead of admin manually Checking disk usage on 50 servers every morning, a 10 line script can SSH into each one, Check usage, email a report (2hr - 30 seconds)\n- Python (requests for API, boto3 for AWS, Parcmiko (SSH))\n- Shell (Bash) - native to Linux/mac OS\n- Powershell (Windows)"
+    },
+    {
+      "id": "c095",
+      "page": 51,
+      "heading": "REST APIs",
+      "sectionPath": [
+        "REST APIs"
+      ],
+      "text": "URI (Identifier) - identifies any resource, by name, location, or both. Every URL is a URI.\nURL (Locator) - a URI that also tells you where to find the resource and how to access it (protocol + host + path)\n```\nhttps://api.library.com/v1/books/101?format=json\n```\n- scheme -> `https`\n- host -> `api.library.com`\n- version -> `v1`\n- resource id -> `books/101`\n- query -> `?`\n- string -> `format=json`",
+      "embedText": "Page 51 > REST APIs >  > URI (Identifier) - identifies any resource, by name, location, or both. Every URL is a URI.\nURL (Locator) - a URI that also tells you where to find the resource and how to access it (protocol + host + path)\n```\nhttps://api.library.com/v1/books/101?format=json\n```\n- scheme -> `https`\n- host -> `api.library.com`\n- version -> `v1`\n- resource id -> `books/101`\n- query -> `?`\n- string -> `format=json`"
+    },
+    {
+      "id": "c096",
+      "page": 52,
+      "heading": "REST API",
+      "sectionPath": [
+        "REST API"
+      ],
+      "text": "- Statelessness\n- layered system\n- Resource based URLs\n- Uniform interface\n- Representation (JSON, XML)\n\n- GET (Retrieve) Idempotent (Idpt)\n- POST (create) Not Idpt\n- PUT (Replace/update) Idpt\n- PATCH (partial update) ~~Idpt~~ maybe Idpt\n- DELETE (remove a resource) Idpt\n\n- API keys (static secret string)\n- OAuth 2.0 (flow where script request time limited token on behalf of user instead of permanent key)",
+      "embedText": "Page 52 > REST API >  > - Statelessness\n- layered system\n- Resource based URLs\n- Uniform interface\n- Representation (JSON, XML)\n\n- GET (Retrieve) Idempotent (Idpt)\n- POST (create) Not Idpt\n- PUT (Replace/update) Idpt\n- PATCH (partial update) ~~Idpt~~ maybe Idpt\n- DELETE (remove a resource) Idpt\n\n- API keys (static secret string)\n- OAuth 2.0 (flow where script request time limited token on behalf of user instead of permanent key)"
+    },
+    {
+      "id": "c097",
+      "page": 53,
+      "heading": "2xx - Success",
+      "sectionPath": [
+        "HTTP status Codes",
+        "2xx - Success"
+      ],
+      "text": "- 200 ok (Success) GET\n- 201 created (New resource Created) POST\n- 204 No content (Success, no return) DELETE\n\n- 301 Moved permanently (New URL).\n- 302 found (Temp redirect)\n- 304 Not modified (Cached version valid)\n\n- 400 Bad Request (Malformed request)\n- 401 Unauthorized (missing / Invalid Credentials)\n- 403 Forbidden (Authenticated, not allowed)\n- 404 Not found (Resource doesn't exist)\n- 429 Too Many Requests (Rate limit exceeded)\n\n- 500 Internal Server error (Server crash)\n- 502 Bad Gateway (upstream server invalid response)\n- 503 Service Unavailable (Server down)\n- 504 Gateway Timeout (Upstream server took too long)",
+      "embedText": "Page 53 > HTTP status Codes > 2xx - Success >  > - 200 ok (Success) GET\n- 201 created (New resource Created) POST\n- 204 No content (Success, no return) DELETE\n\n- 301 Moved permanently (New URL).\n- 302 found (Temp redirect)\n- 304 Not modified (Cached version valid)\n\n- 400 Bad Request (Malformed request)\n- 401 Unauthorized (missing / Invalid Credentials)\n- 403 Forbidden (Authenticated, not allowed)\n- 404 Not found (Resource doesn't exist)\n- 429 Too Many Requests (Rate limit exceeded)\n\n- 500 Internal Server error (Server crash)\n- 502 Bad Gateway (upstream server invalid response)\n- 503 Service Unavailable (Server down)\n- 504 Gateway Timeout (Upstream server took too long)"
+    },
+    {
+      "id": "c098",
+      "page": 54,
+      "heading": "API Key",
+      "sectionPath": [
+        "API Key"
+      ],
+      "text": "- Unique String\n- Passed via header, query, param or body\n- Simple to implement",
+      "embedText": "Page 54 > API Key >  > - Unique String\n- Passed via header, query, param or body\n- Simple to implement"
+    },
+    {
+      "id": "c099",
+      "page": 54,
+      "heading": "REST API Features",
+      "sectionPath": [
+        "REST API Features"
+      ],
+      "text": "- Scalability\n- Interoperability\n- Simplicity\n- Flexibility",
+      "embedText": "Page 54 > REST API Features >  > - Scalability\n- Interoperability\n- Simplicity\n- Flexibility"
+    },
+    {
+      "id": "c100",
+      "page": 55,
+      "heading": "Declarative",
+      "sectionPath": [
+        "Terraform",
+        "Declarative"
+      ],
+      "text": "- Idempotent\n- Terraform, OpenTofu, AWS Cloud Formation, Azure Bicep\n\n- Granular level control over every action\n- Chef, Ansible, Bash, scripts\n```\nVar .tf files  ->  Terraform Core operations\n                                 |  API calls\n                                 v\n                    HTTPS API  <-  Providers calls\nActual Cloud       <-\n```\n- `init`\n- `plan`\n- `apply`\n- `destroy`\nIaC is the practice of managing and provisioning Computing infrastructure - networks, VM, Storage through machine readable files",
+      "embedText": "Page 55 > Terraform > Declarative >  > - Idempotent\n- Terraform, OpenTofu, AWS Cloud Formation, Azure Bicep\n\n- Granular level control over every action\n- Chef, Ansible, Bash, scripts\n```\nVar .tf files  ->  Terraform Core operations\n                                 |  API calls\n                                 v\n                    HTTPS API  <-  Providers calls\nActual Cloud       <-\n```\n- `init`\n- `plan`\n- `apply`\n- `destroy`\nIaC is the practice of managing and provisioning Computing infrastructure - networks, VM, Storage through machine readable files"
+    },
+    {
+      "id": "c101",
+      "page": 56,
+      "heading": "Iac benefits",
+      "sectionPath": [
+        "Iac benefits"
+      ],
+      "text": "- Speed & Agility\n- Consistency\n- Version Control\n- Cost Control\n- Collaboration\n- Disaster Recovery",
+      "embedText": "Page 56 > Iac benefits >  > - Speed & Agility\n- Consistency\n- Version Control\n- Cost Control\n- Collaboration\n- Disaster Recovery"
+    },
+    {
+      "id": "c102",
+      "page": 56,
+      "heading": "Terraform Characteristics",
+      "sectionPath": [
+        "Terraform Characteristics"
+      ],
+      "text": "- Cloud agnostic\n- Open Source\n- HCL (Hashicorp config language)\n- Maintains a state file\nkeys: HCL, Provider, Resource, State, Module.",
+      "embedText": "Page 56 > Terraform Characteristics >  > - Cloud agnostic\n- Open Source\n- HCL (Hashicorp config language)\n- Maintains a state file\nkeys: HCL, Provider, Resource, State, Module."
+    },
+    {
+      "id": "c103",
+      "page": 56,
+      "heading": "HCL",
+      "sectionPath": [
+        "HCL"
+      ],
+      "text": "- Resource block\n- Arguments\n- Nested blocks\n- Builds a dependency graph",
+      "embedText": "Page 56 > HCL >  > - Resource block\n- Arguments\n- Nested blocks\n- Builds a dependency graph"
+    },
+    {
+      "id": "c104",
+      "page": 57,
+      "heading": "TF state",
+      "sectionPath": [
+        "TF state"
+      ],
+      "text": "terraform.tfstate is a JSON that maps the resources in your code to real world objects in Azure. (IDs, attributes, dependencies)",
+      "embedText": "Page 57 > TF state >  > terraform.tfstate is a JSON that maps the resources in your code to real world objects in Azure. (IDs, attributes, dependencies)"
+    },
+    {
+      "id": "c105",
+      "page": 57,
+      "heading": "Modules",
+      "sectionPath": [
+        "Modules"
+      ],
+      "text": "Module is a reusable, self Contained set of ~~TF~~ Config files that can be multiple times with different inputs.",
+      "embedText": "Page 57 > Modules >  > Module is a reusable, self Contained set of ~~TF~~ Config files that can be multiple times with different inputs."
+    },
+    {
+      "id": "c106",
+      "page": 57,
+      "heading": "Variables",
+      "sectionPath": [
+        "Variables"
+      ],
+      "text": "```hcl\n1, Variable \"instance-Count\" {\n     type = 'number'\n     description = \"How many instances to Create\"\n     default = 2\n   }\n```\n```hcl\n1, Variable \"tags\" {\n     type = list(number)\n     default = [80, 4503]\n   }\n```\nTypes: String, number, bool, list (type), set (type), map (type), object ({...}), tuple ([...]).",
+      "embedText": "Page 57 > Variables >  > ```hcl\n1, Variable \"instance-Count\" {\n     type = 'number'\n     description = \"How many instances to Create\"\n     default = 2\n   }\n```\n```hcl\n1, Variable \"tags\" {\n     type = list(number)\n     default = [80, 4503]\n   }\n```\nTypes: String, number, bool, list (type), set (type), map (type), object ({...}), tuple ([...])."
+    },
+    {
+      "id": "c107",
+      "page": 58,
+      "heading": "Precedence of Variables",
+      "sectionPath": [
+        "Precedence of Variables"
+      ],
+      "text": "- export TF_VAR_environment = dev\n- terraform.tfvars file\n- *.auto.tfvars 1\n- -Var -file = Custom.tfvars\n- -Var = \"environment = dev\"\n- Interactive prompt",
+      "embedText": "Page 58 > Precedence of Variables >  > - export TF_VAR_environment = dev\n- terraform.tfvars file\n- *.auto.tfvars 1\n- -Var -file = Custom.tfvars\n- -Var = \"environment = dev\"\n- Interactive prompt"
+    },
+    {
+      "id": "c108",
+      "page": 58,
+      "heading": "Dependencies",
+      "sectionPath": [
+        "Dependencies"
+      ],
+      "text": "1, Implicit dependencies ?\nWhen one resource references another attr, Terraform automatically knows to create the referenced one first.\n```hcl\nresource \"local_file\" \"Config\" {\n   filename = \"${path.module}/app.conf\"\n   Content = \"ready\"\n}\n```\n```hcl\nresource \"local_file\" \"marker\" {\n   filename = \"${path.module}/marker.txt\"\n   Content = \"Config exists at: ${local_file.config.filename}\"\n```",
+      "embedText": "Page 58 > Dependencies >  > 1, Implicit dependencies ?\nWhen one resource references another attr, Terraform automatically knows to create the referenced one first.\n```hcl\nresource \"local_file\" \"Config\" {\n   filename = \"${path.module}/app.conf\"\n   Content = \"ready\"\n}\n```\n```hcl\nresource \"local_file\" \"marker\" {\n   filename = \"${path.module}/marker.txt\"\n   Content = \"Config exists at: ${local_file.config.filename}\"\n```"
+    },
+    {
+      "id": "c109",
+      "page": 59,
+      "heading": "Page 59",
+      "sectionPath": [],
+      "text": "```bash\n** terraform graph | dot -Tpng > graph.png\n```\n- Explicit dependencies with depends-on:\n```hcl\nresource \"local-file\" \"a\" {\n   filename = \"${path.module}/a.txt\"\n   Content = \"a\"\n}\nresource \"local-file\" \"b\" {\n   filename = \"${path.module}/b.txt\"\n   Content = \"b\"\n   depends-on = [local-file.a]\n}\n```",
+      "embedText": "Page 59 >  > ```bash\n** terraform graph | dot -Tpng > graph.png\n```\n- Explicit dependencies with depends-on:\n```hcl\nresource \"local-file\" \"a\" {\n   filename = \"${path.module}/a.txt\"\n   Content = \"a\"\n}\nresource \"local-file\" \"b\" {\n   filename = \"${path.module}/b.txt\"\n   Content = \"b\"\n   depends-on = [local-file.a]\n}\n```"
+    },
+    {
+      "id": "c110",
+      "page": 59,
+      "heading": "Meta arguments",
+      "sectionPath": [
+        "Meta arguments"
+      ],
+      "text": "- Count:\n```hcl\n   count = length(Var.server-names)\n```\n- for-each = Var.servers\n- lifecycle {\n```hcl\n   prevent_destroy = true\n   create_before_destroy = true\n   ignore_changes = [content]\n}\n```",
+      "embedText": "Page 59 > Meta arguments >  > - Count:\n```hcl\n   count = length(Var.server-names)\n```\n- for-each = Var.servers\n- lifecycle {\n```hcl\n   prevent_destroy = true\n   create_before_destroy = true\n   ignore_changes = [content]\n}\n```"
+    },
+    {
+      "id": "c111",
+      "page": 60,
+      "heading": "Page 60",
+      "sectionPath": [],
+      "text": "- Drift: It is any divergence between the actual infra and what's recorded in the state file\n- State locking: Mechanism that prevents Concurrent write operations to state file by sharing/acquiring an exclusive lock before any plan/apply/destroy would modify state\n- Provider: It is a plugin that implements resource types and data sources for a specific platform.\n- terraform import binds real world resource to a resource address in your state file.\n- terraform State mv\nModule is a Container for multiple resources used together - any folder of .tf files is a module",
+      "embedText": "Page 60 >  > - Drift: It is any divergence between the actual infra and what's recorded in the state file\n- State locking: Mechanism that prevents Concurrent write operations to state file by sharing/acquiring an exclusive lock before any plan/apply/destroy would modify state\n- Provider: It is a plugin that implements resource types and data sources for a specific platform.\n- terraform import binds real world resource to a resource address in your state file.\n- terraform State mv\nModule is a Container for multiple resources used together - any folder of .tf files is a module"
+    },
+    {
+      "id": "c112",
+      "page": 60,
+      "heading": "Workspace",
+      "sectionPath": [
+        "Workspace"
+      ],
+      "text": "a named, isolated instance of state within the same backend and configuration.\nterraform.workspace is a built in reference to the current workspace",
+      "embedText": "Page 60 > Workspace >  > a named, isolated instance of state within the same backend and configuration.\nterraform.workspace is a built in reference to the current workspace"
+    },
+    {
+      "id": "c113",
+      "page": 61,
+      "heading": "Page 61",
+      "sectionPath": [],
+      "text": "- terraform workspace new dev\n- terraform workspace new Staging\n- \" \" new dev\n- \" \" \" select dev",
+      "embedText": "Page 61 >  > - terraform workspace new dev\n- terraform workspace new Staging\n- \" \" new dev\n- \" \" \" select dev"
+    },
+    {
+      "id": "c114",
+      "page": 61,
+      "heading": "Provisioner",
+      "sectionPath": [
+        "Provisioner"
+      ],
+      "text": "It executes scripts or commands on a local or remote machine as part of resource Creation or destruction. (local -exec, remote- exec)",
+      "embedText": "Page 61 > Provisioner >  > It executes scripts or commands on a local or remote machine as part of resource Creation or destruction. (local -exec, remote- exec)"
+    },
+    {
+      "id": "c115",
+      "page": 61,
+      "heading": "Testing (CI CD, Secrets & Debugging)",
+      "sectionPath": [
+        "Testing (CI CD, Secrets & Debugging)"
+      ],
+      "text": "1, terra form fmt (used for formatting to a Consistent style of Canonical HCL style.\n    - recursive, - Check\n2, terraform validate (checks whether a Configuration is syntactically valid and internally Consistent\n3, linting (tflint) (is a 3rd party linter that adds provider specific rules beyond what \"validate\" checks",
+      "embedText": "Page 61 > Testing (CI CD, Secrets & Debugging) >  > 1, terra form fmt (used for formatting to a Consistent style of Canonical HCL style.\n    - recursive, - Check\n2, terraform validate (checks whether a Configuration is syntactically valid and internally Consistent\n3, linting (tflint) (is a 3rd party linter that adds provider specific rules beyond what \"validate\" checks"
+    },
+    {
+      "id": "c116",
+      "page": 62,
+      "heading": "Page 62",
+      "sectionPath": [],
+      "text": "4) tfsec (Static analysis security Scanners for IaC that check Configurations against a database of known misConfiguration patterns and Compliance benchmarks (CIS) without needing to apply anything) (Checkov)\n3) CI/CD pipeline\nfmt/validate/lint/plan/apply",
+      "embedText": "Page 62 >  > 4) tfsec (Static analysis security Scanners for IaC that check Configurations against a database of known misConfiguration patterns and Compliance benchmarks (CIS) without needing to apply anything) (Checkov)\n3) CI/CD pipeline\nfmt/validate/lint/plan/apply"
+    },
+    {
+      "id": "c117",
+      "page": 62,
+      "heading": "Structure",
+      "sectionPath": [
+        "Structure"
+      ],
+      "text": "```\nproject/\n    main.tf\n    variables.tf\n~~descriptions/~~\n    ~~outputs.tf~~\n    ~~providers.tf~~\n~~blocks/~~\n    ~~versions.tf~~\nproviders.tf\n```\n```\nproject/\n    main.tf\n    variables.tf\n    outputs.tf\n    providers.tf\n    versions.tf\n    terraform.tfvars\n    .gitignore\n    modules/\n```\nterraform State show",
+      "embedText": "Page 62 > Structure >  > ```\nproject/\n    main.tf\n    variables.tf\n~~descriptions/~~\n    ~~outputs.tf~~\n    ~~providers.tf~~\n~~blocks/~~\n    ~~versions.tf~~\nproviders.tf\n```\n```\nproject/\n    main.tf\n    variables.tf\n    outputs.tf\n    providers.tf\n    versions.tf\n    terraform.tfvars\n    .gitignore\n    modules/\n```\nterraform State show"
+    },
+    {
+      "id": "c118",
+      "page": 63,
+      "heading": "* Versions.tf",
+      "sectionPath": [
+        "* Versions.tf"
+      ],
+      "text": "```hcl\nterraform {\n  required_version = \">=1.5.0\"\n  required_providers {\n     aws = {\n        source = \"hashicorp/aws\"\n        version = \"~> 5.0\"\n}\n   }\n}\n```",
+      "embedText": "Page 63 > * Versions.tf >  > ```hcl\nterraform {\n  required_version = \">=1.5.0\"\n  required_providers {\n     aws = {\n        source = \"hashicorp/aws\"\n        version = \"~> 5.0\"\n}\n   }\n}\n```"
+    },
+    {
+      "id": "c119",
+      "page": 63,
+      "heading": "* providers.tf",
+      "sectionPath": [
+        "* providers.tf"
+      ],
+      "text": "```hcl\nproviders \"aws\" {\n   region = Var.aws-region\n}\n```",
+      "embedText": "Page 63 > * providers.tf >  > ```hcl\nproviders \"aws\" {\n   region = Var.aws-region\n}\n```"
+    },
+    {
+      "id": "c120",
+      "page": 64,
+      "heading": "* Variables.tf",
+      "sectionPath": [
+        "* Variables.tf"
+      ],
+      "text": "```hcl\nVariable \"aws-region\" {\n   type = string\n   description = \"Aws region to deploy into\"\n   default = \"us-east-1\"\n}\nVariable \"bucket -name\" {\n   type = string\n   description = \"Globally unique name for the S3 bucket\".\n}\n```",
+      "embedText": "Page 64 > * Variables.tf >  > ```hcl\nVariable \"aws-region\" {\n   type = string\n   description = \"Aws region to deploy into\"\n   default = \"us-east-1\"\n}\nVariable \"bucket -name\" {\n   type = string\n   description = \"Globally unique name for the S3 bucket\".\n}\n```"
+    },
+    {
+      "id": "c121",
+      "page": 64,
+      "heading": "* main.tf",
+      "sectionPath": [
+        "* main.tf"
+      ],
+      "text": "```hcl\nresource \"aws_s3_bucket\" \"app\" {\n   bucket = var.bucket-name\n   tags = {\n      ManagedBy = \"terraform\"\n   }\n}\n```",
+      "embedText": "Page 64 > * main.tf >  > ```hcl\nresource \"aws_s3_bucket\" \"app\" {\n   bucket = var.bucket-name\n   tags = {\n      ManagedBy = \"terraform\"\n   }\n}\n```"
+    },
+    {
+      "id": "c122",
+      "page": 65,
+      "heading": "* Outputs.tf",
+      "sectionPath": [
+        "* Outputs.tf"
+      ],
+      "text": "```hcl\noutput \"bucket_arn\" {\n   description = \"ARN of the Created bucket\"\n   value = aws_s3_bucket.app.arn\n}\n```\nTerraform is an open source IaC software tool Created by HashiCorp that allows developers to define, provision! and manage cloud and on-premise infrastructure using a declarative Configuration language.",
+      "embedText": "Page 65 > * Outputs.tf >  > ```hcl\noutput \"bucket_arn\" {\n   description = \"ARN of the Created bucket\"\n   value = aws_s3_bucket.app.arn\n}\n```\nTerraform is an open source IaC software tool Created by HashiCorp that allows developers to define, provision! and manage cloud and on-premise infrastructure using a declarative Configuration language."
+    },
+    {
+      "id": "c123",
+      "page": 65,
+      "heading": "Key benefits",
+      "sectionPath": [
+        "Key benefits"
+      ],
+      "text": "- Multi - cloud Deployment\n- Declarative Approach.\n- State Management\n- Version Control Friendly\n- Speed and Reusability.",
+      "embedText": "Page 65 > Key benefits >  > - Multi - cloud Deployment\n- Declarative Approach.\n- State Management\n- Version Control Friendly\n- Speed and Reusability."
+    },
+    {
+      "id": "c124",
+      "page": 66,
+      "heading": "Prompt Engineering",
+      "sectionPath": [
+        "Prompt Engineering"
+      ],
+      "text": "It is the practise of designing, structuring and refining the input you give a LLM so that it produces the output you actually want.\nThree prompt qualities - Vague, Better, Engineered.",
+      "embedText": "Page 66 > Prompt Engineering >  > It is the practise of designing, structuring and refining the input you give a LLM so that it produces the output you actually want.\nThree prompt qualities - Vague, Better, Engineered."
+    },
+    {
+      "id": "c125",
+      "page": 66,
+      "heading": "Role of prompts in LLM performance",
+      "sectionPath": [
+        "Role of prompts in LLM performance"
+      ],
+      "text": "1, Prompts Set the \"Search space\"\n2, Prompts activate latent knowledge.\n3, Prompts Control Performance ceiling AND floor\n4, Prompts affect reliability, not just quality.",
+      "embedText": "Page 66 > Role of prompts in LLM performance >  > 1, Prompts Set the \"Search space\"\n2, Prompts activate latent knowledge.\n3, Prompts Control Performance ceiling AND floor\n4, Prompts affect reliability, not just quality."
+    },
+    {
+      "id": "c126",
+      "page": 66,
+      "heading": "Anatomy of a prompt",
+      "sectionPath": [
+        "Anatomy of a prompt"
+      ],
+      "text": "- Instruction\n- Context\n- Input data\n- Output format\n- Constraints.",
+      "embedText": "Page 66 > Anatomy of a prompt >  > - Instruction\n- Context\n- Input data\n- Output format\n- Constraints."
+    },
+    {
+      "id": "c127",
+      "page": 67,
+      "heading": "Prompt Design Strategies",
+      "sectionPath": [
+        "Prompt Design Strategies"
+      ],
+      "text": "- Zero shot prompting (no examples)\n- One Shot prompting (only 1 example)\n- Few Shot prompting (multiple examples).",
+      "embedText": "Page 67 > Prompt Design Strategies >  > - Zero shot prompting (no examples)\n- One Shot prompting (only 1 example)\n- Few Shot prompting (multiple examples)."
+    },
+    {
+      "id": "c128",
+      "page": 67,
+      "heading": "Instruction based Prompting",
+      "sectionPath": [
+        "Instruction based Prompting"
+      ],
+      "text": "a) Use Imperative verbs, not passive requests\nb) Be explicit about Constraints, not implicit.\nc) Use Chain of Thought Prompting (CoT)\nd) Role Based Prompting\ne) Prompt Chaining",
+      "embedText": "Page 67 > Instruction based Prompting >  > a) Use Imperative verbs, not passive requests\nb) Be explicit about Constraints, not implicit.\nc) Use Chain of Thought Prompting (CoT)\nd) Role Based Prompting\ne) Prompt Chaining"
+    },
+    {
+      "id": "c129",
+      "page": 67,
+      "heading": "Context Engineering",
+      "sectionPath": [
+        "Context Engineering"
+      ],
+      "text": "Content commonly comes from:\n- Conversation history\n- System prompts\n- Retrieved documents (RAG)\n- Metadata\n- Tool / function outputs.",
+      "embedText": "Page 67 > Context Engineering >  > Content commonly comes from:\n- Conversation history\n- System prompts\n- Retrieved documents (RAG)\n- Metadata\n- Tool / function outputs."
+    },
+    {
+      "id": "c130",
+      "page": 68,
+      "heading": "Techniques for Injecting Context",
+      "sectionPath": [
+        "Techniques for Injecting Context"
+      ],
+      "text": "a) System prompts\nb) Metadatta injection\nc) External Knowledge injection.\n- Models pay less attention to info buried in the middle of a very long context than to info at the start or end.\n- Context relevance vs Context volume (precision > volume)\n- Context poisoning / injection risk.\n- Static and Dynamic Content.",
+      "embedText": "Page 68 > Techniques for Injecting Context >  > a) System prompts\nb) Metadatta injection\nc) External Knowledge injection.\n- Models pay less attention to info buried in the middle of a very long context than to info at the start or end.\n- Context relevance vs Context volume (precision > volume)\n- Context poisoning / injection risk.\n- Static and Dynamic Content."
+    },
+    {
+      "id": "c131",
+      "page": 68,
+      "heading": "Role prompting",
+      "sectionPath": [
+        "Role prompting"
+      ],
+      "text": "- Persona roles\n- Functional roles",
+      "embedText": "Page 68 > Role prompting >  > - Persona roles\n- Functional roles"
+    },
+    {
+      "id": "c132",
+      "page": 68,
+      "heading": "Multi Turn Conversation Design",
+      "sectionPath": [
+        "Multi Turn Conversation Design"
+      ],
+      "text": "a) persistent System instructions across Turns\nb) State tracking via explicit recap\nc) Turn taking discipline\nd) Explicit Correction handling",
+      "embedText": "Page 68 > Multi Turn Conversation Design >  > a) persistent System instructions across Turns\nb) State tracking via explicit recap\nc) Turn taking discipline\nd) Explicit Correction handling"
+    },
+    {
+      "id": "c133",
+      "page": 69,
+      "heading": "Prompt Chaining",
+      "sectionPath": [
+        "Prompt Chaining"
+      ],
+      "text": "It is breaking a complex task into a sequence of smaller prompts, where the output of one prompt becomes the input to the next.\n- Prompt templates with Variables.",
+      "embedText": "Page 69 > Prompt Chaining >  > It is breaking a complex task into a sequence of smaller prompts, where the output of one prompt becomes the input to the next.\n- Prompt templates with Variables."
+    },
+    {
+      "id": "c134",
+      "page": 69,
+      "heading": "* Evaluation & Optimization",
+      "sectionPath": [
+        "* Evaluation & Optimization"
+      ],
+      "text": "a) Accuracy by Relevance & Coherence",
+      "embedText": "Page 69 > * Evaluation & Optimization >  > a) Accuracy by Relevance & Coherence"
+    },
+    {
+      "id": "c135",
+      "page": 69,
+      "heading": "Hallucination",
+      "sectionPath": [
+        "Hallucination"
+      ],
+      "text": "It is when the model generates plausible sounding but factually incorrect or fabricated info",
+      "embedText": "Page 69 > Hallucination >  > It is when the model generates plausible sounding but factually incorrect or fabricated info"
+    },
+    {
+      "id": "c136",
+      "page": 69,
+      "heading": "mitigation Techniques",
+      "sectionPath": [
+        "mitigation Techniques"
+      ],
+      "text": "- Ground responses in provided Content\n- Ask for confidence / uncertainty flagging\n- Request citations / sources for factual claims",
+      "embedText": "Page 69 > mitigation Techniques >  > - Ground responses in provided Content\n- Ask for confidence / uncertainty flagging\n- Request citations / sources for factual claims"
+    },
+    {
+      "id": "c137",
+      "page": 70,
+      "heading": "Consistency / robustness testing",
+      "sectionPath": [
+        "Consistency / robustness testing"
+      ],
+      "text": "Testing the same prompt variants with minor, meaning less variations. A robust prompt should give stable results despite input variation.",
+      "embedText": "Page 70 > Consistency / robustness testing >  > Testing the same prompt variants with minor, meaning less variations. A robust prompt should give stable results despite input variation."
+    },
+    {
+      "id": "c138",
+      "page": 70,
+      "heading": "Integration with Frameworks",
+      "sectionPath": [
+        "Integration with Frameworks"
+      ],
+      "text": "LangChain is a popular open-source framework for building applications powered by LLMs, it doesn't replace prompt engineering, it gives you structure to manage prompts, chains, memory and tools in code rather than manually copy pasting text between chat turns.",
+      "embedText": "Page 70 > Integration with Frameworks >  > LangChain is a popular open-source framework for building applications powered by LLMs, it doesn't replace prompt engineering, it gives you structure to manage prompts, chains, memory and tools in code rather than manually copy pasting text between chat turns."
+    },
+    {
+      "id": "c139",
+      "page": 70,
+      "heading": "Key Concepts",
+      "sectionPath": [
+        "Key Concepts"
+      ],
+      "text": "- Prompt Templates\n- Chains\n- Memory (Conversation Buffer/Memory/Conversation Summary)\n- Agents/ and tool use",
+      "embedText": "Page 70 > Key Concepts >  > - Prompt Templates\n- Chains\n- Memory (Conversation Buffer/Memory/Conversation Summary)\n- Agents/ and tool use"
+    },
+    {
+      "id": "c140",
+      "page": 71,
+      "heading": "Retrieval Augmented Generation (`RAG`)",
+      "sectionPath": [
+        "Retrieval Augmented Generation (`RAG`)"
+      ],
+      "text": "```\nIngest docs → split into chunks → convert each\nchunk into a\nstore in a vector database. ← Vector embedding\n```",
+      "embedText": "Page 71 > Retrieval Augmented Generation (`RAG`) >  > ```\nIngest docs → split into chunks → convert each\nchunk into a\nstore in a vector database. ← Vector embedding\n```"
+    },
+    {
+      "id": "c141",
+      "page": 71,
+      "heading": "Azure AI SDK for Prompt Orchestration",
+      "sectionPath": [
+        "Azure AI SDK for Prompt Orchestration"
+      ],
+      "text": "Same like `Aws Bedrock`, `Google vertex AI`\n- Deployment management\n- Content filtering/safety layers\n- Structured output enforcement\n- Token/cost monitoring.",
+      "embedText": "Page 71 > Azure AI SDK for Prompt Orchestration >  > Same like `Aws Bedrock`, `Google vertex AI`\n- Deployment management\n- Content filtering/safety layers\n- Structured output enforcement\n- Token/cost monitoring."
+    },
+    {
+      "id": "c142",
+      "page": 71,
+      "heading": "Other frameworks like `LangChain`",
+      "sectionPath": [
+        "Other frameworks like `LangChain`"
+      ],
+      "text": "- Llama Index (for `RAG`)\n- Semantic Kernel (Microsoft)\n- `CrewAI`/`AutoGen` (multi agent orchestration).",
+      "embedText": "Page 71 > Other frameworks like `LangChain` >  > - Llama Index (for `RAG`)\n- Semantic Kernel (Microsoft)\n- `CrewAI`/`AutoGen` (multi agent orchestration)."
+    },
+    {
+      "id": "c143",
+      "page": 72,
+      "heading": "AI timeline",
+      "sectionPath": [
+        "AI timeline"
+      ],
+      "text": "1, Symbolic AI/Rule-based Systems (1950s to 1980s)  \n2, Classical Machine Learning (1990s to 2000s)  \n3, Deep Learning (2012 Onwards)  \n4, Transformer (2017)  \n5, Pre trained language models (2018 to 2019)  \n6, Scaling and LLMs (2020 to 2022)  \n7, Multimodal, reasoning and agentic era (2023 to now)",
+      "embedText": "Page 72 > AI timeline >  > 1, Symbolic AI/Rule-based Systems (1950s to 1980s)  \n2, Classical Machine Learning (1990s to 2000s)  \n3, Deep Learning (2012 Onwards)  \n4, Transformer (2017)  \n5, Pre trained language models (2018 to 2019)  \n6, Scaling and LLMs (2020 to 2022)  \n7, Multimodal, reasoning and agentic era (2023 to now)"
+    },
+    {
+      "id": "c144",
+      "page": 72,
+      "heading": "AIOps",
+      "sectionPath": [
+        "AIOps"
+      ],
+      "text": "It replaces manual, slow troubleshooting with a Continuous, automated loop. that ~~access~~ processes vast amount of system data.\n- Incident management and root cause analysis\n- Log and alert summarization\n- Runbook automation / ChatOps\n- Infrastructure as Code (IaC)\n- ITSM Configuration",
+      "embedText": "Page 72 > AIOps >  > It replaces manual, slow troubleshooting with a Continuous, automated loop. that ~~access~~ processes vast amount of system data.\n- Incident management and root cause analysis\n- Log and alert summarization\n- Runbook automation / ChatOps\n- Infrastructure as Code (IaC)\n- ITSM Configuration"
+    },
+    {
+      "id": "c145",
+      "page": 73,
+      "heading": "Embeddings",
+      "sectionPath": [
+        "Embeddings"
+      ],
+      "text": "It is a list of numbers (called vectors) that represents the meaning of words, images or audio. So a computer can understand them.\nIt Captures intricate relationships and nuances in meaning.\n\n1, Frequency based (`TF-IDF`)  \n2, Prediction based (Semantic reln)\n- Word 2 Vec (`CBOW`, Skip-GRAM)\n- `GLOVE` (Global vectors for Word Representation)\nTransformers use Contextual based embeddings.",
+      "embedText": "Page 73 > Embeddings >  > It is a list of numbers (called vectors) that represents the meaning of words, images or audio. So a computer can understand them.\nIt Captures intricate relationships and nuances in meaning.\n\n1, Frequency based (`TF-IDF`)  \n2, Prediction based (Semantic reln)\n- Word 2 Vec (`CBOW`, Skip-GRAM)\n- `GLOVE` (Global vectors for Word Representation)\nTransformers use Contextual based embeddings."
+    },
+    {
+      "id": "c146",
+      "page": 74,
+      "heading": "Self attention",
+      "sectionPath": [
+        "Large Language Models",
+        "Self attention"
+      ],
+      "text": "Q (Query) [what am I looking for?]  \nK (Key) [What do I Contain?]  \nV (Value) ((What information do I offer?]\n```\nAttention (Q,K,V) = softmax (Q . K^T) / (√d_k) . V\n```\nd_k is the dimension of key vectors\n\nInstead of one attention Computation, run in Several parallel (\"heads\"), each potentially Specializing (one for syntax, Coreference, long [sentence unfinished in notes]\n- Encoder only\n    - Bidirectional (`BERT`, `T5`)\n    - Understanding Classification, embeddings",
+      "embedText": "Page 74 > Large Language Models > Self attention >  > Q (Query) [what am I looking for?]  \nK (Key) [What do I Contain?]  \nV (Value) ((What information do I offer?]\n```\nAttention (Q,K,V) = softmax (Q . K^T) / (√d_k) . V\n```\nd_k is the dimension of key vectors\n\nInstead of one attention Computation, run in Several parallel (\"heads\"), each potentially Specializing (one for syntax, Coreference, long [sentence unfinished in notes]\n- Encoder only\n    - Bidirectional (`BERT`, `T5`)\n    - Understanding Classification, embeddings"
+    },
+    {
+      "id": "c147",
+      "page": 75,
+      "heading": "Page 75",
+      "sectionPath": [],
+      "text": "- Decoder only\n    - Causal/masked (only Sees past tokens)\n    - Generation (`GPT`, Claude, Llama)\n- Encoder-decoder\n    - Encoder bidirectional, decoder casual, plus attention\n    - Translation, Summarization\n    - T5, `BART`, or 9 Transformer\n- ~~[illegible]~~\n\n- `MCP` (Model Context Protocol)\n- `A2A` (Agent 2 Agent)",
+      "embedText": "Page 75 >  > - Decoder only\n    - Causal/masked (only Sees past tokens)\n    - Generation (`GPT`, Claude, Llama)\n- Encoder-decoder\n    - Encoder bidirectional, decoder casual, plus attention\n    - Translation, Summarization\n    - T5, `BART`, or 9 Transformer\n- ~~[illegible]~~\n\n- `MCP` (Model Context Protocol)\n- `A2A` (Agent 2 Agent)"
+    },
+    {
+      "id": "c148",
+      "page": 75,
+      "heading": "LangChain",
+      "sectionPath": [
+        "LangChain"
+      ],
+      "text": "- lang chain → Core (messages, prompts, tools)\n- langchain (Higher level chains and agents)\n- langchain -<provider> (langchain-anthropic, langchain-openai)\n- lang chain - Community (loader, Vector stores)",
+      "embedText": "Page 75 > LangChain >  > - lang chain → Core (messages, prompts, tools)\n- langchain (Higher level chains and agents)\n- langchain -<provider> (langchain-anthropic, langchain-openai)\n- lang chain - Community (loader, Vector stores)"
+    },
+    {
+      "id": "c149",
+      "page": 76,
+      "heading": "LangGraph",
+      "sectionPath": [
+        "LangGraph"
+      ],
+      "text": "It is an open source framework designed to build and manage AI agent workflows using graphs structures . It allows developers to define workflows as nodes and edges making Complex agent interactions- more structured Scalable and easier to control.\n\n- Nodes (Language model /tool)\n- Edges (Direct paths to Connect nodes)\n- Conditional edges (Decission rules that Check the Current progress and Choose the next node)\n- State (Shared memory notebook that every step can read /write to)\n- Cycles (Allows AI to think, act, check the result and repeat the process until goal is met)",
+      "embedText": "Page 76 > LangGraph >  > It is an open source framework designed to build and manage AI agent workflows using graphs structures . It allows developers to define workflows as nodes and edges making Complex agent interactions- more structured Scalable and easier to control.\n\n- Nodes (Language model /tool)\n- Edges (Direct paths to Connect nodes)\n- Conditional edges (Decission rules that Check the Current progress and Choose the next node)\n- State (Shared memory notebook that every step can read /write to)\n- Cycles (Allows AI to think, act, check the result and repeat the process until goal is met)"
+    },
+    {
+      "id": "c150",
+      "page": 77,
+      "heading": "Key components of LangChain",
+      "sectionPath": [
+        "Key components of LangChain"
+      ],
+      "text": "- Models (openAI, anthropic, gemini)\n- Prompt Templates\n- Chains\n- Memory\n- Agents",
+      "embedText": "Page 77 > Key components of LangChain >  > - Models (openAI, anthropic, gemini)\n- Prompt Templates\n- Chains\n- Memory\n- Agents"
+    },
+    {
+      "id": "c151",
+      "page": 77,
+      "heading": "LangSmith",
+      "sectionPath": [
+        "LangSmith"
+      ],
+      "text": "It is a unified platform built by creators of Lang Chain for debugging, testing, evaluating and monitoring LLMs and AI agents\n\n- observability & Tracing\n- Testing & Evaluation\n- Prompt Engineering\n- Deployment.",
+      "embedText": "Page 77 > LangSmith >  > It is a unified platform built by creators of Lang Chain for debugging, testing, evaluating and monitoring LLMs and AI agents\n\n- observability & Tracing\n- Testing & Evaluation\n- Prompt Engineering\n- Deployment."
+    },
+    {
+      "id": "c152",
+      "page": 78,
+      "heading": "RAGAS",
+      "sectionPath": [
+        "RAGAS"
+      ],
+      "text": "Retrieval -Augmented Generation ASsessment (`RAGAS`) is an open source frameworks designed to quantitatively evaluate, test and improve LLM and `RAG` applications.\n\n- Core `RAG` metrics\n    - Faithfulness\n    - Answer Relevancy\n    - Context Precision\n    - Context Recall\n\n- RAG pipeline optimization\n- CI/CD for AI\n- Agentic workflows",
+      "embedText": "Page 78 > RAGAS >  > Retrieval -Augmented Generation ASsessment (`RAGAS`) is an open source frameworks designed to quantitatively evaluate, test and improve LLM and `RAG` applications.\n\n- Core `RAG` metrics\n    - Faithfulness\n    - Answer Relevancy\n    - Context Precision\n    - Context Recall\n\n- RAG pipeline optimization\n- CI/CD for AI\n- Agentic workflows"
+    },
+    {
+      "id": "c153",
+      "page": 79,
+      "heading": "Workflow patterns",
+      "sectionPath": [
+        "Workflow patterns"
+      ],
+      "text": "1, Prompt chaining  \n2, Routing (easy tasks to Small model, hard to large)  \n3, Parallelization (Sectioning and voting)  \n4, Orchestrator -workers  \n5, Evaluator -optimizer",
+      "embedText": "Page 79 > Workflow patterns >  > 1, Prompt chaining  \n2, Routing (easy tasks to Small model, hard to large)  \n3, Parallelization (Sectioning and voting)  \n4, Orchestrator -workers  \n5, Evaluator -optimizer"
+    },
+    {
+      "id": "c154",
+      "page": 79,
+      "heading": "Microsoft Azure Agent Ecosystem",
+      "sectionPath": [
+        "Microsoft Azure Agent Ecosystem"
+      ],
+      "text": "- Microsoft Foundry (Azure AI Foundry)\n    - platform for models, agents, evaluation and deployment\n- Foundry Agent Service (runtime for hosting agents, tool execution and enterprise Controls)",
+      "embedText": "Page 79 > Microsoft Azure Agent Ecosystem >  > - Microsoft Foundry (Azure AI Foundry)\n    - platform for models, agents, evaluation and deployment\n- Foundry Agent Service (runtime for hosting agents, tool execution and enterprise Controls)"
+    },
+    {
+      "id": "c155",
+      "page": 79,
+      "heading": "AI Search",
+      "sectionPath": [
+        "AI Search"
+      ],
+      "text": "we can build and manage cloud search solutions using the Azure AI Search platform for enterprise data retrieval and generative AI grounding.",
+      "embedText": "Page 79 > AI Search >  > we can build and manage cloud search solutions using the Azure AI Search platform for enterprise data retrieval and generative AI grounding."
+    },
+    {
+      "id": "c156",
+      "page": 80,
+      "heading": "Core Components",
+      "sectionPath": [
+        "Core Components"
+      ],
+      "text": "- Data Sources (CosmosDB, Azure SQL, Blob)\n- Indexers (content ingestion, parsing and field mapping)\n- Search Indexer (optimised text and vectors for fast retrieval)\n\n1. Sparse/count-based\n    - Bag of words, `TF-IDF`\n    - ~~static-word-Embedding~~\n2. Static word embeddings\n    - Word2Vec, `GloVe`, fastText\n3, Contextual embeddings\n    - BERT-based, Sentence-based\n4, Modern text embedding models\n    - Dedicated embedding models (openAI, cohere, Voyage)\n5, Multimodal\n    - `CLIP` style, multimodal embedding models",
+      "embedText": "Page 80 > Core Components >  > - Data Sources (CosmosDB, Azure SQL, Blob)\n- Indexers (content ingestion, parsing and field mapping)\n- Search Indexer (optimised text and vectors for fast retrieval)\n\n1. Sparse/count-based\n    - Bag of words, `TF-IDF`\n    - ~~static-word-Embedding~~\n2. Static word embeddings\n    - Word2Vec, `GloVe`, fastText\n3, Contextual embeddings\n    - BERT-based, Sentence-based\n4, Modern text embedding models\n    - Dedicated embedding models (openAI, cohere, Voyage)\n5, Multimodal\n    - `CLIP` style, multimodal embedding models"
+    },
+    {
+      "id": "c157",
+      "page": 81,
+      "heading": "Page 81",
+      "sectionPath": [],
+      "text": "The core operation behind vectors `KNN`,\n\n- Cosine Similarity (angles between vectors, ignores b [clipped at page edge]\n- Dot product (inner product)\n- Euclidean Distance (L2)",
+      "embedText": "Page 81 >  > The core operation behind vectors `KNN`,\n\n- Cosine Similarity (angles between vectors, ignores b [clipped at page edge]\n- Dot product (inner product)\n- Euclidean Distance (L2)"
+    },
+    {
+      "id": "c158",
+      "page": 81,
+      "heading": "Vector Databases",
+      "sectionPath": [
+        "Vector Databases"
+      ],
+      "text": "A system to store vectors with their metad [clipped at page edge]  \nand payloads, index them for `ANN` search  \nand serve queries with filtering, updates, sele [clipped at page edge]",
+      "embedText": "Page 81 > Vector Databases >  > A system to store vectors with their metad [clipped at page edge]  \nand payloads, index them for `ANN` search  \nand serve queries with filtering, updates, sele [clipped at page edge]"
+    },
+    {
+      "id": "c159",
+      "page": 81,
+      "heading": "FAISS (Facebook AI Similarity Search)",
+      "sectionPath": [
+        "FAISS (Facebook AI Similarity Search)"
+      ],
+      "text": "- open source C++/ Python\n- Runs in process /no server\n- weak on metadata filtering and live updates\n- Learning, prototypes, batch jobs",
+      "embedText": "Page 81 > FAISS (Facebook AI Similarity Search) >  > - open source C++/ Python\n- Runs in process /no server\n- weak on metadata filtering and live updates\n- Learning, prototypes, batch jobs"
+    },
+    {
+      "id": "c160",
+      "page": 82,
+      "heading": "Pinecone",
+      "sectionPath": [
+        "Pinecone"
+      ],
+      "text": "- fully managed cloud vector database\n- index → namespaces → records\n- Pros : Zero ops, Scales easily, simple API\n- Fast prod launch with infra work",
+      "embedText": "Page 82 > Pinecone >  > - fully managed cloud vector database\n- index → namespaces → records\n- Pros : Zero ops, Scales easily, simple API\n- Fast prod launch with infra work"
+    },
+    {
+      "id": "c161",
+      "page": 82,
+      "heading": "Weaviate",
+      "sectionPath": [
+        "Weaviate"
+      ],
+      "text": "- Open source (Self host /cloud) vector database\n- With [bullet unfinished in notes]",
+      "embedText": "Page 82 > Weaviate >  > - Open source (Self host /cloud) vector database\n- With [bullet unfinished in notes]"
+    }
+  ]
+}

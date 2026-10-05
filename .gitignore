@@ -1,0 +1,36 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+
+# next.js
+/.next/
+/out/
+/build
+
+# generated vector index. Rebuilt by `npm run index` (also runs on prebuild).
+/src/data/index.json
+
+# cached page renders, written on demand by /api/page/[n]
+/.cache
+
+# original scanned notebook — large binary, not needed to build or run
+/*.pdf
+
+# env files — contains GROQ_API_KEY and GOOGLE_API_KEY
+.env
+.env.local
+.env*.local
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# typescript
+*.tsbuildinfo
