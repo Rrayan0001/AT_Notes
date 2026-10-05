@@ -38,11 +38,17 @@ export function EvidenceRail({
   const [notesState, setNotesState] = useState<NotesState>(EMPTY);
   // Holds the page whose image failed, so switching pages clears it.
   const [imageFailedFor, setImageFailedFor] = useState<number | null>(null);
+  // Bumped by the retry button so the image remounts and refetches instead of
+  // sitting in its failed state. The nonce also defeats any cached failure.
+  const [imageRetry, setImageRetry] = useState(0);
 
   // Adjusting state during render is React's documented alternative to an
   // effect that only exists to reset state on a prop change.
   if (notesState.page !== page) setNotesState({ page, notes: [], error: null });
-  if (imageFailedFor !== null && imageFailedFor !== page) setImageFailedFor(null);
+  if (imageFailedFor !== null && imageFailedFor !== page) {
+    setImageFailedFor(null);
+    setImageRetry(0);
+  }
 
   useEffect(() => {
     if (page === null) return;
@@ -131,14 +137,30 @@ export function EvidenceRail({
         <div className="space-y-4 p-3">
           <div className="overflow-hidden rounded-lg border bg-background shadow-sm">
             {imageFailed ? (
-              <div className="px-3 py-6 text-center text-xs text-muted-foreground">
-                Page image unavailable. Poppler and ImageMagick are needed:{" "}
-                <span className="font-mono">brew install poppler imagemagick</span>
+              <div className="space-y-2 px-3 py-6 text-center">
+                <p className="text-xs text-muted-foreground">
+                  Page image unavailable. This can happen if the server was
+                  restarting — try again before reinstalling anything.
+                </p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setImageFailedFor(null);
+                    setImageRetry((n) => n + 1);
+                  }}
+                >
+                  Retry
+                </Button>
+                <p className="text-[11px] text-muted-foreground/70">
+                  Still failing? The server needs poppler and ImageMagick:{" "}
+                  <span className="font-mono">brew install poppler imagemagick</span>
+                </p>
               </div>
             ) : (
               <Image
-                key={page}
-                src={`/api/page/${page}?w=760`}
+                key={`${page}-${imageRetry}`}
+                src={`/api/page/${page}?w=760${imageRetry > 0 ? `&r=${imageRetry}` : ""}`}
                 alt={`Scanned notebook page ${page}`}
                 width={760}
                 height={985}
