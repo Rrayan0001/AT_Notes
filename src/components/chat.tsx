@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { ArrowUp, BookOpen, Loader2, MessageCircleQuestion, Square } from "lucide-react";
+import { ArrowUp, BookOpen, Loader2, MessageCircleQuestion, Square, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
@@ -28,6 +28,7 @@ export interface ChatProps {
 
 export function Chat({ onCite, onBrowsePages }: ChatProps) {
   const [input, setInput] = useState("");
+  const [photoOpen, setPhotoOpen] = useState(false);
   const { turns, busy, ask, stop } = useChatStream();
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -46,16 +47,39 @@ export function Chat({ onCite, onBrowsePages }: ChatProps) {
     bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [turns]);
 
+  // Close the photo preview with Escape and lock background scroll while open.
+  useEffect(() => {
+    if (!photoOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setPhotoOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [photoOpen]);
+
   return (
     <div className="flex h-full min-w-0 flex-1 flex-col">
       <header className="flex items-center gap-3 border-b px-5 py-3.5">
-        <Image
-          src="/profile.png"
-          alt="Profile"
-          width={36}
-          height={36}
-          className="size-9 shrink-0 rounded-full border object-cover object-top"
-        />
+        <button
+          type="button"
+          onClick={() => setPhotoOpen(true)}
+          aria-label="Preview profile photo"
+          title="Preview profile photo"
+          className="shrink-0 cursor-zoom-in rounded-full outline-none transition ring-offset-background focus-visible:ring-2 focus-visible:ring-ring hover:opacity-90 hover:ring-2 hover:ring-primary/40"
+        >
+          <Image
+            src="/profile.png"
+            alt="Profile"
+            width={36}
+            height={36}
+            className="size-9 rounded-full border object-cover object-top"
+          />
+        </button>
         <div className="min-w-0">
           <h1 className="text-[15px] font-semibold tracking-tight">Automation Tools Notes</h1>
         </div>
@@ -132,6 +156,39 @@ export function Chat({ onCite, onBrowsePages }: ChatProps) {
           </p>
         </div>
       </footer>
+
+      {photoOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Profile photo preview"
+          onClick={() => setPhotoOpen(false)}
+          className="fixed inset-0 z-50 flex cursor-zoom-out items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative max-h-[90vh] w-auto max-w-[92vw] cursor-default overflow-hidden rounded-xl border bg-background shadow-2xl"
+          >
+            <Button
+              onClick={() => setPhotoOpen(false)}
+              variant="secondary"
+              size="icon-sm"
+              aria-label="Close photo preview"
+              className="absolute right-2 top-2 z-10 rounded-full shadow"
+            >
+              <X className="size-4" />
+            </Button>
+            <Image
+              src="/profile.png"
+              alt="Profile photo preview"
+              width={1034}
+              height={1600}
+              priority
+              className="h-auto max-h-[85vh] w-auto max-w-[90vw] object-contain"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
