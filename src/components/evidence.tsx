@@ -139,8 +139,7 @@ export function EvidenceRail({
             {imageFailed ? (
               <div className="space-y-2 px-3 py-6 text-center">
                 <p className="text-xs text-muted-foreground">
-                  Page image unavailable. This can happen if the server was
-                  restarting — try again before reinstalling anything.
+                  Page image unavailable. It may not have deployed — try again.
                 </p>
                 <Button
                   variant="outline"
@@ -152,15 +151,11 @@ export function EvidenceRail({
                 >
                   Retry
                 </Button>
-                <p className="text-[11px] text-muted-foreground/70">
-                  Still failing? The server needs poppler and ImageMagick:{" "}
-                  <span className="font-mono">brew install poppler imagemagick</span>
-                </p>
               </div>
             ) : (
               <Image
                 key={`${page}-${imageRetry}`}
-                src={`/api/page/${page}?w=760${imageRetry > 0 ? `&r=${imageRetry}` : ""}`}
+                src={`/pages/${page}-760.webp${imageRetry > 0 ? `?r=${imageRetry}` : ""}`}
                 alt={`Scanned notebook page ${page}`}
                 width={760}
                 height={985}
