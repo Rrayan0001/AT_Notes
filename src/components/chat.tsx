@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { ArrowUp, BookOpen, Loader2, MessageCircleQuestion, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -47,7 +48,14 @@ export function Chat({ onCite, onBrowsePages, maxPage }: ChatProps) {
 
   return (
     <div className="flex h-full min-w-0 flex-1 flex-col">
-      <header className="flex items-start gap-3 border-b px-5 py-3.5">
+      <header className="flex items-center gap-3 border-b px-5 py-3.5">
+        <Image
+          src="/profile.png"
+          alt="Profile"
+          width={36}
+          height={36}
+          className="size-9 shrink-0 rounded-full border object-cover object-top"
+        />
         <div className="min-w-0">
           <h1 className="text-[15px] font-semibold tracking-tight">Automation Tools Notes</h1>
           <p className="mt-0.5 text-xs text-muted-foreground">
