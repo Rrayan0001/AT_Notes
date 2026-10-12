@@ -26,7 +26,7 @@ export interface ChatProps {
   maxPage: number;
 }
 
-export function Chat({ onCite, onBrowsePages, maxPage }: ChatProps) {
+export function Chat({ onCite, onBrowsePages }: ChatProps) {
   const [input, setInput] = useState("");
   const { turns, busy, ask, stop } = useChatStream();
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -58,9 +58,6 @@ export function Chat({ onCite, onBrowsePages, maxPage }: ChatProps) {
         />
         <div className="min-w-0">
           <h1 className="text-[15px] font-semibold tracking-tight">Automation Tools Notes</h1>
-          <p className="mt-0.5 text-xs text-muted-foreground">
-            {maxPage} pages of transcribed study notes. Every claim cites the notebook page.
-          </p>
         </div>
         <div className="ml-auto flex items-center gap-1">
           <Button
