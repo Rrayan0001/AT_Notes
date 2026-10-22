@@ -1,4 +1,5 @@
 import { getIndex } from "@/lib/retrieve";
+import { guardDomainAccess } from "@/lib/session-guard";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -19,6 +20,9 @@ export async function GET(
   _req: Request,
   { params }: { params: Promise<{ n: string }> }
 ) {
+  const guard = await guardDomainAccess();
+  if (!guard.ok) return guard.response;
+
   const { n } = await params;
   const page = Number(n);
 
@@ -26,7 +30,7 @@ export async function GET(
     return Response.json({ error: "page must be an integer" }, { status: 400 });
   }
 
-  const { chunks } = getIndex();
+  const { chunks } = getIndex(guard.domainId);
   const notes: PageNote[] = chunks
     .filter((c) => c.page === page)
     .map((c) => ({ id: c.id, heading: c.heading, sectionPath: c.sectionPath, text: c.text }));

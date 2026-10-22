@@ -14,6 +14,8 @@ interface EvidenceRailProps {
   onPageChange: (page: number) => void;
   onClose: () => void;
   highlight?: string[];
+  /** Which notebook occupies which shelf range, for multi-scan domains. */
+  shelf?: { from: number; to: number; label: string }[];
 }
 
 interface NotesState {
@@ -34,6 +36,7 @@ export function EvidenceRail({
   onPageChange,
   onClose,
   highlight,
+  shelf = [],
 }: EvidenceRailProps) {
   const [notesState, setNotesState] = useState<NotesState>(EMPTY);
   // Holds the page whose image failed, so switching pages clears it.
@@ -41,6 +44,7 @@ export function EvidenceRail({
   // Bumped by the retry button so the image remounts and refetches instead of
   // sitting in its failed state. The nonce also defeats any cached failure.
   const [imageRetry, setImageRetry] = useState(0);
+  const [jumpValue, setJumpValue] = useState("");
 
   // Adjusting state during render is React's documented alternative to an
   // effect that only exists to reset state on a prop change.
@@ -91,6 +95,8 @@ export function EvidenceRail({
 
   const loading = notesState.notes.length === 0 && notesState.error === null;
   const imageFailed = imageFailedFor === page;
+  // For multi-notebook shelves, name the scan a page physically lives in.
+  const book = shelf.find((v) => page >= v.from && page <= v.to)?.label;
 
   return (
     // Below md there is no room for two columns, so the rail covers the
@@ -99,8 +105,32 @@ export function EvidenceRail({
       <div className="flex items-center gap-1 border-b px-3 py-2">
         <span className="font-mono text-xs font-medium">page {page}</span>
         <span className="text-xs text-muted-foreground">of {maxPage}</span>
+        {book && (
+          <span className="ml-1 hidden truncate text-xs text-muted-foreground lg:inline">
+            · {book}
+          </span>
+        )}
 
         <div className="ml-auto flex items-center gap-0.5">
+          <input
+            type="number"
+            min={1}
+            max={maxPage}
+            value={jumpValue}
+            placeholder={String(page)}
+            onChange={(e) => setJumpValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                const n = Number(jumpValue);
+                if (Number.isInteger(n) && n >= 1 && n <= maxPage) {
+                  onPageChange(n);
+                  setJumpValue("");
+                }
+              }
+            }}
+            className="h-7 w-12 rounded-md border bg-background px-1 text-center font-mono text-xs outline-none focus:ring-1 focus:ring-ring"
+            aria-label="Jump to page"
+          />
           <Button
             variant="ghost"
             size="icon"
@@ -155,7 +185,7 @@ export function EvidenceRail({
             ) : (
               <Image
                 key={`${page}-${imageRetry}`}
-                src={`/pages/${page}-760.webp${imageRetry > 0 ? `?r=${imageRetry}` : ""}`}
+                src={`/api/page/${page}?w=760${imageRetry > 0 ? `&r=${imageRetry}` : ""}`}
                 alt={`Scanned notebook page ${page}`}
                 width={760}
                 height={985}

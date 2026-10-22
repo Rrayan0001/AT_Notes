@@ -34,3 +34,6 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# OAuth client secret (never commit)
+client_secret_*.json

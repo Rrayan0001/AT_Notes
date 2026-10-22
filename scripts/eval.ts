@@ -12,7 +12,7 @@ import type { RetrievedSource } from "../src/lib/types";
 loadEnv();
 
 const groq = getGroq();
-const { manifest } = getIndex();
+const { manifest } = getIndex("automation");
 
 const TOP_K_FETCH = 20;
 const TOP_K_CONTEXT = 5;
@@ -215,7 +215,7 @@ async function main() {
   for (const [selectedIndex, c] of cases.entries()) {
     const i = offset + selectedIndex;
     const qVec = await embedQuery(c.question);
-    const candidates = retrieveHybrid(c.question, qVec, TOP_K_FETCH);
+    const candidates = retrieveHybrid("automation", c.question, qVec, TOP_K_FETCH);
     const ranked = await rerank(c.question, candidates.slice(0, TOP_K_RERANK), TOP_K_CONTEXT);
     const sources: RetrievedSource[] = toSources(ranked);
 

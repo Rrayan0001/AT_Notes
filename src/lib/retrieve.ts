@@ -1,34 +1,42 @@
 // No `server-only` import here: scripts/eval.ts loads this module outside
 // Next.js, and the `server-only` guard throws in a plain Node context.
 // Only the two route handlers reach this module in the app itself.
-import bundle from "@/data/index.json";
+import automationBundle from "@/data/index.json";
+import awsBundle from "@/data/index-aws.json";
+import azureBundle from "@/data/index-azure.json";
 import { Bm25Index } from "./bm25";
 import type { Chunk, IndexBundle, RetrievedSource, ScoredChunk } from "./types";
 
 const RRF_K = 60;
 
-let state: { chunks: Chunk[]; vectors: Float32Array; bm25: Bm25Index; dim: number } | null = null;
+/** One bundle per domain; automation keeps its original filename. */
+const BUNDLES: Record<string, IndexBundle> = {
+  automation: automationBundle as unknown as IndexBundle,
+  aws: awsBundle as unknown as IndexBundle,
+  azure: azureBundle as unknown as IndexBundle,
+};
+
+type IndexState = { chunks: Chunk[]; vectors: Float32Array; bm25: Bm25Index; dim: number };
+
+const states = new Map<string, IndexState>();
 
 /** The JSON import is untyped, so treat it as the validated shape at runtime. */
-function loadBundle(): IndexBundle {
-  return bundle as unknown as IndexBundle;
-}
-
-export function getIndex(): {
-  chunks: Chunk[];
-  vectors: Float32Array;
-  bm25: Bm25Index;
-  dim: number;
-  manifest: IndexBundle["manifest"];
-} {
-  if (state) return { ...state, manifest: loadBundle().manifest };
-
-  const data = loadBundle();
+function loadBundle(domain: string): IndexBundle {
+  const data = BUNDLES[domain];
   if (!data.chunks?.length || !data.vectorsB64) {
     throw new Error(
-      "Vector index is missing or empty. Run: npm run index (needs GOOGLE_API_KEY in .env)."
+      `Vector index for ${domain} is missing or empty. Run: npx tsx scripts/embed.ts --domain ${domain} (needs GOOGLE_API_KEY in .env).`
     );
   }
+  return data;
+}
+
+export function getIndex(domain = "automation"): IndexState & {
+  manifest: IndexBundle["manifest"];
+} {
+  const data = loadBundle(domain);
+  const cached = states.get(domain);
+  if (cached) return { ...cached, manifest: data.manifest };
 
   const { count, dim } = data.manifest;
 
@@ -41,7 +49,7 @@ export function getIndex(): {
 
   if (vectors.length !== count * dim) {
     throw new Error(
-      `Vector store mismatch: expected ${count * dim} floats, got ${vectors.length}. Re-run: npm run index`
+      `Vector store mismatch for ${domain}: expected ${count * dim} floats, got ${vectors.length}. Re-run the embed script.`
     );
   }
 
@@ -53,7 +61,8 @@ export function getIndex(): {
     data.chunks.map((c) => `${c.heading} ${c.sectionPath.join(" ")} ${c.text}`)
   );
 
-  state = { chunks: data.chunks, vectors, bm25, dim };
+  const state: IndexState = { chunks: data.chunks, vectors, bm25, dim };
+  states.set(domain, state);
   return { ...state, manifest: data.manifest };
 }
 
@@ -68,8 +77,13 @@ export function denseScores(queryVec: number[], chunks: Chunk[], vectors: Float3
   return out;
 }
 
-export function retrieveHybrid(query: string, queryVec: number[], topK = 20): ScoredChunk[] {
-  const { chunks, vectors, bm25, dim } = getIndex();
+export function retrieveHybrid(
+  domain: string,
+  query: string,
+  queryVec: number[],
+  topK = 20
+): ScoredChunk[] {
+  const { chunks, vectors, bm25, dim } = getIndex(domain);
   const dense = denseScores(queryVec, chunks, vectors, dim);
   const sparse = bm25.search(query);
 
@@ -103,8 +117,12 @@ export function retrieveHybrid(query: string, queryVec: number[], topK = 20): Sc
  * milliseconds and needs no embedding call, so the UI can paint evidence while
  * the semantic query embedding is still in flight.
  */
-export function retrieveSparse(query: string, topK = 5): ScoredChunk[] {
-  const { chunks, bm25 } = getIndex();
+export function retrieveSparse(
+  domain: string,
+  query: string,
+  topK = 5
+): ScoredChunk[] {
+  const { chunks, bm25 } = getIndex(domain);
   const sparse = bm25.search(query);
   const byId = new Map(chunks.map((chunk) => [chunk.id, chunk]));
 

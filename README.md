@@ -21,6 +21,51 @@ Two keys are required: Groq serves the chat and rerank models, Gemini serves
 embeddings. Groq's catalog contains no embedding model at all, so the two
 cannot be combined.
 
+## Accounts & domains
+
+The chat sits behind auth. A user signs up, picks **exactly one domain**
+(Automation Tools, AWS, Azure, SAP), and that assignment is permanent —
+retrieval and page scans are scoped to it server-side from the session, so no
+request can widen its own access.
+
+DATABASE_URL, AUTH_SECRET, and the optional OAuth keys are all read from `.env`
+(see `.env.example`).
+
+### Database
+
+Neon Postgres, via Drizzle. Connection notes:
+
+- **Neon:** copy the connection string into `DATABASE_URL`. The HTTP driver is
+  used automatically whenever the URL contains `neon.tech`.
+- **Local dev (no Neon):** any Postgres works, e.g.
+  `docker run -d --name pavan-notes-db -e POSTGRES_PASSWORD=notes -e POSTGRES_DB=notes -p 55432:5432 postgres:16-alpine`
+  with `DATABASE_URL=postgresql://postgres:notes@localhost:55432/notes`.
+
+Then create the tables:
+
+```bash
+npm run db:push
+```
+
+### Auth
+
+Email + password (scrypt, stored as `users.password_hash`), plus OAuth when
+provider pairs exist in `.env` — Google and GitHub buttons simply appear when
+their keys do. Production callback URLs:
+`https://<host>/api/auth/callback/google` and `/api/auth/callback/github`.
+
+`src/auth.config.ts` is the edge-safe half (used by `src/proxy.ts` — Next 16
+renamed the middleware convention — to gate every page and return 401 JSON for
+`/api/*`). `src/auth.ts` is the node half wiring the Drizzle adapter and the
+credentials provider. OAuth sign-ins only succeed for emails that already
+registered and picked a domain, keeping "one email = one domain" true for both
+login methods.
+
+Sign-up flow: `/api/auth/signup` validates with Zod, hashes the password, and
+inserts the user with the chosen domain. Un-ingested domains (AWS, Azure, SAP
+today) render a deliberate "corpus not ingested yet" state and their API calls
+return 503 until their notes go through the chunk + embed pipeline.
+
 `npm run index` is idempotent — it re-embeds only when the markdown or the
 embedding model changes. It also runs automatically on `npm run build`, so a
 fresh clone or a Vercel deploy needs no manual step.

@@ -36,10 +36,14 @@ function firstContentLine(text: string): string {
   for (const raw of text.split("\n")) {
     const line = cleanLine(raw);
     if (line.length < 8 || NOISE_LINE.test(raw.trim()) || NOISE_TEXT.test(line)) continue;
+    // Skip bullet/arrow fragments; they are rarely good topic labels.
+    if (/^[→•\-*]/.test(raw.trim())) continue;
     const letters = line.match(/[a-z]/gi)?.length ?? 0;
     if (letters < 4) continue;
     if (line.split(/\s+/).length < 3) continue;
-    return line.replace(/[.,;:]+$/, "").slice(0, 60);
+    // Prefer a short, title-like phrase when the line is long.
+    const phrase = line.replace(/[.,;:]+$/, "").slice(0, 60);
+    return phrase;
   }
   return "";
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Newsreader } from "next/font/google";
+import { WelcomeGate } from "@/components/welcome";
 import "./globals.css";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -31,8 +32,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             __html: `(function(){try{var s=localStorage.getItem("pavan-notes-theme");var d=s?s==="dark":window.matchMedia("(prefers-color-scheme: dark)").matches;document.documentElement.classList.toggle("dark",d);}catch(e){}})();`,
           }}
         />
+        {/* Hides the page behind a static veil until the welcome sequence runs, so the landing page never flashes before it. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var reduced=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;if(reduced||sessionStorage.getItem("axiom-welcome")==="1")return;document.documentElement.classList.add("axiom-welcome-pending");}catch(e){}})();`,
+          }}
+        />
       </head>
-      <body className="flex min-h-full flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        <div data-welcome-static aria-hidden="true" className="welcome-static" />
+        <WelcomeGate />
+        {children}
+      </body>
     </html>
   );
 }

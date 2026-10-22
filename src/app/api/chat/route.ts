@@ -18,6 +18,7 @@ import {
 } from "@/lib/memory";
 import { buildFollowupSuggestions } from "@/lib/suggestions";
 import type { RetrievedSource, ScoredChunk } from "@/lib/types";
+import { guardDomainAccess } from "@/lib/session-guard";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -58,6 +59,9 @@ function parseHistory(value: unknown, mode: ChatMode): ConversationMemoryTurn[] 
 }
 
 export async function POST(req: Request) {
+  const guard = await guardDomainAccess();
+  if (!guard.ok) return guard.response;
+
   let question: string;
   let mode: ChatMode;
   let history: ConversationMemoryTurn[];
@@ -119,7 +123,7 @@ export async function POST(req: Request) {
         if (mode === "general") {
           // Retrieval is intentionally skipped so notebook passages cannot leak
           // into a general-knowledge answer.
-          const { manifest } = getIndex();
+          const { manifest } = getIndex(guard.domainId);
           send({ type: "sources", phase: "none", sources: [], totalChunks: manifest.count, mode });
           if (explicitGeneral) {
             effectiveQuestion = resolveExplicitGeneralQuestion(question, history);
@@ -136,13 +140,13 @@ export async function POST(req: Request) {
           }
         } else {
           effectiveQuestion = resolveRetrievalQuestion(question, history);
-          const { manifest } = getIndex();
+          const { manifest } = getIndex(guard.domainId);
 
           // BM25 needs no embedding call, so evidence can be shown immediately
           // while the ~600ms query embedding is still in flight. Skipped when the
           // query shares no vocabulary with the notes, since an empty panel is
           // worse than none.
-          const lexical = retrieveSparse(effectiveQuestion, LEXICAL_TOP_K);
+          const lexical = retrieveSparse(guard.domainId, effectiveQuestion, LEXICAL_TOP_K);
           if (lexical.length > 0) {
             send({
               type: "sources",
@@ -154,7 +158,7 @@ export async function POST(req: Request) {
           }
 
           const qVec = await embedQuery(effectiveQuestion);
-          candidates = retrieveHybrid(effectiveQuestion, qVec, TOP_K_FETCH);
+          candidates = retrieveHybrid(guard.domainId, effectiveQuestion, qVec, TOP_K_FETCH);
           // rerankWithStatus always returns `topK` chunks, falling back to the
           // head of the pool it was given, so the context window never shrinks.
           ranked = (
@@ -225,7 +229,7 @@ export async function POST(req: Request) {
         flush();
 
         if (mode === "notes") {
-          const { chunks } = getIndex();
+          const { chunks } = getIndex(guard.domainId);
           const suggestions = buildFollowupSuggestions({
             effectiveQuestion,
             candidates,

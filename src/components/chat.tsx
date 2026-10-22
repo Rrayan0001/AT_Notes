@@ -9,6 +9,8 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { MarkdownView } from "@/components/markdown";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { UserMenu } from "@/components/user-menu";
+import type { AppUser } from "@/components/coming-soon";
 import { useChatStream, type Turn } from "@/lib/use-chat-stream";
 import { selectConversationMemory } from "@/lib/memory";
 import type { RetrievedSource } from "@/lib/types";
@@ -24,9 +26,11 @@ export interface ChatProps {
   onCite: (page: number, chunkIds?: string[]) => void;
   onBrowsePages: () => void;
   maxPage: number;
+  user: AppUser | null;
+  domainLabel?: string;
 }
 
-export function Chat({ onCite, onBrowsePages }: ChatProps) {
+export function Chat({ onCite, onBrowsePages, user, domainLabel }: ChatProps) {
   const [input, setInput] = useState("");
   const [photoOpen, setPhotoOpen] = useState(false);
   const { turns, busy, ask, stop } = useChatStream();
@@ -40,7 +44,7 @@ export function Chat({ onCite, onBrowsePages }: ChatProps) {
 
   // Clear the composer as soon as its text becomes a question. Empty input is
   // left alone so an ignored Enter press does not erase whitespace being edited.
-  const submitInput = (question: string) => submitQuestion(question);
+  const submitInput = submitQuestion;
 
   // Keep the newest token in view as the answer streams.
   useEffect(() => {
@@ -81,9 +85,12 @@ export function Chat({ onCite, onBrowsePages }: ChatProps) {
           />
         </button>
         <div className="min-w-0">
-          <h1 className="text-[15px] font-semibold tracking-tight">Automation Tools Notes</h1>
+          <h1 className="truncate text-[15px] font-semibold tracking-tight">
+            {domainLabel ?? "Notes"}
+          </h1>
         </div>
         <div className="ml-auto flex items-center gap-1">
+          {user && <UserMenu user={user} />}
           <Button
             onClick={onBrowsePages}
             variant="ghost"

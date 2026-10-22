@@ -117,8 +117,11 @@ export function useChatStream() {
             }));
           } else if (evt.type === "suggestions") {
             patch((t) => ({ ...t, suggestions: parseSuggestions(evt.suggestions) }));
-          } else if (evt.type === "fallback" && evt.fallback) {
-            patch((t) => ({ ...t, mode: evt.fallback! }));
+          } else if (evt.type === "fallback") {
+            // The server sends the new mode under `mode`; accept `fallback` too
+            // for older clients of the contract.
+            const next = evt.fallback ?? evt.mode;
+            if (next) patch((t) => ({ ...t, mode: next }));
           } else if (evt.type === "delta" && evt.text) {
             patch((t) => ({ ...t, answer: t.answer + evt.text }));
           } else if (evt.type === "error") {

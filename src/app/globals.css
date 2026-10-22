@@ -7,8 +7,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  /* Was `var(--font-sans)`, which is self-referential and left the font stack
-     unset, so the Geist faces in layout.tsx never applied. */
+  --color-rubric: var(--rubric);
+  --color-vellum: var(--vellum);
+  --color-leaf: var(--leaf);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-serif: var(--font-newsreader);
@@ -55,6 +56,11 @@
    indigo ink as the accent. Hue values are small but non-zero throughout so
    surfaces read as paper rather than as flat gray. */
 :root {
+  --rubric: #a63c24;
+  --rubric-deep: #8f321e;
+  --vellum: oklch(0.975 0.008 92);
+  --leaf: rgba(28 26 22 / 0.13);
+
   --background: oklch(0.985 0.006 85);
   --foreground: oklch(0.24 0.015 60);
   --card: oklch(0.995 0.004 85);
@@ -90,6 +96,10 @@
 }
 
 .dark {
+  --rubric: #c05a3c;
+  --vellum: oklch(0.235 0.012 70);
+  --leaf: rgba(232 225 211 / 0.14);
+
   --background: oklch(0.19 0.012 70);
   --foreground: oklch(0.93 0.008 85);
   --card: oklch(0.235 0.012 70);
@@ -150,6 +160,57 @@
       var(--background);
   }
 
+  /* The auth desk: one low warm source raking across the paper from the top
+     of the form column, the edges falling away. */
+  .auth-ground {
+    background:
+      radial-gradient(90% 60% at 78% 0%, color-mix(in oklch, var(--foreground) 4%, transparent), transparent 70%),
+      radial-gradient(
+        110% 70% at 50% 120%,
+        color-mix(in oklch, var(--rubric) 4%, transparent),
+        transparent 70%
+      ),
+      var(--background);
+  }
+
+  /* Borderless form fields under a single hairline; focus deepens it. */
+  .field-underline {
+    @apply w-full bg-transparent outline-none;
+    border-bottom: 1px solid var(--leaf);
+    border-radius: 0;
+    padding-block: 0.55rem;
+    transition:
+      border-color 240ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 240ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .field-underline::placeholder {
+    color: color-mix(in oklch, var(--foreground) 70%, var(--background));
+  }
+  .field-underline:hover {
+    border-bottom-color: color-mix(in oklch, var(--foreground) 30%, transparent);
+  }
+  .field-underline:focus-visible {
+    border-bottom-color: var(--rubric);
+  }
+
+  /* Chrome paints autofilled fields as filled rounded boxes over the design;
+     hold it to the flat surface color and the underline. */
+  .field-underline:-webkit-autofill,
+  .field-underline:-webkit-autofill:hover,
+  .field-underline:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px var(--background) inset;
+    -webkit-text-fill-color: var(--foreground);
+    caret-color: var(--foreground);
+    border-radius: 0;
+  }
+
+  /* The brief's focus rule: a 1px Rubric outline with 2px offset, instant. */
+  .focus-rubric:focus-visible {
+    outline: 1px solid var(--rubric);
+    outline-offset: 2px;
+    transition: none;
+  }
+
   /* Loading shimmer for page thumbnails and answer text. */
   .shimmer {
     background: linear-gradient(
@@ -169,5 +230,152 @@
   }
   100% {
     background-position: -200% 0;
+  }
+}
+
+/* ─── Welcome veil ─────────────────────────────────────────────────────────
+   One entrance sequence, once per session. Opacity, draw and tracking only;
+   the veil never moves a second time during the session. */
+
+/* Static veil shown during hydration/before React mounts, so the landing page
+   never flashes ahead of the welcome sequence. Removed by WelcomeGate. */
+.welcome-static {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background:
+    radial-gradient(
+      120% 90% at 50% 115%,
+      color-mix(in oklch, var(--rubric) 8%, transparent),
+      transparent 60%
+    ),
+    oklch(0.135 0.012 70);
+}
+html:not(.axiom-welcome-pending) .welcome-static {
+  display: none;
+}
+/* Once the animated veil has mounted, drop the static placeholder so there
+   is never a frame where neither covers the page. */
+html.axiom-welcome-pending:has(.welcome-veil) .welcome-static {
+  display: none;
+}
+
+.welcome-veil {
+  background:
+    radial-gradient(
+      120% 90% at 50% 115%,
+      color-mix(in oklch, var(--rubric) 8%, transparent),
+      transparent 60%
+    ),
+    oklch(0.135 0.012 70);
+  animation: welcome-veil 3.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.welcome-hline {
+  transform-origin: center;
+  background: rgba(232 225 211 / 0.16);
+  animation: welcome-draw-x 700ms 350ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.welcome-vline {
+  transform-origin: center;
+  background: rgba(232 225 211 / 0.1);
+  animation: welcome-draw-y 700ms 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.welcome-word {
+  animation: welcome-word 900ms 250ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.welcome-rule {
+  animation: welcome-rule 700ms 1000ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.welcome-meta {
+  animation: welcome-rise 600ms 1500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.welcome-scan {
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in oklch, var(--rubric) 65%, transparent) 46%,
+    color-mix(in oklch, var(--rubric) 90%, transparent) 50%,
+    color-mix(in oklch, var(--rubric) 65%, transparent) 54%,
+    transparent 100%
+  );
+  opacity: 0;
+  animation: welcome-scan 1400ms 1900ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+.welcome-skip {
+  animation: welcome-rise 600ms 2600ms ease-out both;
+}
+
+@keyframes welcome-veil {
+  0% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+@keyframes welcome-draw-x {
+  from {
+    transform: translateX(-50%) scaleX(0);
+  }
+  to {
+    transform: translateX(-50%) scaleX(1);
+  }
+}
+@keyframes welcome-draw-y {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+@keyframes welcome-word {
+  from {
+    opacity: 0;
+    letter-spacing: 0.5em;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    letter-spacing: 0.06em;
+    transform: none;
+  }
+}
+@keyframes welcome-rule {
+  from {
+    width: 0;
+  }
+  to {
+    width: 7rem;
+  }
+}
+@keyframes welcome-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes welcome-scan {
+  0% {
+    opacity: 0;
+    transform: translateX(-32vw);
+  }
+  14% {
+    opacity: 1;
+  }
+  86% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(32vw);
   }
 }

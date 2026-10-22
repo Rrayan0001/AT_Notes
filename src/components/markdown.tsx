@@ -17,6 +17,21 @@ import { normalizeCitations } from "@/lib/citations";
 const CITE_TEXT = /\[page\s+(\d+)\]/g;
 const toCiteLink = (_: string, page: string) => `[@p${page}](cite:${page})`;
 
+const BR_HTML = /<br\s*\/?>/gi;
+
+/**
+ * Models write `<br>` for line breaks, but react-markdown escapes raw HTML, so
+ * it would surface as literal text. Inside a table row a newline would also
+ * split the GFM row, so those become " · "; everywhere else it becomes a real
+ * line break.
+ */
+function normalizeBrTags(text: string): string {
+  return text
+    .split("\n")
+    .map((line) => (/^\s*\|/.test(line) ? line.replace(BR_HTML, " · ") : line.replace(BR_HTML, "\n")))
+    .join("\n");
+}
+
 /** Keep `cite:` links alive; the default transform drops unknown protocols. */
 function urlTransform(url: string): string {
   if (url.startsWith("cite:")) return url;
@@ -182,7 +197,7 @@ export const MarkdownView = memo(function MarkdownView({
           ),
         }}
       >
-        {normalizeCitations(children).replace(CITE_TEXT, toCiteLink)}
+        {normalizeBrTags(normalizeCitations(children)).replace(CITE_TEXT, toCiteLink)}
       </Markdown>
     </div>
   );

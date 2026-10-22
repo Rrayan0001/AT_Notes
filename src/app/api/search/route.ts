@@ -1,20 +1,23 @@
 import { NextResponse } from "next/server";
 import { embedQuery } from "@/lib/embed";
 import { getIndex, retrieveHybrid } from "@/lib/retrieve";
+import { guardDomainAccess } from "@/lib/session-guard";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
   try {
+    const guard = await guardDomainAccess();
+    if (!guard.ok) return guard.response;
     const { query, topK = 8 } = (await req.json()) as { query?: string; topK?: number };
     if (!query?.trim()) {
       return NextResponse.json({ error: "query is required" }, { status: 400 });
     }
 
     const qVec = await embedQuery(query.trim());
-    const candidates = retrieveHybrid(query.trim(), qVec, Math.max(1, Math.min(30, topK)));
-    const { manifest } = getIndex();
+    const candidates = retrieveHybrid(guard.domainId, query.trim(), qVec, Math.max(1, Math.min(30, topK)));
+    const { manifest } = getIndex(guard.domainId);
 
     return NextResponse.json({
       query,

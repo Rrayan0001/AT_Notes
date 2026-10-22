@@ -1,13 +1,13 @@
 import { spawn } from "node:child_process";
 import { existsSync, mkdirSync, renameSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { getIndex } from "@/lib/retrieve";
+import { guardDomainAccess } from "@/lib/session-guard";
+import { resolvePage, SHELVES } from "@/lib/shelf";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const PDF_PATH = join(process.cwd(), "pawan_notes.pdf");
-const CACHE_DIR = join(process.cwd(), ".cache", "pages");
+const CACHE_ROOT = join(process.cwd(), ".cache", "pages");
 
 const ALLOWED_WIDTHS = new Set([360, 760, 1600]);
 const CACHE_MAX_AGE = 60 * 60 * 24 * 365;
@@ -38,13 +38,13 @@ function run(
   });
 }
 
-async function renderPage(page: number, width: number): Promise<Buffer> {
+async function renderPage(pdfPath: string, localPage: number, width: number): Promise<Buffer> {
   // pdftocairo writes JPEG to stdout with `-`; ImageMagick re-encodes that
   // stream to WebP without either side touching the disk. This build of cwebp
   // has no -stdin, so magick is the converter.
   const jpeg = await run(
     "pdftocairo",
-    ["-f", String(page), "-l", String(page), "-jpeg", "-singlefile", "-scale-to", String(width), PDF_PATH, "-"]
+    ["-f", String(localPage), "-l", String(localPage), "-jpeg", "-singlefile", "-scale-to", String(width), pdfPath, "-"]
   );
   if (jpeg.code !== 0 || jpeg.stdout.length === 0) {
     throw new Error(`pdftocairo failed (${jpeg.code}): ${jpeg.stderr.slice(0, 200)}`);
@@ -70,17 +70,24 @@ let renderCounter = 0;
  * atomic rename, so a request arriving mid-render can neither read a partial
  * file nor collide on the temp name.
  */
-async function cached(page: number, width: number): Promise<Buffer> {
-  mkdirSync(CACHE_DIR, { recursive: true });
-  const finalPath = join(CACHE_DIR, `${page}-${width}.webp`);
+async function cached(
+  domain: string,
+  pdfPath: string,
+  localPage: number,
+  page: number,
+  width: number
+): Promise<Buffer> {
+  const cacheDir = join(CACHE_ROOT, domain);
+  mkdirSync(cacheDir, { recursive: true });
+  const finalPath = join(cacheDir, `${page}-${width}.webp`);
 
   if (existsSync(finalPath)) return readFileSync(finalPath);
 
-  const key = `${page}-${width}`;
+  const key = `${domain}-${page}-${width}`;
   const existing = inflight.get(key);
   if (existing) return existing;
 
-  const job = renderPage(page, width).then(async (bytes) => {
+  const job = renderPage(pdfPath, localPage, width).then(async (bytes) => {
     const tmpPath = `${finalPath}.${process.pid}.${renderCounter++}.${Math.random()
       .toString(36)
       .slice(2)}.tmp`;
@@ -106,6 +113,9 @@ export async function GET(
   req: Request,
   { params }: { params: Promise<{ n: string }> }
 ) {
+  const guard = await guardDomainAccess();
+  if (!guard.ok) return guard.response;
+
   const { n } = await params;
   const page = Number(n);
 
@@ -113,8 +123,11 @@ export async function GET(
     return Response.json({ error: "page must be an integer" }, { status: 400 });
   }
 
-  const { chunks } = getIndex();
-  const maxPage = chunks.reduce((m, c) => Math.max(m, c.page), 0);
+  const shelves = SHELVES[guard.domainId];
+  if (!shelves || shelves.length === 0) {
+    return Response.json({ error: `no scan shelf for domain ${guard.domainId}` }, { status: 404 });
+  }
+  const maxPage = shelves[shelves.length - 1].to;
   if (page < 1 || page > maxPage) {
     return Response.json({ error: `page must be between 1 and ${maxPage}` }, { status: 400 });
   }
@@ -127,12 +140,20 @@ export async function GET(
     );
   }
 
-  if (!existsSync(PDF_PATH)) {
-    return Response.json({ error: `notebook scan not found at ${PDF_PATH}` }, { status: 503 });
+  const resolved = resolvePage(guard.domainId, page);
+  if (!resolved) {
+    return Response.json({ error: `no scan for page ${page}` }, { status: 404 });
+  }
+  const pdfPath = join(process.cwd(), resolved.volume.pdf);
+  if (!existsSync(pdfPath)) {
+    return Response.json(
+      { error: `notebook scan not found at ${resolved.volume.pdf}` },
+      { status: 503 }
+    );
   }
 
   try {
-    const bytes = await cached(page, width);
+    const bytes = await cached(guard.domainId, pdfPath, resolved.localPage, page, width);
     return new Response(new Uint8Array(bytes), {
       headers: {
         "Content-Type": "image/webp",
