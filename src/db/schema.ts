@@ -90,3 +90,17 @@ export const authenticators = pgTable(
     primaryKey({ columns: [authenticator.userId, authenticator.credentialID] }),
   ],
 );
+
+export const charts = pgTable("charts", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
+  type: text("type").notNull(), // bar | pie | line
+  metric: text("metric").notNull(), // chunksByVolume | topHeadings
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
+});
