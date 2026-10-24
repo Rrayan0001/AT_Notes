@@ -14,8 +14,13 @@ import { normalizeCitations } from "@/lib/citations";
  * citation split across two streamed deltas simply fails to match until its
  * closing bracket lands, then resolves.
  */
-const CITE_TEXT = /\[page\s+(\d+)\]/g;
-const toCiteLink = (_: string, page: string) => `[@p${page}](cite:${page})`;
+const CITE_TEXT = /\[pages?\s+((?:\d+\s*,\s*(?:page\s+)?)*\d+)\]/g;
+const toCiteLinks = (_: string, pages: string) =>
+  pages
+    .split(",")
+    .map((page) => page.trim().replace(/^page\s+/i, ""))
+    .map((page) => `[@p${page}](cite:${page})`)
+    .join(" ");
 
 const BR_HTML = /<br\s*\/?>/gi;
 
@@ -197,7 +202,7 @@ export const MarkdownView = memo(function MarkdownView({
           ),
         }}
       >
-        {normalizeBrTags(normalizeCitations(children)).replace(CITE_TEXT, toCiteLink)}
+        {normalizeBrTags(normalizeCitations(children)).replace(CITE_TEXT, toCiteLinks)}
       </Markdown>
     </div>
   );

@@ -57,6 +57,7 @@ export function Workbench({
         onClose={close}
         highlight={highlight}
         shelf={shelf}
+        domainId={user?.domain}
       />
     </div>
   );

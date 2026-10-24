@@ -52,7 +52,7 @@ function firstContentLine(text: string): string {
     const letters = line.match(/[a-z]/gi)?.length ?? 0;
     if (letters < 4) continue;
     if (line.split(/\s+/).length < 3) continue;
-    return line.replace(/[.,;:]+$/, "").slice(0, 60);
+    return line.replace(/\s*([.,;:?])\s*$/, "$1").slice(0, 60);
   }
   return "";
 }

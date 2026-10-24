@@ -16,6 +16,9 @@ interface EvidenceRailProps {
   highlight?: string[];
   /** Which notebook occupies which shelf range, for multi-scan domains. */
   shelf?: { from: number; to: number; label: string }[];
+  /** Session domain; sent on image fetches so one URL maps to one domain's
+   * scan and a shared cache can never serve another domain's page. */
+  domainId?: string | null;
 }
 
 interface NotesState {
@@ -37,6 +40,7 @@ export function EvidenceRail({
   onClose,
   highlight,
   shelf = [],
+  domainId,
 }: EvidenceRailProps) {
   const [notesState, setNotesState] = useState<NotesState>(EMPTY);
   // Holds the page whose image failed, so switching pages clears it.
@@ -206,7 +210,7 @@ export function EvidenceRail({
             ) : (
               <Image
                 key={`${page}-${imageRetry}`}
-                src={`/api/page/${page}?w=760${imageRetry > 0 ? `&r=${imageRetry}` : ""}`}
+                src={`/api/page/${page}?w=760${domainId ? `&d=${domainId}` : ""}${imageRetry > 0 ? `&r=${imageRetry}` : ""}`}
                 alt={`Scanned notebook page ${page}`}
                 width={760}
                 height={985}

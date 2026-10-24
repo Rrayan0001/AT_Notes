@@ -163,6 +163,20 @@ export async function GET(
     );
   }
 
+  /**
+   * The domain is part of the cache key because the URL otherwise identical
+   * across domains, and shared caches (browser and edge) stored one domain's
+   * scan under a URL the other domain could read back. A mismatch is rejected
+   * instead of silently redirecting to the session's domain.
+   */
+  const statedDomain = new URL(req.url).searchParams.get("d");
+  if (statedDomain && statedDomain !== guard.domainId) {
+    return Response.json(
+      { error: `page belongs to domain ${guard.domainId}` },
+      { status: 409 }
+    );
+  }
+
   const resolved = resolvePage(guard.domainId, page);
   if (!resolved) {
     return Response.json({ error: `no scan for page ${page}` }, { status: 404 });
