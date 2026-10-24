@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 /**
  * The welcome veil: a dramatic entrance sequence, once per browser session.
@@ -10,25 +10,19 @@ import { useEffect, useRef, useState } from "react";
  */
 export function WelcomeGate() {
   const [phase, setPhase] = useState<"idle" | "play" | "done">("idle");
-  const particlesRef = useRef<Array<{
-    x: number; y: number; size: number;
-    tx: number; ty: number; dur: number; delay: number;
-  }>>([]);
-
-  // Generate dust particles once
-  if (particlesRef.current.length === 0) {
-    for (let i = 0; i < 18; i++) {
-      particlesRef.current.push({
-        x: 10 + Math.random() * 80,
-        y: 10 + Math.random() * 80,
-        size: 1 + Math.random() * 2.5,
-        tx: (Math.random() - 0.5) * 32,
-        ty: -8 - Math.random() * 20,
-        dur: 3 + Math.random() * 3,
-        delay: Math.random() * 2,
-      });
-    }
-  }
+  // Generated once per mount with a lazy initializer — deterministic per
+  // visit, no ref writes during render.
+  const [particles] = useState(() =>
+    Array.from({ length: 18 }, () => ({
+      x: 10 + Math.random() * 80,
+      y: 10 + Math.random() * 80,
+      size: 1 + Math.random() * 2.5,
+      tx: (Math.random() - 0.5) * 32,
+      ty: -8 - Math.random() * 20,
+      dur: 3 + Math.random() * 3,
+      delay: Math.random() * 2,
+    })),
+  );
 
   useEffect(() => {
     let skip = false;
@@ -94,7 +88,7 @@ export function WelcomeGate() {
       className="welcome-veil fixed inset-0 z-[60] select-none overflow-hidden"
     >
       {/* Dust particles — ambient floating motes */}
-      {particlesRef.current.map((p, i) => (
+      {particles.map((p, i) => (
         <span
           key={i}
           className="welcome-particle"
