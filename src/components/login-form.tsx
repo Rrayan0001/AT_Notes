@@ -16,7 +16,7 @@ import {
 import { PasswordField } from "@/components/auth/password-field";
 
 const DISCLAIMER =
-  "AXIOM is a personal study aid. Answers come from transcribed notes, not authoritative sources — check them against your own material and syllabus.";
+  "Pavan Garu is a personal study aid. Answers come from transcribed notes, not authoritative sources — check them against your own material and syllabus.";
 
 export function LoginForm({ oauthProviders }: { oauthProviders: string[] }) {
   const router = useRouter();

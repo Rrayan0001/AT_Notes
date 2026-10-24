@@ -4,7 +4,7 @@ import { LoginForm } from "@/components/login-form";
 import { AuthShell } from "@/components/auth/auth-shell";
 import { oauthProviderNames } from "@/lib/oauth";
 
-export const metadata: Metadata = { title: "Sign in — AXIOM" };
+export const metadata: Metadata = { title: "Sign in — Pavan Garu" };
 
 /** The signup form lands here with ?created=1 when auto sign-in needs a retry. */
 const NOTICES: Record<string, string> = {

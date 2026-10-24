@@ -4,7 +4,7 @@ import { SignupForm } from "@/components/signup-form";
 import { AuthShell } from "@/components/auth/auth-shell";
 import { oauthProviderNames } from "@/lib/oauth";
 
-export const metadata: Metadata = { title: "Create account — AXIOM" };
+export const metadata: Metadata = { title: "Create account — Pavan Garu" };
 
 const OAUTH_ERRORS: Record<string, string> = {
   unlinked:

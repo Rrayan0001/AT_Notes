@@ -25,7 +25,7 @@ export function ComingSoon({ domainLabel, user }: { domainLabel: string; user: A
         <div className="mb-6 h-px w-12 bg-rubric" />
 
         <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground mb-4">
-          AXIOM
+          PAVAN GARU
         </p>
 
         <h1

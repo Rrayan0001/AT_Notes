@@ -31,7 +31,7 @@ export function AuthShell({
             href="/"
             className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground hover:text-rubric transition-colors"
           >
-            AXIOM
+            PAVAN GARU
           </Link>
 
           {/* Rubric accent — the one saturated line on this screen */}

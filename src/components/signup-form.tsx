@@ -22,7 +22,7 @@ import {
 } from "@/lib/password";
 
 const DISCLAIMER =
-  "AXIOM is a personal study aid. Answers come from transcribed notes, not authoritative sources — check them against your own material and syllabus.";
+  "Pavan Garu is a personal study aid. Answers come from transcribed notes, not authoritative sources — check them against your own material and syllabus.";
 
 const strengthColor = (strength: 0 | 1 | 2 | 3 | 4): string =>
   strength <= 1 ? "bg-rubric" : strength === 2 ? "bg-amber-500" : "bg-emerald-500";

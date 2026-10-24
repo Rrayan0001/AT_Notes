@@ -114,8 +114,8 @@ export function WelcomeGate() {
 
       <div className="relative flex h-full flex-col items-center justify-center">
         {/* The wordmark */}
-        <h1 className="welcome-word font-serif text-[clamp(4.5rem,16vw,11rem)] font-light leading-none tracking-[0.06em] text-[oklch(0.94_0.01_85)]">
-          AXIOM
+        <h1 className="welcome-word font-serif text-[clamp(3.5rem,12vw,9rem)] font-light leading-none tracking-[0.06em] text-[oklch(0.94_0.01_85)]">
+          Pavan Garu
         </h1>
 
         {/* Rubric rule expanding below the wordmark */}
