@@ -23,6 +23,7 @@ import {
 } from "@/lib/memory";
 import { buildFollowupSuggestions } from "@/lib/suggestions";
 import type { RetrievedSource, ScoredChunk } from "@/lib/types";
+import { createOpenuiScrubber, type OpenuiScrubber } from "@/lib/openui-scrub";
 import { guardDomainAccess } from "@/lib/session-guard";
 import { getDomain } from "@/lib/domains";
 
@@ -123,6 +124,10 @@ export async function POST(req: Request) {
       try {
         let messages: { role: "system" | "user"; content: string }[];
         let effectiveQuestion = question;
+        // The OpenUI canvas streams through the same answer channel; when the
+        // user did not explicitly ask for a detailed output, a scrubber strips
+        // any DSL the model produces anyway.
+        let openuiAllowed = false;
         let candidates: ScoredChunk[] = [];
         let ranked: ScoredChunk[] = [];
         let hadFallback = false;
@@ -143,6 +148,7 @@ export async function POST(req: Request) {
               },
               { role: "user", content: buildGeneralPrompt(effectiveQuestion, []) },
             ];
+            if (wantsExpressiveAnswer(effectiveQuestion)) openuiAllowed = true;
           } else {
             effectiveQuestion = resolveRetrievalQuestion(question, history);
             messages = [
@@ -154,6 +160,7 @@ export async function POST(req: Request) {
               },
               { role: "user", content: buildGeneralPrompt(effectiveQuestion, history) },
             ];
+            if (wantsExpressiveAnswer(effectiveQuestion)) openuiAllowed = true;
           }
         } else {
           effectiveQuestion = resolveRetrievalQuestion(question, history);
@@ -186,6 +193,8 @@ export async function POST(req: Request) {
             )
           ).chunks;
 
+          if (wantsExpressiveAnswer(effectiveQuestion)) openuiAllowed = true;
+
           const sources: RetrievedSource[] = toSources(ranked);
 
           send({
@@ -214,14 +223,18 @@ export async function POST(req: Request) {
           messages,
         });
 
+        const scrubber: OpenuiScrubber | null = openuiAllowed ? null : createOpenuiScrubber();
+        const passthrough = (text: string) => (scrubber ? scrubber.push(text) : text);
+
         let notesAnswer: string | null = mode === "notes" ? "" : null;
         for await (const part of completion) {
           const delta = part.choices[0]?.delta?.content;
           if (delta) {
             if (notesAnswer !== null) notesAnswer += delta;
-            emit(delta);
+            emit(passthrough(delta));
           }
         }
+        if (scrubber) emit(scrubber.flush());
         flush();
 
         // The exact missing-note response is the automatic fallback trigger. It
@@ -240,10 +253,12 @@ export async function POST(req: Request) {
           });
 
           emit("\n\n");
+          const fallbackScrub = createOpenuiScrubber();
           for await (const part of fallback) {
             const delta = part.choices[0]?.delta?.content;
-            if (delta) emit(delta);
+            if (delta) emit(fallbackScrub.push(delta));
           }
+          emit(fallbackScrub.flush());
           emit(
             "\n\n> **Not from the notes:** This detailed explanation was generated from general knowledge, not the notebook transcription."
           );

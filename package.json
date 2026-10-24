@@ -10,7 +10,7 @@
     "db:push": "drizzle-kit push",
     "eval": "tsx scripts/eval.ts",
     "openui:spec": "npx @openuidev/cli@latest generate src/lib/openui.tsx --spec --out src/lib/openui.spec.json",
-    "prebuild": "npm run openui:spec && tsx scripts/embed.ts",
+    "prebuild": "tsx scripts/embed.ts",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",

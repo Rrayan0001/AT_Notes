@@ -7,7 +7,7 @@ export type ChatMode = "notes" | "general";
  * is plain detail, while "very detailed and expressive" is the trigger.
  */
 const EXPRESSIVE_PATTERN =
-  /\b(?:very\s+detail(?:ed)?|detail(?:ed)?\s+and\s+expressive\b|expressive|expressively|elaborate|elaborately|in\s+(?:great|full|complete)\s+detail|exhaustively|exhaustive|highly\s+detailed|deep\s+dive|visually\s+(?:rich|detailed|appealing))\b/i;
+  /\b(?:very\s+detail(?:ed)?|detailed\s+(?:and\s+expressive\s+)?(?:output|answer|answer|response|explanation|breakdown|version)|detail(?:ed)?\s+and\s+expressive\b|expressive|expressively|elaborate|elaborately|in\s+(?:great|full|complete)\s+detail|exhaustively|exhaustive|highly\s+detailed|deep\s+dive|visually\s+(?:rich|detailed|appealing))\b/i;
 
 export function wantsExpressiveAnswer(question: string): boolean {
   return EXPRESSIVE_PATTERN.test(question);
