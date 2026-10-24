@@ -3,13 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ArrowUp, BookOpen, Loader2, MessageCircleQuestion, Square, X } from "lucide-react";
+import { BuiltinActionType, Renderer, type ActionEvent } from "@openuidev/react-lang";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { MarkdownView } from "@/components/markdown";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { UserMenu } from "@/components/user-menu";
+import { library } from "@/lib/openui";
+import openuiSpec from "@/lib/openui.spec.json";
 import type { AppUser } from "@/components/coming-soon";
 import { useChatStream, type Turn } from "@/lib/use-chat-stream";
 import { selectConversationMemory } from "@/lib/memory";
@@ -37,6 +39,8 @@ export function Chat({ onCite, onBrowsePages, user, domainLabel, sessionId, onSe
   const [photoOpen, setPhotoOpen] = useState(false);
   const { turns, busy, ask, stop, reset } = useChatStream();
   const bottomRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const stickToBottomRef = useRef(true);
   const persistedRef = useRef<Set<string>>(new Set());
 
   const submitQuestion = async (question: string) => {
@@ -122,10 +126,26 @@ export function Chat({ onCite, onBrowsePages, user, domainLabel, sessionId, onSe
     }
   }, [turns, sessionId]);
 
-  // Keep the newest token in view as the answer streams.
+  // Keep the newest token in view as the answer streams, but only when the
+  // user is already near the bottom. Scrolling up to read earlier output must
+  // not be yanked back down by every incoming token.
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    const el = scrollRef.current;
+    if (!el || !stickToBottomRef.current) return;
+    el.scrollTop = el.scrollHeight;
   }, [turns]);
+
+  // Track whether the user is pinned to the bottom so streaming can follow.
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 80;
+      stickToBottomRef.current = nearBottom;
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, []);
 
   // Close the photo preview with Escape and lock background scroll while open.
   useEffect(() => {
@@ -180,7 +200,7 @@ export function Chat({ onCite, onBrowsePages, user, domainLabel, sessionId, onSe
         </div>
       </header>
 
-      <ScrollArea className="min-h-0 flex-1">
+      <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto">
         <div className="mx-auto w-full max-w-2xl px-5 py-6">
           {turns.length === 0 && <EmptyState onPick={submitQuestion} />}
 
@@ -199,7 +219,7 @@ export function Chat({ onCite, onBrowsePages, user, domainLabel, sessionId, onSe
           )}
           <div ref={bottomRef} />
         </div>
-      </ScrollArea>
+      </div>
 
       <footer className="border-t bg-background/80 px-5 py-3 backdrop-blur">
         <div className="mx-auto w-full max-w-2xl">
@@ -338,11 +358,13 @@ function TurnView({
       )}
 
       {turn.answer && (
-        <MarkdownView
-          // A citation names a page, not a chunk, so highlight whichever of
-          // this turn's sources came from that page. General answers have no
-          // notebook citations, so their chips stay inert.
+        <AnswerView
+          answer={turn.answer}
+          isStreaming={turn.status === "streaming"}
           onCite={
+            // A citation names a page, not a chunk, so highlight whichever of
+            // this turn's sources came from that page. General answers have no
+            // notebook citations, so their chips stay inert.
             isGeneral
               ? undefined
               : (page) =>
@@ -351,10 +373,8 @@ function TurnView({
                     turn.sources.filter((s) => s.page === page).map((s) => s.id)
                   )
           }
-          className="text-[14px]"
-        >
-          {turn.answer}
-        </MarkdownView>
+          onFollowup={onFollowup}
+        />
       )}
 
       {turn.status === "done" && suggestions.length > 0 && (
@@ -393,6 +413,68 @@ function TurnView({
           {turn.error}
         </p>
       )}
+    </div>
+  );
+}
+
+/** True when the stored/streamed answer is an OpenUI Lang program, not legacy markdown. */
+function looksLikeOpenuiLang(text: string): boolean {
+  const specRoot = openuiSpec.root;
+  const firstLine =
+    text
+      .slice(0, 200)
+      .split("\n")
+      .map((l) => l.trim())
+      .filter((l) => l.length > 0)[0] ?? "";
+  return (
+    text.includes("]]>openui:") ||
+    (typeof specRoot === "string" && new RegExp(`^${specRoot}\\s*(\\(|\\{)`).test(firstLine))
+  );
+}
+
+/**
+ * Renders the assistant answer. New answers are OpenUI Lang programs rendered
+ * as live UI; answers persisted before the Gateway switch are plain markdown
+ * and keep the original renderer.
+ */
+function AnswerView({
+  answer,
+  isStreaming,
+  onCite,
+  onFollowup,
+}: {
+  answer: string;
+  isStreaming: boolean;
+  onCite?: (page: number, chunkIds?: string[]) => void;
+  onFollowup: (question: string) => void;
+}) {
+  if (!looksLikeOpenuiLang(answer)) {
+    return (
+      <MarkdownView onCite={onCite} className="text-[14px]">
+        {answer}
+      </MarkdownView>
+    );
+  }
+
+  const onAction = (event: ActionEvent) => {
+    if (event.type === BuiltinActionType.ContinueConversation) {
+      const lines = [`User clicked: ${event.humanFriendlyMessage}`];
+      if (event.formState) lines.push(`Form values: ${JSON.stringify(event.formState)}`);
+      onFollowup(lines.join("\n"));
+    } else if (event.type === BuiltinActionType.OpenUrl) {
+      const url = String(event.params?.url ?? "");
+      if (/^https?:\/\//i.test(url)) window.open(url, "_blank", "noopener,noreferrer");
+    }
+  };
+
+  return (
+    <div className="text-[14px]">
+      <Renderer
+        response={answer}
+        library={library}
+        isStreaming={isStreaming}
+        onAction={onAction}
+      />
     </div>
   );
 }

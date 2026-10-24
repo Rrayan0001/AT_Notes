@@ -1,4 +1,4 @@
-import { CHAT_MODEL, getGroq } from "@/lib/groq";
+import { GATEWAY_MODEL, answerSystemPrompt, getGateway } from "@/lib/gateway";
 import { embedQuery } from "@/lib/embed";
 import { getIndex, retrieveHybrid, retrieveSparse, toSources } from "@/lib/retrieve";
 import { rerankWithStatus } from "@/lib/rerank";
@@ -128,13 +128,13 @@ export async function POST(req: Request) {
           if (explicitGeneral) {
             effectiveQuestion = resolveExplicitGeneralQuestion(question, history);
             messages = [
-              { role: "system", content: GENERAL_SYSTEM_PROMPT },
+              { role: "system", content: answerSystemPrompt(GENERAL_SYSTEM_PROMPT) },
               { role: "user", content: buildGeneralPrompt(effectiveQuestion, []) },
             ];
           } else {
             effectiveQuestion = resolveRetrievalQuestion(question, history);
             messages = [
-              { role: "system", content: GENERAL_SYSTEM_PROMPT },
+              { role: "system", content: answerSystemPrompt(GENERAL_SYSTEM_PROMPT) },
               { role: "user", content: buildGeneralPrompt(effectiveQuestion, history) },
             ];
           }
@@ -179,14 +179,14 @@ export async function POST(req: Request) {
             mode,
           });
           messages = [
-            { role: "system", content: SYSTEM_PROMPT },
+            { role: "system", content: answerSystemPrompt(SYSTEM_PROMPT) },
             { role: "user", content: buildUserPrompt(effectiveQuestion, sources, history) },
           ];
         }
 
-        const groq = getGroq();
-        const completion = await groq.chat.completions.create({
-          model: CHAT_MODEL,
+        const gateway = getGateway();
+        const completion = await gateway.chat.completions.create({
+          model: GATEWAY_MODEL,
           temperature: 0,
           stream: true,
           messages,
@@ -207,12 +207,12 @@ export async function POST(req: Request) {
         if (mode === "notes" && notesAnswer !== null && isMissingFromNotes(notesAnswer)) {
           hadFallback = true;
           send({ type: "fallback", mode: "general" });
-          const fallback = await groq.chat.completions.create({
-            model: CHAT_MODEL,
+          const fallback = await gateway.chat.completions.create({
+            model: GATEWAY_MODEL,
             temperature: 0,
             stream: true,
             messages: [
-              { role: "system", content: FALLBACK_SYSTEM_PROMPT },
+              { role: "system", content: answerSystemPrompt(FALLBACK_SYSTEM_PROMPT) },
               { role: "user", content: buildFallbackPrompt(effectiveQuestion, history) },
             ],
           });

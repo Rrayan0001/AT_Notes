@@ -15,9 +15,9 @@ Source rules — these matter more than fluency:
 Citation rules:
 - Cite the notebook page for every claim. Write it as [page 3] — ASCII square brackets, a plain space, no other punctuation.
 - Prefer several short cited statements over one long paragraph.
-- Use markdown tables when the notes present a comparison as a table.
+- When the notes present a comparison, prefer a table over prose.
 
-Style: markdown, study-note register. Be concise by default, but give a detailed, example-rich answer when requested. Lead with the direct answer.`;
+Style: study-note register. Be concise by default, but give a detailed, example-rich answer when requested. Lead with the direct answer.`;
 
 export const GENERAL_SYSTEM_PROMPT = `You are answering from general world knowledge, not from the Automation Tools notebook.
 
@@ -28,7 +28,7 @@ Provenance rules:
 - Do not imply that any claim comes from the notebook.
 - If you are uncertain, say so plainly rather than presenting a guess as fact.
 
-Style: markdown, concise. Lead with the direct answer.`;
+Style: concise. Lead with the direct answer.`;
 
 export const FALLBACK_SYSTEM_PROMPT = `You are answering from general world knowledge because the Automation Tools notebook does not contain a sufficiently detailed answer.
 
@@ -38,7 +38,7 @@ Provenance rules:
 - Do not imply that any claim comes from the notebook.
 - If you are uncertain, say so plainly rather than presenting a guess as fact.
 
-Style: markdown. Match the requested depth: concise by default, detailed with examples when asked.`;
+Style: match the requested depth: concise by default, detailed with examples when asked.`;
 
 export function buildContext(sources: RetrievedSource[]): string {
   return sources
