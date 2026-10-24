@@ -35,7 +35,7 @@ const ROOT = process.cwd();
 const SPECS: DomainSpec[] = [
   {
     domain: "aws",
-    title: "AWS Notes — Full Transcription (Cloud Practitioner + Notes)",
+    title: "AWS Notes — Full Transcription (Cloud Practitioner + Notes + EventBridge)",
     out: join(ROOT, "data", "AWS_Notes_Transcription.md"),
     volumes: [
       {
@@ -60,6 +60,12 @@ const SPECS: DomainSpec[] = [
           "AWS_notes/extracted/Notes_pages_010-018.md",
         ],
         pages: 18,
+      },
+      {
+        id: "eventbridge",
+        label: "EventBridge Notes",
+        files: ["AWS_notes/extracted/EVENTBRIDGE_pages_001-003.md"],
+        pages: 3,
       },
     ],
   },

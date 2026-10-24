@@ -1,16 +1,34 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
- * The welcome veil: a single short entrance sequence, shown once per browser
- * session before any page's content becomes interactive. Dark lamplight field,
- * the wordmark settling from a wide tracking, hairline stage lines and one
- * Rubric scan light. Any key or click skips it; prefers-reduced-motion skips it
- * outright. Plays nowhere else afterwards.
+ * The welcome veil: a dramatic entrance sequence, once per browser session.
+ * Dark lamplight field, wordmark settling with blur + tracking, hairline stage
+ * lines, floating dust particles, and one Rubric scan light.
+ * Any key or click skips it; prefers-reduced-motion skips it outright.
  */
 export function WelcomeGate() {
   const [phase, setPhase] = useState<"idle" | "play" | "done">("idle");
+  const particlesRef = useRef<Array<{
+    x: number; y: number; size: number;
+    tx: number; ty: number; dur: number; delay: number;
+  }>>([]);
+
+  // Generate dust particles once
+  if (particlesRef.current.length === 0) {
+    for (let i = 0; i < 18; i++) {
+      particlesRef.current.push({
+        x: 10 + Math.random() * 80,
+        y: 10 + Math.random() * 80,
+        size: 1 + Math.random() * 2.5,
+        tx: (Math.random() - 0.5) * 32,
+        ty: -8 - Math.random() * 20,
+        dur: 3 + Math.random() * 3,
+        delay: Math.random() * 2,
+      });
+    }
+  }
 
   useEffect(() => {
     let skip = false;
@@ -51,13 +69,13 @@ export function WelcomeGate() {
       try {
         sessionStorage.setItem("axiom-welcome", "1");
       } catch {
-        /* private mode: the veil simply won't persist */
+        /* private mode */
       }
       document.documentElement.classList.remove("axiom-welcome-pending");
       setPhase("done");
     };
 
-    const end = setTimeout(finish, 3600);
+    const end = setTimeout(finish, 3900);
     const onKey = () => finish();
     window.addEventListener("keydown", onKey);
     window.addEventListener("pointerdown", onKey);
@@ -75,35 +93,51 @@ export function WelcomeGate() {
       aria-hidden="true"
       className="welcome-veil fixed inset-0 z-[60] select-none overflow-hidden"
     >
-      {/* Stage lines: one horizon, one plumb, drawn from the center. */}
-      <span className="welcome-hline absolute top-[38%] left-1/2 h-px w-[86%] -translate-x-1/2" />
+      {/* Dust particles — ambient floating motes */}
+      {particlesRef.current.map((p, i) => (
+        <span
+          key={i}
+          className="welcome-particle"
+          style={{
+            left: `${p.x}%`,
+            top: `${p.y}%`,
+            width: p.size,
+            height: p.size,
+            "--dur": `${p.dur}s`,
+            "--delay": `${p.delay}s`,
+            "--tx": `${p.tx}px`,
+            "--ty": `${p.ty}px`,
+          } as React.CSSProperties}
+        />
+      ))}
+
+      {/* Stage lines: horizon + plumb, drawn from the center */}
+      <span className="welcome-hline absolute top-[38%] left-1/2 h-px w-[88%] -translate-x-1/2" />
       <span className="welcome-vline absolute top-0 left-1/2 h-full w-px" />
 
-      {/* The scan light: one 1px Rubric rule sweeping the plumb. */}
+      {/* The scan light: one Rubric beam sweeping the plumb */}
       <span className="welcome-scan absolute top-0 h-full w-px left-1/2" />
 
       <div className="relative flex h-full flex-col items-center justify-center">
         {/* The wordmark */}
-        <h1 className="welcome-word font-serif text-[clamp(4rem,15vw,10rem)] font-light leading-none text-[oklch(0.94_0.01_85)]">
+        <h1 className="welcome-word font-serif text-[clamp(4.5rem,16vw,11rem)] font-light leading-none tracking-[0.06em] text-[oklch(0.94_0.01_85)]">
           AXIOM
         </h1>
-        <span className="welcome-rule mt-7 h-px w-0 bg-(--rubric)" />
+
+        {/* Rubric rule expanding below the wordmark */}
+        <span className="welcome-rule mt-6 h-px w-0 bg-(--rubric)" />
 
         {/* The machine line */}
-        <p className="welcome-meta mt-7 flex flex-wrap items-center justify-center gap-x-3 font-mono text-[11px] uppercase tracking-[0.3em] text-[oklch(0.62_0.01_75)]">
+        <p className="welcome-meta mt-6 flex flex-wrap items-center justify-center gap-x-4 font-mono text-[10px] uppercase tracking-[0.32em] text-[oklch(0.58_0.01_75)]">
           <span>transcribed</span>
-          <span aria-hidden="true" className="opacity-40">
-            ·
-          </span>
+          <span aria-hidden="true" className="opacity-30">·</span>
           <span>retrieved</span>
-          <span aria-hidden="true" className="opacity-40">
-            ·
-          </span>
+          <span aria-hidden="true" className="opacity-30">·</span>
           <span>attested</span>
         </p>
       </div>
 
-      <p className="welcome-skip absolute bottom-8 w-full text-center font-mono text-[10px] uppercase tracking-[0.3em] text-[oklch(0.45_0.01_75)]">
+      <p className="welcome-skip absolute bottom-8 w-full text-center font-mono text-[9px] uppercase tracking-[0.35em] text-[oklch(0.42_0.01_75)]">
         press any key to continue
       </p>
     </div>

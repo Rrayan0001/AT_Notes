@@ -14,15 +14,25 @@ import {
   PRIMARY,
 } from "@/components/auth/auth-shell";
 import { PasswordField } from "@/components/auth/password-field";
+import {
+  PASSWORD_MIN,
+  STRENGTH_LABELS,
+  passwordRequirementMessage,
+  passwordStrength,
+} from "@/lib/password";
 
 const DISCLAIMER =
   "AXIOM is a personal study aid. Answers come from transcribed notes, not authoritative sources — check them against your own material and syllabus.";
+
+const strengthColor = (strength: 0 | 1 | 2 | 3 | 4): string =>
+  strength <= 1 ? "bg-rubric" : strength === 2 ? "bg-amber-500" : "bg-emerald-500";
 
 export function SignupForm({ oauthProviders }: { oauthProviders: string[] }) {
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
   const [keep, setKeep] = useState(false);
   const [domain, setDomain] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -34,6 +44,15 @@ export function SignupForm({ oauthProviders }: { oauthProviders: string[] }) {
     setError(null);
     if (!domain) {
       setError("Choose the one domain you want to belong to — it can't be changed later.");
+      return;
+    }
+    const requirement = passwordRequirementMessage(password);
+    if (requirement) {
+      setError(requirement);
+      return;
+    }
+    if (confirm !== password) {
+      setError("Passwords do not match.");
       return;
     }
     setBusy(true);
@@ -105,16 +124,48 @@ export function SignupForm({ oauthProviders }: { oauthProviders: string[] }) {
           placeholder="you@example.com"
         />
       </div>
+      <div className="space-y-2">
+        <PasswordField
+          id="signup-password"
+          label="Password"
+          autoComplete="new-password"
+          required
+          minLength={PASSWORD_MIN}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder={`${PASSWORD_MIN}+ chars, upper/lower case, digit, symbol`}
+        />
+        {/* Live strength meter: four hairline segments fill as independent
+            character classes appear — the machine voice, left aligned. */}
+        <div aria-hidden="true" className="flex gap-1">
+          {[1, 2, 3, 4].map((step) => (
+            <span
+              key={step}
+              className={
+                "h-0.5 flex-1 transition-colors duration-300 " +
+                (passwordStrength(password) >= step && password.length > 0
+                  ? strengthColor(passwordStrength(password))
+                  : "bg-foreground/10")
+              }
+            />
+          ))}
+        </div>
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+          strength: {STRENGTH_LABELS[passwordStrength(password)]}
+        </p>
+      </div>
       <PasswordField
-        id="signup-password"
-        label="Password"
+        id="signup-confirm"
+        label="Confirm password"
         autoComplete="new-password"
         required
-        minLength={8}
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="At least 8 characters"
+        value={confirm}
+        onChange={(e) => setConfirm(e.target.value)}
+        placeholder="Repeat the password"
       />
+      {confirm.length > 0 && confirm !== password && (
+        <p className="text-[12px] text-rubric">Passwords do not match.</p>
+      )}
       <KeepSignedIn checked={keep} onChange={setKeep} />
 
       {/* The domain contents list: a table of contents, not a card grid.

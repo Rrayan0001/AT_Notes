@@ -24,6 +24,7 @@ export function ChatSidebar({
   onNew: () => void;
 }) {
   const [sessions, setSessions] = useState<Session[]>([]);
+  const [mounted, setMounted] = useState(false);
 
   async function load() {
     const res = await fetch("/api/sessions");
@@ -35,6 +36,7 @@ export function ChatSidebar({
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
     void load();
   }, [activeId]);
 
@@ -46,8 +48,14 @@ export function ChatSidebar({
 
   if (!open) {
     return (
-      <div className="hidden w-10 shrink-0 border-r bg-card/40 md:flex md:flex-col md:items-center md:pt-3">
-        <Button variant="ghost" size="icon" className="size-8" onClick={onToggle} aria-label="Open sidebar">
+      <div className="hidden w-10 shrink-0 sidebar-panel md:flex md:flex-col md:items-center md:pt-3">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-8 transition-all hover:scale-110 hover:bg-rubric/10 hover:text-rubric"
+          onClick={onToggle}
+          aria-label="Open sidebar"
+        >
           <PanelLeftOpen className="size-4" />
         </Button>
       </div>
@@ -55,48 +63,79 @@ export function ChatSidebar({
   }
 
   return (
-    <aside className="hidden w-60 shrink-0 flex-col border-r bg-card/40 md:flex">
-      <div className="flex items-center justify-between border-b px-3 py-2">
-        <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Chats</span>
-        <Button variant="ghost" size="icon" className="size-7" onClick={onToggle} aria-label="Close sidebar">
-          <PanelLeftClose className="size-4" />
+    <aside
+      className="hidden w-64 shrink-0 flex-col sidebar-panel md:flex"
+      style={{ opacity: mounted ? 1 : 0, transition: "opacity 200ms ease" }}
+    >
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--leaf)]">
+        <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+          Sessions
+        </span>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-6 transition-all hover:scale-110 hover:bg-rubric/10 hover:text-rubric"
+          onClick={onToggle}
+          aria-label="Close sidebar"
+        >
+          <PanelLeftClose className="size-3.5" />
         </Button>
       </div>
-      <div className="p-2">
-        <Button variant="outline" size="sm" className="w-full justify-start gap-2" onClick={onNew}>
-          <Plus className="size-3.5" /> New chat
-        </Button>
+
+      {/* New chat button */}
+      <div className="p-3">
+        <button
+          onClick={onNew}
+          className="group flex w-full items-center gap-2 rounded-none border border-[var(--leaf)] bg-transparent px-3 py-2 text-[13px] text-muted-foreground transition-all hover:border-rubric/40 hover:bg-rubric/5 hover:text-foreground"
+        >
+          <Plus className="size-3.5 transition-transform group-hover:rotate-90" />
+          <span className="font-mono tracking-wide">New chat</span>
+        </button>
       </div>
-      <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-2">
+
+      <div className="h-px bg-[var(--leaf)] mx-3" />
+
+      {/* Session list */}
+      <div className="min-h-0 flex-1 overflow-y-auto py-2 px-1.5">
+        {sessions.length === 0 && (
+          <p className="px-4 py-6 text-[11px] font-mono text-muted-foreground/60 tracking-wide uppercase">
+            No sessions yet
+          </p>
+        )}
         {sessions.map((s) => (
           <div
             key={s.id}
             className={
-              "group flex items-center gap-1 rounded-md px-2 py-1.5 text-sm " +
-              (s.id === activeId ? "bg-accent" : "hover:bg-accent/50")
+              "session-row group flex items-center gap-1.5 rounded-sm px-2.5 py-2 mb-0.5 " +
+              (s.id === activeId ? "active" : "")
             }
           >
             <button
               type="button"
               onClick={() => onSelect(s.id)}
-              className="flex min-w-0 flex-1 items-center gap-2 text-left"
+              className="flex min-w-0 flex-1 items-center gap-2.5 text-left"
             >
-              <MessageSquare className="size-3.5 shrink-0 text-muted-foreground" />
-              <span className="truncate">{s.title}</span>
+              <MessageSquare
+                className={
+                  "size-3.5 shrink-0 transition-colors " +
+                  (s.id === activeId ? "text-rubric" : "text-muted-foreground")
+                }
+              />
+              <span className="truncate text-[12.5px] leading-snug">
+                {s.title}
+              </span>
             </button>
             <button
               type="button"
               onClick={() => remove(s.id)}
-              className="opacity-0 group-hover:opacity-100"
+              className="opacity-0 group-hover:opacity-100 transition-all hover:text-rubric rounded p-0.5"
               aria-label="Delete chat"
             >
-              <Trash2 className="size-3.5 text-muted-foreground" />
+              <Trash2 className="size-3 text-muted-foreground hover:text-rubric transition-colors" />
             </button>
           </div>
         ))}
-        {sessions.length === 0 && (
-          <p className="px-2 py-4 text-xs text-muted-foreground">No chats yet.</p>
-        )}
       </div>
     </aside>
   );

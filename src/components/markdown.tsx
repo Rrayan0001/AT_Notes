@@ -47,7 +47,7 @@ export interface MarkdownProps {
 function Cite({ page, onCite }: { page: number; onCite?: (page: number) => void }) {
   if (!onCite) {
     return (
-      <span className="mx-0.5 inline-flex h-5 translate-y-[-1px] items-center rounded-full bg-accent px-1.5 align-middle font-mono text-[11px] font-medium text-accent-foreground">
+      <span className="cite-chip">
         p{page}
       </span>
     );
@@ -58,7 +58,7 @@ function Cite({ page, onCite }: { page: number; onCite?: (page: number) => void 
       type="button"
       onClick={() => onCite(page)}
       title={`Show page ${page} in the evidence panel`}
-      className="mx-0.5 inline-flex h-5 translate-y-[-1px] cursor-pointer items-center gap-1 rounded-full bg-accent px-1.5 align-middle font-mono text-[11px] font-medium text-accent-foreground transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="cite-chip cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
     >
       p{page}
     </button>
@@ -71,7 +71,7 @@ export const MarkdownView = memo(function MarkdownView({
   className,
 }: MarkdownProps) {
   return (
-    <div className={className}>
+    <div className={`answer-text ${className ?? ""}`}>
       <Markdown
         remarkPlugins={[remarkGfm]}
         urlTransform={urlTransform}

@@ -25,30 +25,35 @@ export function AuthShell({
   return (
     <main className="auth-ground min-h-dvh lg:grid lg:grid-cols-[1.15fr_1fr] lg:grid-rows-1">
       {/* The title page */}
-      <aside className="px-7 pt-10 pb-2 lg:flex lg:flex-col lg:justify-between lg:px-14 lg:py-14">
+      <aside className="px-7 pt-10 pb-6 lg:flex lg:flex-col lg:justify-between lg:px-14 lg:py-14 turn-enter">
         <div>
           <Link
             href="/"
-            className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground hover:text-foreground"
+            className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground hover:text-rubric transition-colors"
           >
             AXIOM
           </Link>
+
+          {/* Rubric accent — the one saturated line on this screen */}
+          <div className="mt-8 mb-1 h-px w-10 bg-rubric" />
+
           <h1
-            className="mt-6 max-w-[16ch] font-serif text-4xl font-light leading-[1.08] tracking-[-0.02em] text-balance sm:text-5xl lg:mt-10"
+            className="mt-6 max-w-[16ch] font-serif text-4xl font-light leading-[1.08] tracking-[-0.02em] text-balance sm:text-5xl lg:mt-8"
             style={{ fontVariationSettings: '"opsz" 36' }}
           >
             {title}
           </h1>
-          <p className="mt-4 max-w-[52ch] text-[15px] leading-relaxed text-muted-foreground">
+          <p className="mt-4 max-w-[48ch] text-[14.5px] leading-relaxed text-muted-foreground">
             {dust}
           </p>
         </div>
-        {/* Machine facts, running across like a contents line */}
-        <div className="mt-10 border-t border-leaf pt-4 lg:mt-0" aria-label="Facts">
-          <p className="flex flex-wrap gap-x-2 gap-y-1 font-mono text-[11px] tracking-[0.02em] text-muted-foreground">
+
+        {/* Machine facts strip */}
+        <div className="mt-10 border-t border-[var(--leaf)] pt-4 lg:mt-0" aria-label="Facts">
+          <p className="flex flex-wrap gap-x-2 gap-y-1 font-mono text-[10px] tracking-[0.06em] text-muted-foreground">
             {facts.map((fact, i) => (
               <span key={fact} className="whitespace-nowrap">
-                {i > 0 && <span className="mr-2 opacity-40">·</span>}
+                {i > 0 && <span className="mr-2 opacity-35">·</span>}
                 {fact}
               </span>
             ))}
@@ -57,24 +62,29 @@ export function AuthShell({
       </aside>
 
       {/* The form leaf */}
-      <div className="bg-vellum lg:border-l lg:border-leaf">
+      <div
+        className="bg-vellum lg:border-l lg:border-[var(--leaf)] turn-enter"
+        style={{ animationDelay: "80ms" }}
+      >
         <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center px-7 py-12 lg:min-h-full lg:px-14 lg:py-14">
           {children}
-          <div className="mt-7 border-t border-leaf pt-5 text-sm text-muted-foreground">{next}</div>
+          <div className="mt-7 border-t border-[var(--leaf)] pt-5 text-[13px] text-muted-foreground">
+            {next}
+          </div>
         </div>
       </div>
     </main>
   );
 }
 
-/** The form-leaf shared pieces. */
+/** Form-leaf shared pieces */
 export function FormError({ children }: { children: ReactNode }) {
   return (
     <p
       role="alert"
-      className="border border-leaf bg-leaf/30 px-4 py-3 text-[13px] leading-relaxed text-muted-foreground"
+      className="border border-[var(--leaf)] bg-[var(--leaf)] px-4 py-3 text-[13px] leading-relaxed text-muted-foreground"
     >
-      <span className="mr-2 font-mono text-[10px] tracking-[0.18em] text-rubric uppercase">
+      <span className="mr-2 font-mono text-[10px] tracking-[0.2em] text-rubric uppercase">
         notice
       </span>
       {children}
@@ -83,18 +93,16 @@ export function FormError({ children }: { children: ReactNode }) {
 }
 
 export const PRIMARY =
-  "h-10 w-full rounded-none text-[15px] font-normal bg-(--rubric) text-[#F5EFE4] hover:bg-(--rubric-deep) focus-visible:ring-0 focus-visible:border-(--rubric)";
+  "h-10 w-full rounded-none text-[14.5px] font-normal bg-(--rubric) text-[#F5EFE4] hover:bg-(--rubric-deep) focus-visible:ring-0 focus-visible:border-(--rubric) transition-all hover:shadow-[0_0_0_3px_var(--rubric-glow)] active:scale-[0.985]";
 
 export const SECONDARY =
-  "h-10 w-full rounded-none border border-leaf bg-transparent text-[15px] font-normal text-foreground hover:bg-leaf/30 focus-visible:ring-0 focus-visible:border-(--rubric)";
+  "h-10 w-full rounded-none border border-[var(--leaf)] bg-transparent text-[14.5px] font-normal text-foreground hover:bg-[var(--leaf)] hover:border-rubric/30 focus-visible:ring-0 focus-visible:border-(--rubric) transition-all";
 
 export const FIELD = "field-underline focus-rubric text-[15px] text-foreground";
-export const LABEL = "text-sm text-muted-foreground";
+export const LABEL = "text-[12px] font-mono uppercase tracking-[0.14em] text-muted-foreground";
 
 /**
- * The session horizon, stated plainly: checked, the token is re-signed for
- * 180 days; unchecked, it lapses after 24 hours (POST /api/session). The
- * right-hand mono text is not decoration — it names the actual lifetime.
+ * The session horizon, stated plainly: checked = 180 days, unchecked = 24 hours.
  */
 export function KeepSignedIn({
   checked,
@@ -104,7 +112,7 @@ export function KeepSignedIn({
   onChange: (v: boolean) => void;
 }) {
   return (
-    <label className="flex cursor-pointer items-center gap-3 border-y border-leaf px-1 py-2.5 transition-colors focus-within:bg-leaf/30 hover:bg-leaf/40">
+    <label className="flex cursor-pointer items-center gap-3 border-y border-[var(--leaf)] px-1 py-2.5 transition-colors focus-within:bg-[var(--leaf)]/50 hover:bg-[var(--leaf)]/40">
       <input
         type="checkbox"
         checked={checked}
@@ -113,24 +121,24 @@ export function KeepSignedIn({
       />
       <span
         aria-hidden="true"
-        className="peer-checked:border-(--rubric) peer-checked:bg-rubric size-3.5 shrink-0 border border-foreground/25 transition-colors"
+        className="peer-checked:border-(--rubric) peer-checked:bg-rubric size-3.5 shrink-0 border border-foreground/25 transition-all duration-200"
       />
       <span className="font-mono text-[11px] tracking-[0.16em] text-muted-foreground uppercase transition-colors peer-checked:text-foreground">
         Keep me signed in
       </span>
-      <span className="ml-auto font-mono text-[10px] tracking-[0.14em] text-muted-foreground/70 uppercase">
+      <span className="ml-auto font-mono text-[10px] tracking-[0.14em] text-muted-foreground/60 uppercase">
         {checked ? "180 days" : "24 hours"}
       </span>
     </label>
   );
 }
 
-/** The plain-term agreement, identical on both leaves. */
+/** The plain-term disclaimer, identical on both form leaves. */
 export function Disclaimer({ children }: { children: ReactNode }) {
   return (
-    <p className="border border-leaf px-4 py-3 text-[13px] leading-relaxed text-muted-foreground">
-      <span className="mr-2 font-mono text-[10px] tracking-[0.18em] text-rubric uppercase">
-        disclaimer
+    <p className="border border-[var(--leaf)] px-4 py-3 text-[13px] leading-relaxed text-muted-foreground">
+      <span className="mr-2 font-mono text-[10px] tracking-[0.2em] text-rubric uppercase">
+        note
       </span>
       {children}
     </p>

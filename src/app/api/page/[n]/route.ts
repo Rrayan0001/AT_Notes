@@ -8,6 +8,8 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const CACHE_ROOT = join(process.cwd(), ".cache", "pages");
+/** Pre-rendered scans served in serverless environments without poppler. */
+const STATIC_ROOT = join(process.cwd(), "public", "pages");
 
 const ALLOWED_WIDTHS = new Set([360, 760, 1600]);
 const CACHE_MAX_AGE = 60 * 60 * 24 * 365;
@@ -109,6 +111,27 @@ async function cached(
   return job;
 }
 
+/**
+ * Pre-rendered static scans, arranged as public/pages/<domain>/<page>-<width>.webp.
+ * Vercel has no poppler/imagemagick, so any page shipped there must exist as a
+ * static asset. The automation corpus predates domain scoping and still lives
+ * flat at public/pages/<page>-<width>.webp — that legacy location is only
+ * consulted for automation.
+ */
+function staticPageBytes(
+  domain: string,
+  page: number,
+  width: number
+): Buffer | null {
+  const scoped = join(STATIC_ROOT, domain, `${page}-${width}.webp`);
+  if (existsSync(scoped)) return readFileSync(scoped);
+  if (domain === "automation") {
+    const legacy = join(STATIC_ROOT, `${page}-${width}.webp`);
+    if (existsSync(legacy)) return readFileSync(legacy);
+  }
+  return null;
+}
+
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ n: string }> }
@@ -153,7 +176,10 @@ export async function GET(
   }
 
   try {
-    const bytes = await cached(guard.domainId, pdfPath, resolved.localPage, page, width);
+    const staticBytes = staticPageBytes(guard.domainId, page, width);
+    const bytes =
+      staticBytes ??
+      (await cached(guard.domainId, pdfPath, resolved.localPage, page, width));
     return new Response(new Uint8Array(bytes), {
       headers: {
         "Content-Type": "image/webp",

@@ -19,7 +19,8 @@ Citation rules:
 
 Style: study-note register. Be concise by default, but give a detailed, example-rich answer when requested. Lead with the direct answer.`;
 
-export const GENERAL_SYSTEM_PROMPT = `You are answering from general world knowledge, not from the Automation Tools notebook.
+export function generalSystemPrompt(domainLabel = "the notes"): string {
+  return `You are answering from general world knowledge, not from the ${domainLabel} notebook.
 
 Provenance rules:
 - Begin your response with "General knowledge — not from these notes."
@@ -29,8 +30,10 @@ Provenance rules:
 - If you are uncertain, say so plainly rather than presenting a guess as fact.
 
 Style: concise. Lead with the direct answer.`;
+}
 
-export const FALLBACK_SYSTEM_PROMPT = `You are answering from general world knowledge because the Automation Tools notebook does not contain a sufficiently detailed answer.
+export function fallbackSystemPrompt(domainLabel = "the notes"): string {
+  return `You are answering from general world knowledge because the ${domainLabel} notebook does not contain a sufficiently detailed answer.
 
 Provenance rules:
 - Do not begin with a provenance header; the interface appends the disclosure.
@@ -39,6 +42,7 @@ Provenance rules:
 - If you are uncertain, say so plainly rather than presenting a guess as fact.
 
 Style: match the requested depth: concise by default, detailed with examples when asked.`;
+}
 
 export function buildContext(sources: RetrievedSource[]): string {
   return sources

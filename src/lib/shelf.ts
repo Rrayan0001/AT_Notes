@@ -23,6 +23,7 @@ const PDFS = {
   pavan: "pawan_notes.pdf",
   awsCp: "AWS_notes/Cloud Practitioner Notes.pdf",
   awsNotes: "AWS_notes/Notes.pdf",
+  awsEventBridge: "AWS_notes/event bridge.pdf",
   azureAnsible: "azure/ANSIBLE.pdf",
   azureDkr: "azure/Docker & Kubernetes (1).pdf",
   azureGithub: "azure/GITHUB.pdf",
@@ -37,6 +38,7 @@ export const SHELVES: Record<string, ShelfVolume[]> = {
   aws: [
     { id: "cp", label: "Cloud Practitioner Notes", pdf: join(PDFS.awsCp), from: 1, to: 43 },
     { id: "notes", label: "AWS Notes", pdf: join(PDFS.awsNotes), from: 44, to: 61 },
+    { id: "eventbridge", label: "EventBridge Notes", pdf: join(PDFS.awsEventBridge), from: 62, to: 64 },
   ],
   azure: [
     { id: "ansible", label: "Ansible", pdf: join(PDFS.azureAnsible), from: 1, to: 16 },

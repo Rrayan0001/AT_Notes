@@ -4,7 +4,7 @@ import fs from "node:fs";
 import { embedQuery } from "@/lib/embed";
 import { retrieveHybrid } from "@/lib/retrieve";
 import { rerank } from "@/lib/rerank";
-import { SYSTEM_PROMPT, buildUserPrompt, FALLBACK_SYSTEM_PROMPT, buildFallbackPrompt } from "@/lib/prompt";
+import { SYSTEM_PROMPT, buildUserPrompt, buildFallbackPrompt, fallbackSystemPrompt } from "@/lib/prompt";
 import { getGroq, CHAT_MODEL } from "@/lib/groq";
 import type { RetrievedSource } from "@/lib/types";
 
@@ -38,7 +38,7 @@ async function main() {
     let general: string | null = null;
     if (/that\s+isn[’']?t\s+in\s+these\s+notes/i.test(a)) {
       general = await answer([
-        { role: "system", content: FALLBACK_SYSTEM_PROMPT },
+        { role: "system", content: fallbackSystemPrompt("the notes") },
         { role: "user", content: buildFallbackPrompt(q, []) },
       ]);
     }

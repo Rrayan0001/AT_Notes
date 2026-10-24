@@ -39,7 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
       </head>
-      <body className="flex min-h-full flex-col">
+      <body className="flex min-h-full flex-col grain">
         <div data-welcome-static aria-hidden="true" className="welcome-static" />
         <WelcomeGate />
         {children}

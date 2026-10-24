@@ -152,5 +152,19 @@ export function useChatStream() {
     setBusy(false);
   }, []);
 
-  return { turns, busy, ask, stop, reset };
+  /**
+   * Loads persisted history without discarding turns that are streaming right
+   * now. Guards the slow-loader race: a question submitted while a previous
+   * session's history fetch is still in flight would otherwise be wiped by
+   * reset() the moment that fetch resolves.
+   */
+  const loadTurns = useCallback((next: Turn[]) => {
+    setTurns((prev) => {
+      const live = prev.filter((t) => t.status === "streaming");
+      if (live.length === 0) return next;
+      return [...next, ...live];
+    });
+  }, []);
+
+  return { turns, busy, ask, stop, reset, loadTurns };
 }

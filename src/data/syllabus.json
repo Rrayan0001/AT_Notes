@@ -1,0 +1,536 @@
+{
+  "_comment": "Curriculum map per domain. Every relationship is authored from the NIIT curricula (AWS Core 13wk, CIS AWS DevOps HiPo 10wk, CIS CNAIP DevOps via AWS 15.6wk, Automation & Analytics 13wk, SAP PP timetable). `prereqs` = modules that logically come first; `leadsTo` = the curriculum's next step, in order; `related` = lateral compare/review links. `bridge` holds the authored question for an edge (leads.*/related.*); edges without one fall back to generic phrasing. Pages are resolved at runtime by matching `keywords` against the domain's chunk index.",
+  "aws": {
+    "modules": [
+      {
+        "id": "cloud-foundation",
+        "title": "Cloud & AWS Foundations",
+        "stage": "Stage 1 · AWS Basics",
+        "topics": ["cloud computing principles", "regions and availability zones", "IaaS / PaaS / SaaS", "shared responsibility model", "Well-Architected Framework"],
+        "keywords": ["cloud computing", "iaas", "paas", "saas", "availability zone", "region", "shared responsibility", "well-architected", "edge location"],
+        "prereqs": [],
+        "leadsTo": ["iam", "vpc", "ec2"],
+        "related": ["cost-optimization"]
+      },
+      {
+        "id": "iam",
+        "title": "IAM — Identity & Access Management",
+        "stage": "Stage 2 · AWS Advanced",
+        "topics": ["users, groups and roles", "policies (identity vs resource)", "MFA", "policy evaluation", "KMS and certificate manager"],
+        "keywords": ["iam", "authentication", "authorization", "policy", "mfa", "multi-factor", "kms", "role"],
+        "prereqs": ["cloud-foundation"],
+        "leadsTo": ["ec2", "databases", "app-integration"],
+        "related": ["cloudwatch-ops"]
+      },
+      {
+        "id": "vpc",
+        "title": "VPC — Networking Foundations",
+        "stage": "Stage 1 · AWS Basics",
+        "topics": ["subnets and routing tables", "security groups vs NACLs", "NAT gateway and endpoints", "peering and Transit Gateway", "hybrid: VPN and Direct Connect"],
+        "keywords": ["vpc", "subnet", "route table", "security group", "nacl", "nat gateway", "transit gateway", "direct connect", "vpc peering", "private link", "endpoint"],
+        "prereqs": ["cloud-foundation"],
+        "leadsTo": ["ec2", "databases"],
+        "related": ["route53-dns"]
+      },
+      {
+        "id": "ec2",
+        "title": "Amazon EC2",
+        "stage": "Stage 1 · AWS Basics",
+        "topics": ["instance types and purchase options", "EBS volumes and snapshots", "AMIs and key pairs", "elastic IP", "security groups for instances"],
+        "keywords": ["ec2", "instance", "ami", "ebs", "snapshot", "key pair", "elastic ip", "on-demand", "reserved instance", "spot"],
+        "prereqs": ["cloud-foundation", "iam", "vpc"],
+        "leadsTo": ["elasticity", "storage-s3", "databases"],
+        "related": ["cost-optimization", "cloudwatch-ops"],
+        "bridge": {
+          "leads": {
+            "elasticity": "How do Auto Scaling groups and load balancers scale an EC2 fleet?",
+            "storage-s3": "How do EC2 workloads connect to S3 storage?",
+            "databases": "How do EC2 applications integrate with RDS databases?"
+          },
+          "related": {
+            "cost-optimization": "How do EC2 pricing models (on-demand, reserved, spot) cut cost?",
+            "cloudwatch-ops": "How is an EC2 instance monitored with CloudWatch?"
+          }
+        }
+      },
+      {
+        "id": "elasticity",
+        "title": "Auto Scaling & Elastic Load Balancing",
+        "stage": "Stage 1 · Elasticity & Management Tools",
+        "topics": ["launch templates and scaling groups", "scaling policies (target tracking, step, scheduled)", "load balancer types", "target groups and request routing"],
+        "keywords": ["auto scaling", "auto scaling group", "scaling policy", "target tracking", "load balanc", "elastic load balancing", "target group", "launch template"],
+        "prereqs": ["ec2"],
+        "leadsTo": ["cloudwatch-ops", "route53-dns"],
+        "related": ["high-availability"]
+      },
+      {
+        "id": "cloudwatch-ops",
+        "title": "CloudWatch, CloudTrail & Governance",
+        "stage": "Stage 2 · AWS Advanced",
+        "topics": ["metrics, alarms and events", "log groups and agent", "CloudTrail auditing", "AWS Config and Trusted Advisor"],
+        "keywords": ["cloudwatch", "cloudtrail", "trusted advisor", "alarm", "log group", "aws config", "metrics"],
+        "prereqs": ["elasticity"],
+        "leadsTo": ["cost-optimization"],
+        "related": ["app-integration"]
+      },
+      {
+        "id": "route53-dns",
+        "title": "Route 53 — DNS & Routing",
+        "stage": "Stage 2 · Cost & DNS",
+        "topics": ["record types (A, CNAME, MX, TXT, PTR)", "routing policies (simple → geolocation)", "health checks and failover", "private hosted zones and resolver"],
+        "keywords": ["route 53", "route53", "hosted zone", "dns", "cname", "routing polic", "health check", "failover", "resolver"],
+        "prereqs": ["elasticity"],
+        "leadsTo": [],
+        "related": ["vpc", "elasticity"],
+        "bridge": {
+          "related": {
+            "vpc": "How does Route 53 resolve names inside a private VPC?",
+            "elasticity": "How does Route 53 fail over traffic behind load balancers?"
+          }
+        }
+      },
+      {
+        "id": "cost-optimization",
+        "title": "Cost Optimization & Billing",
+        "stage": "Stage 2 · Cost & DNS",
+        "topics": ["Cost Explorer and budgets", "savings plans and reserved capacity", "billing tags", "TCP/TCO tooling"],
+        "keywords": ["cost explorer", "budget", "savings plan", "reserved", "billing", "cost optimization", "tco"],
+        "prereqs": ["cloud-foundation"],
+        "leadsTo": [],
+        "related": ["ec2", "cloudwatch-ops"]
+      },
+      {
+        "id": "storage-s3",
+        "title": "S3 & Storage Services",
+        "stage": "Stage 1 · Elasticity & Management Tools",
+        "topics": ["buckets and object storage", "storage classes and Glacier", "lifecycle policies", "versioning and logging"],
+        "keywords": ["s3", "bucket", "glacier", "lifecycle", "versioning", "object storage", "efs", "storage class"],
+        "prereqs": ["cloud-foundation"],
+        "leadsTo": ["serverless"],
+        "related": ["ec2"],
+        "bridge": {
+          "leads": {
+            "serverless": "How does an S3 event trigger a Lambda function?"
+          }
+        }
+      },
+      {
+        "id": "databases",
+        "title": "Database Services — RDS & DynamoDB",
+        "stage": "Stage 2 · IAM & Database Services",
+        "topics": ["RDS engines and instances", "parameter, option and security groups", "Multi-AZ and read replicas", "DynamoDB partition/sort keys and indexes"],
+        "keywords": ["rds", "dynamodb", "aurora", "read replica", "multi-az", "database", "partition key", "sort key", "secondary index"],
+        "prereqs": ["vpc", "iam"],
+        "leadsTo": ["serverless"],
+        "related": ["serverless"]
+      },
+      {
+        "id": "app-integration",
+        "title": "SNS, SQS & EventBridge",
+        "stage": "Stage 2 · Other PaaS Services",
+        "topics": ["SQS queues and DLQs", "SNS topics and fan-out", "EventBridge buses, rules and targets", "event structure and partner buses"],
+        "keywords": ["sns", "sqs", "ses", "eventbridge", "event bus", "dlq", "dead-letter", "fan-out", "event-driven"],
+        "prereqs": ["iam"],
+        "leadsTo": ["serverless"],
+        "related": ["cloudwatch-ops"],
+        "bridge": {
+          "leads": {
+            "serverless": "How does SQS or EventBridge trigger a Lambda function?"
+          }
+        }
+      },
+      {
+        "id": "serverless",
+        "title": "Lambda, API Gateway & Step Functions",
+        "stage": "Stage 2 · Serverless",
+        "topics": ["Lambda runtimes and execution roles", "event sources and triggers", "API Gateway HTTP vs REST", "Step Functions state machines"],
+        "keywords": ["lambda", "api gateway", "step functions", "serverless", "execution role", "state machine", "api gateway"],
+        "prereqs": ["app-integration", "iam"],
+        "leadsTo": [],
+        "related": ["databases", "storage-s3"]
+      },
+      {
+        "id": "containers",
+        "title": "Docker, ECR, ECS & Fargate on AWS",
+        "stage": "Stage 2 · Containers",
+        "topics": ["images and Dockerfile", "ECR push/pull and scanning", "ECS clusters, task definitions and services", "Fargate launch type"],
+        "keywords": ["docker", "container", "ecr", "ecs", "fargate", "task definition", "registry", "image"],
+        "prereqs": ["ec2", "vpc"],
+        "leadsTo": ["kubernetes", "devops-toolchain"],
+        "related": ["ec2"],
+        "bridge": {
+          "leads": {
+            "kubernetes": "How does Kubernetes management compare with running containers on ECS?"
+          }
+        }
+      },
+      {
+        "id": "kubernetes",
+        "title": "Kubernetes & EKS on AWS",
+        "stage": "Stage 2 · Containers",
+        "topics": ["pods, deployments and services", "kubectl workflow", "ConfigMaps and Secrets", "Ingress, service exposure and scaling"],
+        "keywords": ["kubernetes", "eks", "pod", "kubectl", "deployment", "namespace", "ingress", "configmap", "helm", "fargate profile"],
+        "prereqs": ["containers"],
+        "leadsTo": [],
+        "related": ["containers", "devops-toolchain"]
+      },
+      {
+        "id": "devops-toolchain",
+        "title": "Git, Jenkins & Terraform for AWS",
+        "stage": "Stage 2 · DevOps",
+        "topics": ["Git branching and workflow", "Jenkins pipelines and triggers", "Terraform IaC on AWS", "CI/CD automation"],
+        "keywords": ["git", "jenkins", "terraform", "pipeline", "ci/cd", "infrastructure as code", "devops"],
+        "prereqs": ["ec2"],
+        "leadsTo": [],
+        "related": ["containers", "kubernetes"]
+      }
+    ],
+    "starterQuestions": [
+      "Explain IAM users, groups, roles and policies.",
+      "How do Auto Scaling groups and load balancers work together?",
+      "What are SNS, SQS and EventBridge used for?",
+      "How does Amazon EventBridge route events from an event bus to targets?",
+      "Explain the Lambda and API Gateway serverless pattern.",
+      "What sits inside a VPC — subnets, routing tables and security groups?"
+    ]
+  },
+  "azure": {
+    "modules": [
+      {
+        "id": "git-github",
+        "title": "Git & GitHub",
+        "stage": "DevOps Core · Knowledge",
+        "topics": ["version control basics", "basic commands (init/add/commit)", "branching and merging", "collaboration on GitHub"],
+        "keywords": ["git", "github", "repository", "commit", "branch", "merge", "pull request", "version control"],
+        "prereqs": [],
+        "leadsTo": ["maven", "jenkins"],
+        "related": []
+      },
+      {
+        "id": "maven",
+        "title": "Maven — Build Tool",
+        "stage": "DevOps Core · Knowledge",
+        "topics": ["POM and project structure", "build lifecycle and dependencies", "repositories and plugins"],
+        "keywords": ["maven", "pom", "build tool", "dependency", "artifact", "lifecycle"],
+        "prereqs": ["git-github"],
+        "leadsTo": ["jenkins"],
+        "related": ["jenkins"],
+        "bridge": {
+          "related": {
+            "jenkins": "How does Jenkins use Maven to build an application?"
+          }
+        }
+      },
+      {
+        "id": "jenkins",
+        "title": "Jenkins — CI/CD",
+        "stage": "DevOps Core · Knowledge",
+        "topics": ["architecture, jobs and builds", "triggers (manual, SCM, webhooks, cron)", "pipeline types (freestyle, declarative, scripted)", "tool integration and build management"],
+        "keywords": ["jenkins", "freestyle", "pipeline", "jenkinsfile", "trigger", "declarative", "scripted", "multibranch", "devops"],
+        "prereqs": ["git-github", "maven"],
+        "leadsTo": ["docker"],
+        "related": ["splunk", "maven"],
+        "bridge": {
+          "leads": {
+            "docker": "How does a Jenkins pipeline build and deploy Docker images?"
+          },
+          "related": {
+            "splunk": "How does Splunk monitor Jenkins build logs?"
+          }
+        }
+      },
+      {
+        "id": "ansible",
+        "title": "Ansible — Configuration Management",
+        "stage": "DevOps Core · Knowledge",
+        "topics": ["what Ansible automates", "playbooks and inventories", "Tower and Galaxy", "configuration management workflow"],
+        "keywords": ["ansible", "playbook", "inventory", "tower", "galaxy", "configuration management", "automat"],
+        "prereqs": [],
+        "leadsTo": ["terraform"],
+        "related": ["terraform", "docker"]
+      },
+      {
+        "id": "terraform",
+        "title": "Terraform — Infrastructure as Code",
+        "stage": "Common for AWS and Azure DevOps",
+        "topics": ["declarative IaC", "providers and HCL", "state and modules", "workspaces and variables"],
+        "keywords": ["terraform", "iac", "declarative", "hcl", "tf state", "provider", "workspace", "provisioner", "infrastructure as code"],
+        "prereqs": [],
+        "leadsTo": [],
+        "related": ["ansible"],
+        "bridge": {
+          "related": {
+            "ansible": "How is Terraform different from Ansible — provisioning vs configuration management?"
+          }
+        }
+      },
+      {
+        "id": "docker",
+        "title": "Docker — Containers",
+        "stage": "Common for AWS and Azure DevOps",
+        "topics": ["containers vs virtual machines", "images and Dockerfiles", "running/pushing images", "Docker Hub and registries"],
+        "keywords": ["docker", "container", "image", "dockerfile", "registry", "docker hub", "containeriz"],
+        "prereqs": [],
+        "leadsTo": ["kubernetes"],
+        "related": ["jenkins", "ansible"],
+        "bridge": {
+          "leads": {
+            "kubernetes": "Why does Kubernetes need Docker containers, and how do pods wrap them?"
+          }
+        }
+      },
+      {
+        "id": "kubernetes",
+        "title": "Kubernetes — Orchestration",
+        "stage": "Common for AWS and Azure DevOps",
+        "topics": ["architecture and components", "pods and deployments", "services and exposure", "scaling and updating"],
+        "keywords": ["kubernetes", "k8s", "pod", "deployment", "kubectl", "namespace", "service", "scaling", "orchestrat"],
+        "prereqs": ["docker"],
+        "leadsTo": [],
+        "related": ["docker"]
+      },
+      {
+        "id": "splunk",
+        "title": "Splunk — Observability",
+        "stage": "DevOps Core · Knowledge",
+        "topics": ["Splunk components", "indexes and searches", "dashboards and alerts", "log analytics"],
+        "keywords": ["splunk", "index", "forwarder", "dashboard", "log analytics", "observability", "monitoring"],
+        "prereqs": [],
+        "leadsTo": [],
+        "related": ["jenkins", "kubernetes"],
+        "bridge": {
+          "related": {
+            "jenkins": "How does Splunk observe Jenkins pipelines?",
+            "kubernetes": "How is container log data fed into Splunk?"
+          }
+        }
+      }
+    ],
+    "starterQuestions": [
+      "What is Ansible and how does it manage configuration?",
+      "Explain Jenkins pipeline types and triggers.",
+      "How are Docker images built, run and shared?",
+      "How do Kubernetes pods, deployments and services relate?",
+      "How is Terraform different from Ansible?",
+      "What is Maven used for in a CI/CD pipeline?"
+    ]
+  },
+  "automation": {
+    "modules": [
+      {
+        "id": "networking-basics",
+        "title": "Networking Fundamentals",
+        "stage": "Stage 1 · IT Basics",
+        "topics": ["HTTP/HTTPS and TCP/IP", "OSI model layers", "hub, switch and router", "subnetting and CIDR", "DNS and DHCP", "VPN and tunneling"],
+        "keywords": ["http", "https", "tcp", "udp", "osi", "hub", "switch", "router", "subnet", "cidr", "dhcp", "dns", "vpn", "tunneling", "protocol"],
+        "prereqs": [],
+        "leadsTo": ["linux-ops", "cloud-fundamentals"],
+        "related": []
+      },
+      {
+        "id": "linux-ops",
+        "title": "Operating Systems & Linux",
+        "stage": "Stage 1 · IT Basics",
+        "topics": ["Windows server basics", "computer architecture", "users, groups and permissions", "bash and tar/zip", "SSH and remote desktop"],
+        "keywords": ["linux", "ubuntu", "chmod", "chown", "bash", "tar", "zip", "user", "group", "windows", "ssh", "architecture", "kernel"],
+        "prereqs": [],
+        "leadsTo": ["scripting-automation"],
+        "related": ["networking-basics"]
+      },
+      {
+        "id": "cloud-fundamentals",
+        "title": "Cloud Fundamentals (Azure & AWS)",
+        "stage": "Stage 1 · Cloud",
+        "topics": ["cloud characteristics and benefits", "service models (IaaS/PaaS/SaaS)", "shared responsibility", "Azure core services and architecture", "AWS core services and pricing"],
+        "keywords": ["cloud", "saas", "paas", "iaas", "shared responsibility", "azure", "aws", "availability", "pricing", "sla", "monitor"],
+        "prereqs": ["networking-basics"],
+        "leadsTo": ["dba-security", "scripting-automation"],
+        "related": ["networking-basics"]
+      },
+      {
+        "id": "dba-security",
+        "title": "Database Administration & Security",
+        "stage": "Stage 1 · IT Basics",
+        "topics": ["DDL, DML, DCL, TCL", "normalization forms", "DBA tasks, backup and recovery", "CIA triad and attacks", "encryption basics"],
+        "keywords": ["ddl", "dml", "dcl", "tcl", "normalization", "3nf", "bcnf", "dba", "backup", "recovery", "cia triad", "encryption", "phishing", "malware"],
+        "prereqs": ["cloud-fundamentals"],
+        "leadsTo": ["scripting-automation"],
+        "related": []
+      },
+      {
+        "id": "scripting-automation",
+        "title": "Scripting & Automation",
+        "stage": "Stage 2 · Cloud AI Skills",
+        "topics": ["why scripting matters", "Python fundamentals", "REST APIs and status codes", "API keys and CLI automation", "integration patterns"],
+        "keywords": ["scripting", "python", "rest api", "api key", "status code", "automation", "cli"],
+        "prereqs": ["linux-ops", "dba-security"],
+        "leadsTo": ["terraform", "genai-basics"],
+        "related": [],
+        "bridge": {
+          "leads": {
+            "terraform": "How does automation scale up from scripts into Terraform infrastructure as code?"
+          }
+        }
+      },
+      {
+        "id": "terraform",
+        "title": "Terraform — Infrastructure as Code",
+        "stage": "Stage 2 · Cloud AI Skills",
+        "topics": ["declarative IaC and benefits", "HCL and structure of a Terraform project", "state, variables and dependencies", "workspaces, provisioners and meta-arguments", "CI/CD with secrets and debugging"],
+        "keywords": ["terraform", "iac", "declarative", "hcl", "tf state", "workspace", "provisioner", "meta argument", "variables.tf", "module"],
+        "prereqs": ["scripting-automation"],
+        "leadsTo": ["genai-basics"],
+        "related": ["cloud-fundamentals"]
+      },
+      {
+        "id": "genai-basics",
+        "title": "Generative AI & LLMs",
+        "stage": "Stage 2 · GenAI",
+        "topics": ["AI timeline and GenAI basics", "large language models", "embeddings and self-attention", "hallucination and mitigation"],
+        "keywords": ["genai", "generative", "llm", "large language model", "embedding", "attention", "hallucination", "ai timeline", "token"],
+        "prereqs": ["cloud-fundamentals"],
+        "leadsTo": ["prompt-engineering"],
+        "related": ["rag"],
+        "bridge": {
+          "leads": {
+            "prompt-engineering": "How do prompts steer what an LLM generates?"
+          }
+        }
+      },
+      {
+        "id": "prompt-engineering",
+        "title": "Prompt & Context Engineering",
+        "stage": "Stage 2 · GenAI",
+        "topics": ["anatomy of a prompt", "prompt design strategies", "role prompting and prompt chaining", "context injection", "multi-turn conversation design", "evaluation and optimization"],
+        "keywords": ["prompt", "anatomy", "role prompting", "context", "prompt chaining", "multi turn", "evaluation", "optimization", "framework"],
+        "prereqs": ["genai-basics"],
+        "leadsTo": ["rag"],
+        "related": ["genai-basics"],
+        "bridge": {
+          "leads": {
+            "rag": "How does retrieval-augmented generation inject context into a prompt?"
+          }
+        }
+      },
+      {
+        "id": "rag",
+        "title": "RAG & Vector Databases",
+        "stage": "Stage 2 · GenAI",
+        "topics": ["retrieval-augmented generation", "vector datastores and embeddings", "FAISS, Pinecone, Weaviate", "LangChain and its components", "Azure AI Search and agent ecosystem"],
+        "keywords": ["rag", "retrieval augmented", "vector", "faiss", "pinecone", "weaviate", "langchain", "langgraph", "langsmith", "ragas", "ai search", "embedding"],
+        "prereqs": ["genai-basics", "prompt-engineering"],
+        "leadsTo": ["aiops-observability"],
+        "related": ["prompt-engineering"]
+      },
+      {
+        "id": "aiops-observability",
+        "title": "Observability & AIOps",
+        "stage": "Stage 2 · Ops",
+        "topics": ["introduction to observability", "monitoring tools and practices", "AIOps fundamentals", "observability in cloud-native systems"],
+        "keywords": ["aiops", "observability", "monitoring", "metrics", "log analytics", "application insights"],
+        "prereqs": ["cloud-fundamentals"],
+        "leadsTo": [],
+        "related": ["rag", "cloud-fundamentals"]
+      }
+    ],
+    "starterQuestions": [
+      "What is the difference between a hub, a switch and a router?",
+      "Explain subnetting and CIDR notation.",
+      "What do DDL, DML, DCL and TCL mean in database administration?",
+      "How does Terraform manage infrastructure as code?",
+      "What is RAG and why do we need vector databases?",
+      "Explain prompt engineering and how context is injected."
+    ]
+  },
+  "sap": {
+    "modules": [
+      {
+        "id": "intro-architecture",
+        "title": "Introduction to SAP & System Architecture",
+        "stage": "PP Track · Day 1–2",
+        "topics": ["ERP covering SAP and its evolution", "SAP system architecture"],
+        "keywords": ["sap", "erp", "enterprise resource", "architecture", "ecc"],
+        "prereqs": [],
+        "leadsTo": ["master-data"],
+        "related": []
+      },
+      {
+        "id": "master-data",
+        "title": "PP Master Data",
+        "stage": "PP Track · Day 3–9",
+        "topics": ["Material Master", "Bill of Materials (BOM)", "Routing", "Work Center", "Production Version"],
+        "keywords": ["material master", "bom", "bill of material", "routing", "work center", "production version"],
+        "prereqs": ["intro-architecture"],
+        "leadsTo": ["mrp-planning", "repetitive-mfg"],
+        "related": [],
+        "bridge": {
+          "leads": {
+            "mrp-planning": "How does planning use PP master data like BOMs and routings?"
+          }
+        }
+      },
+      {
+        "id": "mrp-planning",
+        "title": "MRP Planning (SOP & LTP)",
+        "stage": "PP Track · Day 10–13",
+        "topics": ["Demand Management", "Long-term planning", "prerequisites for MRP run"],
+        "keywords": ["mrp", "demand management", "sop", "ltp", "long-term planning", "planned independent requirement"],
+        "prereqs": ["master-data"],
+        "leadsTo": ["shop-floor-planning"],
+        "related": [],
+        "bridge": {
+          "leads": {
+            "shop-floor-planning": "What happens after MRP runs — which planned orders convert to production orders?"
+          }
+        }
+      },
+      {
+        "id": "shop-floor-planning",
+        "title": "Shop Floor Planning",
+        "stage": "PP Track · Day 18–21",
+        "topics": ["MRP run", "creation of production order", "conversion of planned order to production order"],
+        "keywords": ["mrp run", "production order", "conversion", "planned order", "process order"],
+        "prereqs": ["mrp-planning"],
+        "leadsTo": ["shop-floor-execution"],
+        "related": [],
+        "bridge": {
+          "leads": {
+            "shop-floor-execution": "Once a production order exists, how does it move through goods issue, release and receipt?"
+          }
+        }
+      },
+      {
+        "id": "shop-floor-execution",
+        "title": "Shop Floor Execution",
+        "stage": "PP Track · Day 22–24",
+        "topics": ["goods issue for production order", "production order release", "production order confirmation", "goods receipt"],
+        "keywords": ["goods issue", "goods receipt", "order release", "confirmation", "shop floor"],
+        "prereqs": ["shop-floor-planning"],
+        "leadsTo": [],
+        "related": ["repetitive-mfg"]
+      },
+      {
+        "id": "repetitive-mfg",
+        "title": "Repetitive Manufacturing (REM)",
+        "stage": "PP Track · Day 25–28",
+        "topics": ["master data for repetitive manufacturing", "REM profile", "product cost collector", "planned order confirmation (MEBF)"],
+        "keywords": ["repetitive", "rem", "rem profile", "product cost", "mebf", "backflush"],
+        "prereqs": ["master-data"],
+        "leadsTo": [],
+        "related": ["shop-floor-execution"],
+        "bridge": {
+          "related": {
+            "shop-floor-execution": "How does confirmation in repetitive manufacturing differ from discrete order confirmation?"
+          }
+        }
+      }
+    ],
+    "starterQuestions": [
+      "Walk me through the SAP PP master data.",
+      "What is a BOM and how does it connect to a routing?",
+      "How does demand management feed into MRP?",
+      "What happens between goods issue and goods receipt?",
+      "How does repetitive manufacturing differ from discrete production orders?"
+    ]
+  }
+}

@@ -1,4 +1,12 @@
 import type { Chunk, FollowupSuggestion, ScoredChunk } from "./types";
+import {
+  bestModuleForAnswer,
+  moduleById,
+  modulePages,
+  syllabusFor,
+  type DomainSyllabus,
+  type SyllabusModule,
+} from "./syllabus";
 
 const MAX_SUGGESTIONS = 3;
 const DETAIL_PATTERN = /\b(detail|detailed|comprehensive|thorough|elaborate|examples?)\b/i;
@@ -10,6 +18,9 @@ interface SuggestionInput {
   ranked: ScoredChunk[];
   chunks: Chunk[];
   hadFallback: boolean;
+  /** Optional curriculum graph; when present it drives the follow-up edges. */
+  domain?: string;
+  domainLabel?: string;
 }
 
 function cleanHeading(heading: string): string {
@@ -41,9 +52,7 @@ function firstContentLine(text: string): string {
     const letters = line.match(/[a-z]/gi)?.length ?? 0;
     if (letters < 4) continue;
     if (line.split(/\s+/).length < 3) continue;
-    // Prefer a short, title-like phrase when the line is long.
-    const phrase = line.replace(/[.,;:]+$/, "").slice(0, 60);
-    return phrase;
+    return line.replace(/[.,;:]+$/, "").slice(0, 60);
   }
   return "";
 }
@@ -83,10 +92,23 @@ function addUnique(
   return true;
 }
 
+/** First corpus page for a syllabus module, or null when the notes never touch it. */
+function landingPage(
+  domain: string | undefined,
+  domainSyllabus: DomainSyllabus,
+  module: SyllabusModule,
+  chunks: Chunk[]
+): number | null {
+  if (!domain) return null;
+  const pages = modulePages(domain, module, chunks);
+  return pages[0] ?? null;
+}
+
 /**
- * Builds follow-up buttons from the current retrieval result instead of asking
- * the model for another completion. Detail and continuation options stay on
- * the current topic; jump options use the next-best distinct retrieved topics.
+ * Builds follow-up buttons for one answer. With a syllabus present the graph
+ * drives the edges — a next-in-curriculum option, then a compare/review
+ * bridge — and raw retrieval candidates are only used as filler. Without a
+ * syllabus the behaviour falls back to retrieval-driven suggestions.
  */
 export function buildFollowupSuggestions({
   effectiveQuestion,
@@ -94,10 +116,13 @@ export function buildFollowupSuggestions({
   ranked,
   chunks,
   hadFallback,
+  domain,
 }: SuggestionInput): FollowupSuggestion[] {
   const suggestions: FollowupSuggestion[] = [];
   const question = effectiveQuestion.replace(/\s+/g, " ").trim();
   if (question.length === 0) return suggestions;
+
+  const domainSyllabus = domain ? syllabusFor(domain) : null;
 
   const selectedIds = new Set(ranked.map((item) => item.chunk.id));
   const usedTopics = new Set(
@@ -118,7 +143,43 @@ export function buildFollowupSuggestions({
         `${question} — in detailed manner`
       );
     }
+  }
 
+  // Syllabus-driven edges: where the curriculum goes next, and a lateral
+  // compare/review bridge that connects this module to another one.
+  if (domainSyllabus && domain) {
+    const current = bestModuleForAnswer(domain, domainSyllabus, ranked);
+    for (const id of current?.leadsTo ?? []) {
+      const target = moduleById(domainSyllabus, id);
+      if (!target) continue;
+      const page = landingPage(domain, domainSyllabus, target, chunks);
+      if (page === null) continue;
+      const authored = current?.bridge?.leads?.[id];
+      addUnique(
+        suggestions,
+        `Continue with ${target.title} on page ${page}?`,
+        authored ?? `Explain ${target.title} on page ${page}.`
+      );
+      break; // only the curriculum's first next-step
+    }
+    const edges = [...(current?.related ?? []), ...(current?.prereqs ?? [])];
+    for (const id of edges) {
+      const target = moduleById(domainSyllabus, id);
+      if (!target) continue;
+      const page = landingPage(domain, domainSyllabus, target, chunks);
+      if (page === null) continue;
+      const authored = current?.bridge?.related?.[id];
+      addUnique(
+        suggestions,
+        authored ? `Related: ${target.title}?` : `Review ${target.title} on page ${page}?`,
+        authored ?? `Explain ${target.title} on page ${page}.`
+      );
+      break;
+    }
+  }
+
+  // Filler from retrieval: continuation of the current chunk, then jumps.
+  if (!hadFallback) {
     const current = ranked[0]?.chunk;
     const next = current
       ? chunks[chunks.findIndex((chunk) => chunk.id === current.id) + 1]

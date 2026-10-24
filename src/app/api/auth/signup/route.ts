@@ -4,11 +4,17 @@ import { eq } from "drizzle-orm";
 import { getDb, schema } from "@/db";
 import { hashPassword } from "@/lib/scrypt";
 import { DOMAINS } from "@/lib/domains";
+import { PASSWORD_MAX, PASSWORD_MIN, passwordRequirementMessage } from "@/lib/password";
 
 const booking = z.object({
   name: z.string().trim().min(1).max(120),
   email: z.string().trim().toLowerCase().email(),
-  password: z.string().min(8).max(200),
+  password: z.string().max(PASSWORD_MAX).refine(
+    (value) => passwordRequirementMessage(value) === null,
+    {
+      message: `Password needs ${PASSWORD_MIN}+ characters with upper and lower case letters, a digit and a symbol.`,
+    }
+  ),
   domain: z.string().refine((value) => value in DOMAINS, "Unknown domain"),
 });
 

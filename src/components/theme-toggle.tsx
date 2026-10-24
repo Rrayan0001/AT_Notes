@@ -6,12 +6,6 @@ import { Button } from "@/components/ui/button";
 
 const STORAGE_KEY = "pavan-notes-theme";
 
-/**
- * layout.tsx applies the stored class before paint, so reading it back through
- * an external store avoids both a hydration mismatch and a mount-time
- * setState-in-effect. Subscribing to the class attribute also keeps the icon
- * honest if something else toggles the theme.
- */
 function subscribe(onChange: () => void): () => void {
   const observer = new MutationObserver(onChange);
   observer.observe(document.documentElement, {
@@ -32,7 +26,7 @@ export function ThemeToggle() {
     try {
       localStorage.setItem(STORAGE_KEY, next ? "dark" : "light");
     } catch {
-      // Private mode can reject writes; the class toggle still applies.
+      /* private mode */
     }
   }, []);
 
@@ -43,8 +37,13 @@ export function ThemeToggle() {
       size="icon"
       aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
       title="Toggle theme"
+      className="transition-all hover:bg-rubric/8 active:scale-90"
     >
-      {dark ? <Sun /> : <Moon />}
+      {dark ? (
+        <Sun className="size-[18px]" />
+      ) : (
+        <Moon className="size-[18px]" />
+      )}
     </Button>
   );
 }

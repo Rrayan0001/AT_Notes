@@ -2,7 +2,15 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { ArrowUp, BookOpen, Loader2, MessageCircleQuestion, Square, X } from "lucide-react";
+import {
+  ArrowUp,
+  BookOpen,
+  Loader2,
+  MessageCircleQuestion,
+  Square,
+  Sparkles,
+  X,
+} from "lucide-react";
 import { BuiltinActionType, Renderer, type ActionEvent } from "@openuidev/react-lang";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,14 +23,8 @@ import openuiSpec from "@/lib/openui.spec.json";
 import type { AppUser } from "@/components/coming-soon";
 import { useChatStream, type Turn } from "@/lib/use-chat-stream";
 import { selectConversationMemory } from "@/lib/memory";
+import { starterQuestionsFor } from "@/lib/syllabus";
 import type { RetrievedSource } from "@/lib/types";
-
-const EXAMPLES = [
-  "How do I calculate the number of valid hosts in a Class C subnet?",
-  "Difference between hub and switch?",
-  "What is an embedding and how is it used in RAG?",
-  "IaaS vs PaaS vs SaaS?",
-];
 
 export interface ChatProps {
   onCite: (page: number, chunkIds?: string[]) => void;
@@ -37,38 +39,51 @@ export interface ChatProps {
 export function Chat({ onCite, onBrowsePages, user, domainLabel, sessionId, onSessionChange }: ChatProps) {
   const [input, setInput] = useState("");
   const [photoOpen, setPhotoOpen] = useState(false);
-  const { turns, busy, ask, stop, reset } = useChatStream();
+  const { turns, busy, ask, stop, reset, loadTurns } = useChatStream();
   const bottomRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const stickToBottomRef = useRef(true);
   const persistedRef = useRef<Set<string>>(new Set());
+  const loadedSessionRef = useRef<string | null>(null);
 
   const submitQuestion = async (question: string) => {
     if (!question.trim() || busy) return;
     setInput("");
+    // Reset textarea height
+    if (textareaRef.current) textareaRef.current.style.height = "auto";
     let sid = sessionId;
     if (!sid) {
-      const res = await fetch("/api/sessions", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title: question.slice(0, 60) }) });
+      const res = await fetch("/api/sessions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: question.slice(0, 60) }),
+      });
       if (res.ok) {
         const j = await res.json();
         sid = j.session?.id ?? null;
-        if (sid) onSessionChange(sid);
+        if (sid) {
+          loadedSessionRef.current = sid;
+          onSessionChange(sid);
+        }
       }
     }
     ask(question, { mode: "notes", history: selectConversationMemory(turns, "notes", question) });
   };
 
-  // Clear the composer as soon as its text becomes a question. Empty input is
-  // left alone so an ignored Enter press does not erase whitespace being edited.
   const submitInput = submitQuestion;
 
-  // Load history when session changes.
+  // Load history when session changes
   useEffect(() => {
-    persistedRef.current = new Set();
     if (!sessionId) {
+      loadedSessionRef.current = null;
+      persistedRef.current = new Set();
       reset([]);
       return;
     }
+    if (loadedSessionRef.current === sessionId) return;
+    loadedSessionRef.current = sessionId;
+    persistedRef.current = new Set();
     let cancelled = false;
     fetch(`/api/sessions/${sessionId}`)
       .then((r) => (r.ok ? r.json() : null))
@@ -95,16 +110,16 @@ export function Chat({ onCite, onBrowsePages, user, domainLabel, sessionId, onSe
           }
         }
         if (cur) turnsBuilt.push(cur);
-        reset(turnsBuilt);
+        loadTurns(turnsBuilt);
         turnsBuilt.forEach((t) => persistedRef.current.add(t.id));
       })
       .catch(() => {});
     return () => {
       cancelled = true;
     };
-  }, [sessionId, reset]);
+  }, [sessionId, reset, loadTurns]);
 
-  // Persist completed turns.
+  // Persist completed turns
   useEffect(() => {
     if (!sessionId) return;
     for (const t of turns) {
@@ -126,16 +141,13 @@ export function Chat({ onCite, onBrowsePages, user, domainLabel, sessionId, onSe
     }
   }, [turns, sessionId]);
 
-  // Keep the newest token in view as the answer streams, but only when the
-  // user is already near the bottom. Scrolling up to read earlier output must
-  // not be yanked back down by every incoming token.
+  // Sticky scroll
   useEffect(() => {
     const el = scrollRef.current;
     if (!el || !stickToBottomRef.current) return;
     el.scrollTop = el.scrollHeight;
   }, [turns]);
 
-  // Track whether the user is pinned to the bottom so streaming can follow.
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
@@ -147,7 +159,7 @@ export function Chat({ onCite, onBrowsePages, user, domainLabel, sessionId, onSe
     return () => el.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close the photo preview with Escape and lock background scroll while open.
+  // Photo preview keyboard
   useEffect(() => {
     if (!photoOpen) return;
     const onKey = (e: KeyboardEvent) => {
@@ -164,26 +176,30 @@ export function Chat({ onCite, onBrowsePages, user, domainLabel, sessionId, onSe
 
   return (
     <div className="flex h-full min-w-0 flex-1 flex-col">
-      <header className="flex items-center gap-3 border-b px-5 py-3.5">
+      {/* Header */}
+      <header className="flex items-center gap-3 border-b border-[var(--leaf)] px-5 py-3.5 bg-background/70 backdrop-blur-sm">
         <button
           type="button"
           onClick={() => setPhotoOpen(true)}
           aria-label="Preview profile photo"
           title="Preview profile photo"
-          className="shrink-0 cursor-zoom-in rounded-full outline-none transition ring-offset-background focus-visible:ring-2 focus-visible:ring-ring hover:opacity-90 hover:ring-2 hover:ring-primary/40"
+          className="shrink-0 cursor-zoom-in rounded-full outline-none transition-all ring-offset-background focus-visible:ring-2 focus-visible:ring-ring hover:opacity-90 hover:scale-105 hover:ring-2 hover:ring-rubric/30"
         >
           <Image
             src="/profile.png"
             alt="Profile"
             width={36}
             height={36}
-            className="size-9 rounded-full border object-cover object-top"
+            className="size-9 rounded-full border border-[var(--leaf)] object-cover object-top shadow-sm"
           />
         </button>
         <div className="min-w-0">
           <h1 className="truncate text-[15px] font-semibold tracking-tight">
             {domainLabel ?? "Notes"}
           </h1>
+          <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground/60">
+            Every answer, attested.
+          </p>
         </div>
         <div className="ml-auto flex items-center gap-1">
           {user && <UserMenu user={user} />}
@@ -191,7 +207,7 @@ export function Chat({ onCite, onBrowsePages, user, domainLabel, sessionId, onSe
             onClick={onBrowsePages}
             variant="ghost"
             size="sm"
-            className="gap-1.5 text-xs text-muted-foreground md:hidden"
+            className="gap-1.5 text-xs text-muted-foreground md:hidden hover:text-rubric hover:bg-rubric/8"
           >
             <BookOpen className="size-3.5" />
             Pages
@@ -200,45 +216,64 @@ export function Chat({ onCite, onBrowsePages, user, domainLabel, sessionId, onSe
         </div>
       </header>
 
+      {/* Conversation */}
       <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto">
-        <div className="mx-auto w-full max-w-2xl px-5 py-6">
-          {turns.length === 0 && <EmptyState onPick={submitQuestion} />}
+        <div className="mx-auto w-full max-w-2xl px-5">
+          {turns.length === 0 && (
+            <div className="flex min-h-[calc(100vh-10rem)] items-center">
+              <EmptyState onPick={submitQuestion} domainId={user?.domain} />
+            </div>
+          )}
 
           {turns.length > 0 && (
-            <div className="space-y-9">
-              {turns.map((turn) => (
+            <div className="space-y-10 py-6">
+              {turns.map((turn, i) => (
                 <TurnView
                   key={turn.id}
                   turn={turn}
                   onCite={onCite}
                   busy={busy}
                   onFollowup={submitQuestion}
+                  index={i}
                 />
               ))}
             </div>
           )}
-          <div ref={bottomRef} />
+          <div ref={bottomRef} className="pb-4" />
         </div>
       </div>
 
-      <footer className="border-t bg-background/80 px-5 py-3 backdrop-blur">
+      {/* Composer */}
+      <footer className="border-t border-[var(--leaf)] bg-background/80 px-5 py-3.5 backdrop-blur-md">
         <div className="mx-auto w-full max-w-2xl">
-          <div className="flex items-end gap-2 rounded-xl border border-border bg-card p-1.5 shadow-sm transition-colors focus-within:border-primary/40">
+          <div className="composer-bar flex items-end gap-2 border border-border bg-card p-1.5">
             <Textarea
+              ref={textareaRef}
               value={input}
-              onChange={(e) => setInput(e.target.value)}
+              onChange={(e) => {
+                setInput(e.target.value);
+                // Auto-grow
+                e.target.style.height = "auto";
+                e.target.style.height = Math.min(e.target.scrollHeight, 160) + "px";
+              }}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
                   submitInput(input);
                 }
               }}
-              placeholder="Ask about anything in the notes…"
-              className="max-h-40 min-h-[38px] resize-none border-0 bg-transparent px-2 py-2 shadow-none focus-visible:ring-0"
+              placeholder="Ask anything in the notes…"
+              className="max-h-40 min-h-[38px] resize-none border-0 bg-transparent px-2 py-2 shadow-none focus-visible:ring-0 text-[14.5px] placeholder:text-muted-foreground/50"
               rows={1}
             />
             {busy ? (
-              <Button onClick={stop} variant="outline" size="icon" aria-label="Stop generating">
+              <Button
+                onClick={stop}
+                variant="outline"
+                size="icon"
+                aria-label="Stop generating"
+                className="shrink-0 rounded-sm border-[var(--rubric-glow)] hover:bg-[color-mix(in_srgb,var(--rubric)_8%,transparent)] hover:text-rubric transition-all"
+              >
                 <Square className="size-3.5 fill-current" />
               </Button>
             ) : (
@@ -247,30 +282,31 @@ export function Chat({ onCite, onBrowsePages, user, domainLabel, sessionId, onSe
                 disabled={!input.trim()}
                 size="icon"
                 aria-label="Ask"
-                className="rounded-lg"
+                className="shrink-0 rounded-sm bg-rubric text-[#F5EFE4] hover:bg-[var(--rubric-deep)] transition-all disabled:opacity-30 hover:shadow-[0_0_0_2px_var(--rubric-glow)]"
               >
                 <ArrowUp className="size-4" />
               </Button>
             )}
           </div>
-          <p className="mt-2 text-center text-[11px] text-muted-foreground">
-            Enter to ask · Shift+Enter for a new line · If the notes lack detail, a labeled
-            general explanation follows automatically
+          <p className="mt-2 text-center font-mono text-[10px] tracking-wide text-muted-foreground/50">
+            Enter to ask · Shift+Enter for a new line
           </p>
         </div>
       </footer>
 
+      {/* Photo modal */}
       {photoOpen && (
         <div
           role="dialog"
           aria-modal="true"
           aria-label="Profile photo preview"
           onClick={() => setPhotoOpen(false)}
-          className="fixed inset-0 z-50 flex cursor-zoom-out items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex cursor-zoom-out items-center justify-center bg-black/75 p-4 backdrop-blur-md"
+          style={{ animation: "turn-rise 240ms ease both" }}
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative max-h-[90vh] w-auto max-w-[92vw] cursor-default overflow-hidden rounded-xl border bg-background shadow-2xl"
+            className="relative max-h-[90vh] w-auto max-w-[92vw] cursor-default overflow-hidden rounded-sm border border-[var(--leaf)] bg-background shadow-2xl"
           >
             <Button
               onClick={() => setPhotoOpen(false)}
@@ -296,26 +332,44 @@ export function Chat({ onCite, onBrowsePages, user, domainLabel, sessionId, onSe
   );
 }
 
-function EmptyState({ onPick }: { onPick: (q: string) => void }) {
+function EmptyState({
+  onPick,
+  domainId,
+}: {
+  onPick: (q: string) => void;
+  domainId?: string | null;
+}) {
   return (
-    <div className="pt-6">
-      <div className="mb-6">
-        <h2 className="text-lg font-semibold tracking-tight">What do you want to look up?</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Ask a question and the answer will cite the exact notebook page it came from.
+    <div className="pt-6 turn-enter">
+      <div className="mb-8">
+        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-rubric mb-3">
+          ready
+        </p>
+        <h2 className="font-serif text-3xl font-light tracking-tight leading-tight text-balance">
+          What do you want to know?
+        </h2>
+        <p className="mt-2 text-sm text-muted-foreground leading-relaxed max-w-[44ch]">
+          Ask a question and I&rsquo;ll cite the exact notebook page it came from.
         </p>
       </div>
-      <p className="mb-2.5 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+
+      <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground/70">
         Try one of these
       </p>
       <div className="grid gap-2 sm:grid-cols-2">
-        {EXAMPLES.map((ex) => (
+        {starterQuestionsFor(domainId).map((ex, i) => (
           <button
             key={ex}
             onClick={() => onPick(ex)}
-            className="group rounded-lg border bg-card px-3 py-2.5 text-left text-[13px] leading-snug transition-colors hover:border-primary/40 hover:bg-accent/40"
+            onMouseMove={(e) => {
+              const rect = e.currentTarget.getBoundingClientRect();
+              e.currentTarget.style.setProperty("--x", `${e.clientX - rect.left}px`);
+              e.currentTarget.style.setProperty("--y", `${e.clientY - rect.top}px`);
+            }}
+            className="example-card group rounded-lg border border-border bg-card px-3.5 py-3 text-left text-[13px] leading-snug"
+            style={{ animationDelay: `${i * 60}ms` }}
           >
-            <BookOpen className="mb-1.5 size-3.5 text-muted-foreground/60 transition-colors group-hover:text-primary" />
+            <Sparkles className="mb-2 size-3.5 text-muted-foreground/50 transition-colors group-hover:text-rubric" />
             {ex}
           </button>
         ))}
@@ -329,42 +383,51 @@ function TurnView({
   onCite,
   busy,
   onFollowup,
+  index,
 }: {
   turn: Turn;
   onCite: ChatProps["onCite"];
   busy: boolean;
   onFollowup: (question: string) => void;
+  index: number;
 }) {
   const isGeneral = turn.mode === "general";
   const suggestions = turn.suggestions ?? [];
 
   return (
-    <div className="space-y-3.5">
+    <div
+      className="space-y-3.5 turn-enter"
+      style={{ animationDelay: `${Math.min(index * 40, 200)}ms` }}
+    >
+      {/* Question */}
       <div className="flex items-baseline gap-2.5">
-        <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground/70">
+        <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-rubric/70 shrink-0">
           {isGeneral ? "general" : "ask"}
         </span>
-        <p className="text-[15px] font-medium leading-snug">{turn.question}</p>
+        <p className="text-[15.5px] font-medium leading-snug">{turn.question}</p>
       </div>
 
+      {/* Sources */}
       {turn.sources.length > 0 && (
-        <Sources sources={turn.sources} phase={turn.sourcePhase} onCite={onCite} />
+        <div className="source-enter">
+          <Sources sources={turn.sources} phase={turn.sourcePhase} onCite={onCite} />
+        </div>
       )}
 
+      {/* General knowledge badge */}
       {isGeneral && turn.answer && (
-        <p className="rounded-lg border border-primary/30 bg-primary/5 px-3 py-2 text-xs font-medium text-primary">
+        <p className="flex items-center gap-2 rounded-sm border border-primary/20 bg-primary/5 px-3 py-2 text-xs font-medium text-primary">
+          <Sparkles className="size-3 shrink-0" />
           General knowledge — not from these notes.
         </p>
       )}
 
+      {/* Answer */}
       {turn.answer && (
         <AnswerView
           answer={turn.answer}
           isStreaming={turn.status === "streaming"}
           onCite={
-            // A citation names a page, not a chunk, so highlight whichever of
-            // this turn's sources came from that page. General answers have no
-            // notebook citations, so their chips stay inert.
             isGeneral
               ? undefined
               : (page) =>
@@ -377,11 +440,12 @@ function TurnView({
         />
       )}
 
+      {/* Suggestions */}
       {turn.status === "done" && suggestions.length > 0 && (
-        <div className="rounded-lg border bg-card/60 p-2.5">
-          <p className="mb-2 flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+        <div className="suggestion-enter rounded-lg border border-[var(--leaf)] bg-card/60 p-3">
+          <p className="mb-2.5 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
             <MessageCircleQuestion className="size-3.5" />
-            Suggested follow-ups
+            Follow-ups
           </p>
           <div className="flex flex-wrap gap-1.5">
             {suggestions.map((suggestion) => (
@@ -391,7 +455,7 @@ function TurnView({
                 variant="outline"
                 disabled={busy}
                 onClick={() => onFollowup(suggestion.question)}
-                className="h-auto max-w-full justify-start gap-1.5 whitespace-normal py-1.5 text-left text-xs font-normal"
+                className="source-chip h-auto max-w-full justify-start gap-1.5 whitespace-normal py-1.5 text-left text-xs font-normal rounded-sm"
                 title={suggestion.question}
               >
                 {suggestion.label}
@@ -401,15 +465,20 @@ function TurnView({
         </div>
       )}
 
+      {/* Streaming placeholder */}
       {turn.status === "streaming" && !turn.answer && (
-        <p className="flex items-center gap-2 text-sm text-muted-foreground">
-          <span className="shimmer inline-block h-3 w-24 rounded" />
-          {turn.sourcePhase === "lexical" ? "Refining results…" : "Searching notes…"}
+        <p className="flex items-center gap-3 text-sm text-muted-foreground">
+          <span className="shimmer inline-block h-3 w-28 rounded-sm" />
+          <span className="font-mono text-[11px] text-muted-foreground/60">
+            {turn.sourcePhase === "lexical" ? "Refining…" : "Searching notes…"}
+          </span>
         </p>
       )}
 
+      {/* Error */}
       {turn.status === "error" && (
-        <p className="rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+        <p className="rounded-sm border border-destructive/25 bg-destructive/5 px-3 py-2.5 text-sm text-destructive">
+          <span className="mr-2 font-mono text-[10px] tracking-[0.18em] uppercase opacity-80">error</span>
           {turn.error}
         </p>
       )}
@@ -417,7 +486,6 @@ function TurnView({
   );
 }
 
-/** True when the stored/streamed answer is an OpenUI Lang program, not legacy markdown. */
 function looksLikeOpenuiLang(text: string): boolean {
   const specRoot = openuiSpec.root;
   const firstLine =
@@ -432,11 +500,6 @@ function looksLikeOpenuiLang(text: string): boolean {
   );
 }
 
-/**
- * Renders the assistant answer. New answers are OpenUI Lang programs rendered
- * as live UI; answers persisted before the Gateway switch are plain markdown
- * and keep the original renderer.
- */
 function AnswerView({
   answer,
   isStreaming,
@@ -450,7 +513,7 @@ function AnswerView({
 }) {
   if (!looksLikeOpenuiLang(answer)) {
     return (
-      <MarkdownView onCite={onCite} className="text-[14px]">
+      <MarkdownView onCite={onCite} className={`text-[14px] ${isStreaming ? "typing-cursor" : ""}`}>
         {answer}
       </MarkdownView>
     );
@@ -492,38 +555,45 @@ function Sources({
   const refining = phase === "lexical";
 
   return (
-    <div className="rounded-lg border bg-card/60">
+    <div className="rounded-lg border border-[var(--leaf)] bg-card/50 overflow-hidden">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs text-muted-foreground transition-colors hover:text-foreground"
+        className="flex w-full items-center gap-2 px-3.5 py-2.5 text-left text-xs text-muted-foreground transition-colors hover:text-foreground hover:bg-accent/30"
       >
-        <BookOpen className="size-3.5" />
+        <BookOpen className="size-3.5 shrink-0" />
         <span>
-          {sources.length} keyword {sources.length === 1 ? "match" : "matches"} from the notebook
+          {sources.length} {sources.length === 1 ? "match" : "matches"} from the notebook
         </span>
         <span className="ml-auto flex items-center gap-2">
           {refining && (
-            <span className="flex items-center gap-1 text-primary">
+            <span className="flex items-center gap-1.5 font-mono text-[10px] tracking-wide text-primary uppercase">
               <Loader2 className="size-3 animate-spin" />
               refining
             </span>
           )}
-          {!refining && (open ? "Hide" : "Show")}
+          {!refining && (
+            <span className="font-mono text-[10px] tracking-[0.18em] uppercase">
+              {open ? "hide" : "show"}
+            </span>
+          )}
         </span>
       </button>
 
       {open && (
-        <div className="space-y-1.5 border-t p-2">
+        <div className="space-y-px border-t border-[var(--leaf)]">
           {sources.map((s, i) => (
             <button
               key={`${s.page}-${i}`}
               onClick={() => onCite(s.page, [s.id])}
-              className="flex w-full items-baseline gap-2 rounded-md px-2 py-1.5 text-left transition-colors hover:bg-accent/60"
+              className="source-chip flex w-full items-baseline gap-2.5 px-3.5 py-2 text-left"
             >
-              <Badge variant="outline" className="shrink-0 font-mono">
+              <Badge
+                variant="outline"
+                className="shrink-0 font-mono text-[10px] border-[var(--leaf)] rounded-sm"
+              >
                 p{s.page}
               </Badge>
-              <span className="min-w-0 flex-1 truncate text-xs font-medium">{s.heading}</span>
+              <span className="min-w-0 flex-1 truncate text-xs">{s.heading}</span>
             </button>
           ))}
         </div>

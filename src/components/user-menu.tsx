@@ -2,8 +2,6 @@
 
 import { signOut } from "next-auth/react";
 import { LogOut } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { DOMAINS } from "@/lib/domains";
 import type { AppUser } from "@/components/coming-soon";
 
@@ -16,17 +14,19 @@ export function UserMenu({ user }: { user: AppUser }) {
   const label = (user.name || user.email).trim();
   return (
     <div className="flex items-center gap-1.5">
-      {domain && <Badge variant="secondary">{domain.label}</Badge>}
-      <Button
-        variant="ghost"
-        size="sm"
+      {domain && (
+        <span className="hidden sm:inline font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground/70 border border-[var(--leaf)] px-2 py-0.5">
+          {domain.label}
+        </span>
+      )}
+      <button
         onClick={() => void signOut({ callbackUrl: "/login" })}
         title={`Signed in as ${user.email}\n(leave this session)`}
-        className="gap-1.5 text-xs text-muted-foreground"
+        className="flex items-center gap-1.5 font-mono text-[11px] text-muted-foreground hover:text-foreground transition-colors group px-1.5 py-1"
       >
-        <LogOut className="size-3.5" />
         <span className="hidden max-w-24 truncate sm:inline">{label}</span>
-      </Button>
+        <LogOut className="size-3 opacity-50 group-hover:opacity-100 group-hover:text-rubric transition-all" />
+      </button>
     </div>
   );
 }

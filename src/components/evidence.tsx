@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight, FileText, Loader2, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { MarkdownView } from "@/components/markdown";
@@ -80,13 +80,32 @@ export function EvidenceRail({
 
   if (page === null) {
     return (
-      <aside className="hidden w-[26rem] shrink-0 border-l bg-card/40 md:flex md:flex-col">
-        <div className="flex flex-1 flex-col items-center justify-center gap-2 px-8 text-center">
-          <FileText className="size-6 text-muted-foreground/50" />
-          <p className="text-sm font-medium">No page selected</p>
-          <p className="text-xs text-muted-foreground">
-            Click a citation like <span className="font-mono">p25</span> in an answer, or open a
-            source, to see the original handwritten page here.
+      <aside
+        className="hidden w-[26rem] shrink-0 evidence-panel md:flex md:flex-col overflow-hidden"
+        style={{
+          background:
+            "repeating-linear-gradient(0deg, transparent, transparent 47px, color-mix(in srgb, var(--foreground) 3%, transparent) 48px), var(--card)",
+        }}
+      >
+        <div className="flex flex-1 flex-col justify-end px-10 pb-14">
+          {/* Rubric accent */}
+          <div className="mb-6 h-px w-8 bg-rubric" />
+          <p className="font-mono text-[10px] uppercase tracking-[0.26em] text-muted-foreground/50 mb-5">
+            Evidence rail
+          </p>
+          <p
+            className="font-serif text-2xl font-light leading-[1.12] tracking-[-0.01em] text-balance text-foreground/80 mb-4"
+            style={{ fontVariationSettings: '"opsz" 24' }}
+          >
+            The source,
+            <br />open beside the answer.
+          </p>
+          <p className="text-[12.5px] leading-relaxed text-muted-foreground max-w-[34ch]">
+            Click a citation like{" "}
+            <span className="font-mono text-[11px] border border-[var(--leaf)] px-1 py-px">
+              p25
+            </span>{" "}
+            in an answer to open the original handwritten notebook page here.
           </p>
         </div>
       </aside>
@@ -101,10 +120,12 @@ export function EvidenceRail({
   return (
     // Below md there is no room for two columns, so the rail covers the
     // transcript. The close button in its header returns to the answer.
-    <aside className="fixed inset-0 z-30 flex w-full flex-col bg-background md:static md:z-auto md:w-[26rem] md:border-l md:bg-card/40">
-      <div className="flex items-center gap-1 border-b px-3 py-2">
-        <span className="font-mono text-xs font-medium">page {page}</span>
-        <span className="text-xs text-muted-foreground">of {maxPage}</span>
+    <aside className="fixed inset-0 z-30 flex w-full flex-col bg-background md:static md:z-auto md:w-[26rem] evidence-panel turn-enter">
+      <div className="flex items-center gap-2 border-b border-[var(--leaf)] px-3.5 py-2.5">
+        <span className="font-mono text-[11px] tracking-wide">
+          <span className="text-rubric">p</span>{page}
+        </span>
+        <span className="font-mono text-[10px] text-muted-foreground/50">of {maxPage}</span>
         {book && (
           <span className="ml-1 hidden truncate text-xs text-muted-foreground lg:inline">
             · {book}
@@ -217,10 +238,10 @@ export function EvidenceRail({
                 <section
                   key={note.id}
                   className={
-                    "rounded-lg border p-3 transition-colors " +
+                    "rounded-sm border p-3 transition-all duration-300 " +
                     (isHighlighted
-                      ? "border-primary/40 bg-accent/50"
-                      : "border-border bg-background")
+                      ? "border-rubric/30 bg-rubric/5 shadow-[inset_3px_0_0_var(--rubric)]"
+                      : "border-[var(--leaf)] bg-background/80")
                   }
                 >
                   <h3 className="mb-1.5 text-sm font-semibold">

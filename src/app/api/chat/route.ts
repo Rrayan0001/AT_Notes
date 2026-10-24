@@ -3,12 +3,12 @@ import { embedQuery } from "@/lib/embed";
 import { getIndex, retrieveHybrid, retrieveSparse, toSources } from "@/lib/retrieve";
 import { rerankWithStatus } from "@/lib/rerank";
 import {
-  FALLBACK_SYSTEM_PROMPT,
-  GENERAL_SYSTEM_PROMPT,
   SYSTEM_PROMPT,
   buildFallbackPrompt,
   buildGeneralPrompt,
   buildUserPrompt,
+  fallbackSystemPrompt,
+  generalSystemPrompt,
 } from "@/lib/prompt";
 import { isExplicitGeneralRequest, isMissingFromNotes, type ChatMode } from "@/lib/answers";
 import {
@@ -19,6 +19,7 @@ import {
 import { buildFollowupSuggestions } from "@/lib/suggestions";
 import type { RetrievedSource, ScoredChunk } from "@/lib/types";
 import { guardDomainAccess } from "@/lib/session-guard";
+import { getDomain } from "@/lib/domains";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -61,6 +62,7 @@ function parseHistory(value: unknown, mode: ChatMode): ConversationMemoryTurn[] 
 export async function POST(req: Request) {
   const guard = await guardDomainAccess();
   if (!guard.ok) return guard.response;
+  const domainLabel = getDomain(guard.domainId)?.label ?? "the notes";
 
   let question: string;
   let mode: ChatMode;
@@ -128,13 +130,13 @@ export async function POST(req: Request) {
           if (explicitGeneral) {
             effectiveQuestion = resolveExplicitGeneralQuestion(question, history);
             messages = [
-              { role: "system", content: answerSystemPrompt(GENERAL_SYSTEM_PROMPT) },
+              { role: "system", content: generalSystemPrompt(domainLabel) },
               { role: "user", content: buildGeneralPrompt(effectiveQuestion, []) },
             ];
           } else {
             effectiveQuestion = resolveRetrievalQuestion(question, history);
             messages = [
-              { role: "system", content: answerSystemPrompt(GENERAL_SYSTEM_PROMPT) },
+              { role: "system", content: generalSystemPrompt(domainLabel) },
               { role: "user", content: buildGeneralPrompt(effectiveQuestion, history) },
             ];
           }
@@ -212,7 +214,7 @@ export async function POST(req: Request) {
             temperature: 0,
             stream: true,
             messages: [
-              { role: "system", content: answerSystemPrompt(FALLBACK_SYSTEM_PROMPT) },
+              { role: "system", content: fallbackSystemPrompt(domainLabel) },
               { role: "user", content: buildFallbackPrompt(effectiveQuestion, history) },
             ],
           });
@@ -236,6 +238,7 @@ export async function POST(req: Request) {
             ranked,
             chunks,
             hadFallback,
+            domain: guard.domainId,
           });
           if (suggestions.length > 0) send({ type: "suggestions", suggestions });
         }

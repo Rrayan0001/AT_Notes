@@ -88,6 +88,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           const [row] = await db.select().from(schema.users).where(eq(schema.users.email, email)).limit(1);
           if (!row?.domain) return "/signup?error=unlinked";
           user.domain = row.domain;
+          // The email-verification gate now lives in the DB for every user:
+          // the provider verified the address, we are just recording a fact we
+          // know for free (no verification codes by design).
+          if (!row.emailVerified) {
+            await db
+              .update(schema.users)
+              .set({ emailVerified: new Date() })
+              .where(eq(schema.users.id, row.id));
+          }
           return true;
         } catch (error) {
           console.error("oauth signIn lookup failed:", error);

@@ -45,184 +45,588 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  /* No border-radius tokens — we use sharp/minimal radii by design */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-xl: 8px;
+  --radius-2xl: 10px;
+  --radius-3xl: 12px;
+  --radius-4xl: 14px;
 }
 
-/* Notebook palette: warm paper in light, warm charcoal in dark, one muted
-   indigo ink as the accent. Hue values are small but non-zero throughout so
-   surfaces read as paper rather than as flat gray. */
+/* ─────────────────────────────────────────────────────────────────────────────
+   LIGHT MODE  — warm paper desk, daytime
+   Single saturated accent: Rubric red (#A63C24)
+   All other surfaces: warm tinted neutrals in the ochre / amber range
+   ───────────────────────────────────────────────────────────────────────── */
 :root {
+  /* Brand accent */
   --rubric: #a63c24;
   --rubric-deep: #8f321e;
-  --vellum: oklch(0.975 0.008 92);
-  --leaf: rgba(28 26 22 / 0.13);
+  --rubric-glow: rgba(166, 60, 36, 0.14);
 
-  --background: oklch(0.985 0.006 85);
-  --foreground: oklch(0.24 0.015 60);
-  --card: oklch(0.995 0.004 85);
-  --card-foreground: oklch(0.24 0.015 60);
-  --popover: oklch(0.995 0.004 85);
-  --popover-foreground: oklch(0.24 0.015 60);
-  --primary: oklch(0.45 0.13 262);
-  --primary-foreground: oklch(0.985 0.006 85);
-  --secondary: oklch(0.955 0.008 85);
-  --secondary-foreground: oklch(0.3 0.02 60);
-  --muted: oklch(0.955 0.008 85);
-  --muted-foreground: oklch(0.52 0.015 70);
-  --accent: oklch(0.93 0.032 262);
-  --accent-foreground: oklch(0.35 0.1 262);
-  --destructive: oklch(0.55 0.2 27);
-  --border: oklch(0.9 0.01 80);
-  --input: oklch(0.9 0.01 80);
-  --ring: oklch(0.55 0.12 262);
-  --chart-1: oklch(0.62 0.13 262);
-  --chart-2: oklch(0.55 0.12 145);
-  --chart-3: oklch(0.68 0.14 70);
-  --chart-4: oklch(0.58 0.14 340);
-  --chart-5: oklch(0.5 0.09 262);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.972 0.007 85);
-  --sidebar-foreground: oklch(0.24 0.015 60);
-  --sidebar-primary: oklch(0.45 0.13 262);
-  --sidebar-primary-foreground: oklch(0.985 0.006 85);
-  --sidebar-accent: oklch(0.93 0.032 262);
-  --sidebar-accent-foreground: oklch(0.35 0.1 262);
-  --sidebar-border: oklch(0.9 0.01 80);
-  --sidebar-ring: oklch(0.55 0.12 262);
+  /* Surface colours */
+  --vellum: #fbf9f3;
+  /* raised form leaf */
+  --leaf: rgba(28 26 22 / 0.11);
+  /* hairline rule colour */
+
+  /* Semantic tokens — warm neutrals only, no cool grey */
+  --background: #f7f4ee;
+  /* warm paper */
+  --foreground: #1e1b16;
+  /* near-black, warm */
+  --card: #faf8f2;
+  /* card = slightly above ground */
+  --card-foreground: #1e1b16;
+  --popover: #faf8f2;
+  --popover-foreground: #1e1b16;
+
+  /* Primary = muted warm brown-ink (NOT indigo — keeps palette warm) */
+  --primary: #5c4a38;
+  --primary-foreground: #faf8f2;
+
+  --secondary: #ede9e0;
+  --secondary-foreground: #3a3228;
+
+  --muted: #ede9e0;
+  --muted-foreground: #7a6f61;
+  /* warm medium grey */
+
+  --accent: #e6e0d4;
+  --accent-foreground: #3a3228;
+
+  --destructive: #b0391f;
+  --border: rgba(28 26 22 / 0.13);
+  --input: rgba(28 26 22 / 0.13);
+  --ring: #a63c24;
+  /* Rubric as focus ring */
+
+  /* Charts — warm family */
+  --chart-1: #a63c24;
+  /* rubric */
+  --chart-2: #5c4a38;
+  /* ink brown */
+  --chart-3: #c9955c;
+  /* amber */
+  --chart-4: #7a6f61;
+  /* umber */
+  --chart-5: #3a3228;
+  /* dark ink */
+
+  --radius: 4px;
+
+  /* Sidebar shares the card colour */
+  --sidebar: #f4f1e9;
+  --sidebar-foreground: #1e1b16;
+  --sidebar-primary: #a63c24;
+  --sidebar-primary-foreground: #faf8f2;
+  --sidebar-accent: #e6e0d4;
+  --sidebar-accent-foreground: #3a3228;
+  --sidebar-border: rgba(28 26 22 / 0.11);
+  --sidebar-ring: #a63c24;
 }
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   DARK MODE  — lamplight desk, 1 a.m.
+   Ground: warm charcoal #14120E — never a cold screen
+   ───────────────────────────────────────────────────────────────────────── */
 .dark {
   --rubric: #c05a3c;
-  --vellum: oklch(0.235 0.012 70);
-  --leaf: rgba(232 225 211 / 0.14);
+  --rubric-deep: #a84830;
+  --rubric-glow: rgba(192, 90, 60, 0.18);
 
-  --background: oklch(0.19 0.012 70);
-  --foreground: oklch(0.93 0.008 85);
-  --card: oklch(0.235 0.012 70);
-  --card-foreground: oklch(0.93 0.008 85);
-  --popover: oklch(0.235 0.012 70);
-  --popover-foreground: oklch(0.93 0.008 85);
-  --primary: oklch(0.76 0.11 258);
-  --primary-foreground: oklch(0.19 0.012 70);
-  --secondary: oklch(0.275 0.012 70);
-  --secondary-foreground: oklch(0.93 0.008 85);
-  --muted: oklch(0.275 0.012 70);
-  --muted-foreground: oklch(0.68 0.012 75);
-  --accent: oklch(0.33 0.055 262);
-  --accent-foreground: oklch(0.9 0.04 262);
-  --destructive: oklch(0.65 0.18 25);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 14%);
-  --ring: oklch(0.6 0.1 258);
-  --chart-1: oklch(0.72 0.12 258);
-  --chart-2: oklch(0.68 0.13 145);
-  --chart-3: oklch(0.76 0.13 70);
-  --chart-4: oklch(0.7 0.14 340);
-  --chart-5: oklch(0.6 0.09 262);
-  --sidebar: oklch(0.215 0.012 70);
-  --sidebar-foreground: oklch(0.93 0.008 85);
-  --sidebar-primary: oklch(0.76 0.11 258);
-  --sidebar-primary-foreground: oklch(0.19 0.012 70);
-  --sidebar-accent: oklch(0.33 0.055 262);
-  --sidebar-accent-foreground: oklch(0.9 0.04 262);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.6 0.1 258);
+  --vellum: #1d1a14;
+  --leaf: rgba(232 225 211 / 0.12);
+
+  --background: #14120e;
+  /* warm charcoal ground */
+  --foreground: #e8e1d3;
+  /* bone cream text */
+  --card: #1d1a14;
+  --card-foreground: #e8e1d3;
+  --popover: #1d1a14;
+  --popover-foreground: #e8e1d3;
+
+  --primary: #c9955c;
+  /* warm amber — not indigo */
+  --primary-foreground: #14120e;
+
+  --secondary: #2a2620;
+  --secondary-foreground: #c8c0b2;
+
+  --muted: #2a2620;
+  --muted-foreground: #8a8070;
+  /* warm medium tone */
+
+  --accent: #2f2b23;
+  --accent-foreground: #c8c0b2;
+
+  --destructive: #c05a3c;
+  --border: rgba(232 225 211 / 0.10);
+  --input: rgba(232 225 211 / 0.12);
+  --ring: #c05a3c;
+
+  --chart-1: #c05a3c;
+  --chart-2: #c9955c;
+  --chart-3: #e8e1d3;
+  --chart-4: #8a8070;
+  --chart-5: #2a2620;
+
+  --radius: 4px;
+
+  --sidebar: #191610;
+  --sidebar-foreground: #e8e1d3;
+  --sidebar-primary: #c05a3c;
+  --sidebar-primary-foreground: #14120e;
+  --sidebar-accent: #2a2620;
+  --sidebar-accent-foreground: #c8c0b2;
+  --sidebar-border: rgba(232 225 211 / 0.10);
+  --sidebar-ring: #c05a3c;
 }
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   BASE
+   ───────────────────────────────────────────────────────────────────────── */
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
+    /* Explicit colour inheritance so theme switches propagate to every node */
+    color: var(--foreground);
+    background-color: var(--background);
   }
+
   html {
     @apply font-sans;
+    scroll-behavior: smooth;
   }
+
+  /* Warm text selection */
   ::selection {
-    background: color-mix(in oklch, var(--primary) 22%, transparent);
+    background: color-mix(in srgb, var(--rubric) 20%, transparent);
+    color: var(--foreground);
+  }
+
+  /* Thin warm scrollbar */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, var(--foreground) 20%, transparent);
+    border-radius: 2px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in srgb, var(--rubric) 60%, transparent);
   }
 }
 
-@layer components {
-  /* Warm vignette so large surfaces read as lit paper instead of flat fill. */
-  .paper-field {
-    background:
-      radial-gradient(
-        120% 80% at 50% -10%,
-        color-mix(in oklch, var(--primary) 5%, transparent),
-        transparent 60%
-      ),
-      var(--background);
-  }
+/* ─────────────────────────────────────────────────────────────────────────────
+   PAPER GRAIN  — SVG noise pseudo-element on body.grain
+   Never on interactive elements; pure visual texture
+   ───────────────────────────────────────────────────────────────────────── */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: -200%;
+  width: 400%;
+  height: 400%;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+  animation: grain-drift 14s steps(2) infinite;
+}
 
-  /* The auth desk: one low warm source raking across the paper from the top
-     of the form column, the edges falling away. */
-  .auth-ground {
-    background:
-      radial-gradient(90% 60% at 78% 0%, color-mix(in oklch, var(--foreground) 4%, transparent), transparent 70%),
-      radial-gradient(
-        110% 70% at 50% 120%,
-        color-mix(in oklch, var(--rubric) 4%, transparent),
-        transparent 70%
-      ),
-      var(--background);
-  }
+.dark .grain::after {
+  opacity: 0.048;
+}
 
-  /* Borderless form fields under a single hairline; focus deepens it. */
-  .field-underline {
-    @apply w-full bg-transparent outline-none;
-    border-bottom: 1px solid var(--leaf);
-    border-radius: 0;
-    padding-block: 0.55rem;
-    transition:
-      border-color 240ms cubic-bezier(0.16, 1, 0.3, 1),
-      box-shadow 240ms cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .field-underline::placeholder {
-    color: color-mix(in oklch, var(--foreground) 70%, var(--background));
-  }
-  .field-underline:hover {
-    border-bottom-color: color-mix(in oklch, var(--foreground) 30%, transparent);
-  }
-  .field-underline:focus-visible {
-    border-bottom-color: var(--rubric);
-  }
+/* ─────────────────────────────────────────────────────────────────────────────
+   GRADIENT SURFACES
+   ───────────────────────────────────────────────────────────────────────── */
 
-  /* Chrome paints autofilled fields as filled rounded boxes over the design;
-     hold it to the flat surface color and the underline. */
-  .field-underline:-webkit-autofill,
-  .field-underline:-webkit-autofill:hover,
-  .field-underline:-webkit-autofill:focus {
-    -webkit-box-shadow: 0 0 0 1000px var(--background) inset;
-    -webkit-text-fill-color: var(--foreground);
-    caret-color: var(--foreground);
-    border-radius: 0;
-  }
+/* The whole-app ground — faint warm bloom at top */
+.paper-field {
+  background:
+    radial-gradient(120% 70% at 50% -5%,
+      color-mix(in srgb, var(--rubric) 5%, transparent),
+      transparent 60%),
+    var(--background);
+}
 
-  /* The brief's focus rule: a 1px Rubric outline with 2px offset, instant. */
-  .focus-rubric:focus-visible {
-    outline: 1px solid var(--rubric);
-    outline-offset: 2px;
-    transition: none;
-  }
+/* Auth desk — raking lamp light from upper-right, warm bloom at base */
+.auth-ground {
+  background:
+    radial-gradient(80% 55% at 80% 0%, color-mix(in srgb, var(--foreground) 4%, transparent), transparent 65%),
+    radial-gradient(90% 60% at 40% 110%, color-mix(in srgb, var(--rubric) 5%, transparent), transparent 65%),
+    var(--background);
+}
 
-  /* Loading shimmer for page thumbnails and answer text. */
-  .shimmer {
-    background: linear-gradient(
-      90deg,
+/* ─────────────────────────────────────────────────────────────────────────────
+   FORM FIELDS  — borderless with single hairline
+   ───────────────────────────────────────────────────────────────────────── */
+.field-underline {
+  @apply w-full bg-transparent outline-none;
+  border-bottom: 1px solid var(--leaf);
+  border-radius: 0;
+  padding-block: 0.55rem;
+  color: var(--foreground);
+  transition:
+    border-color 260ms ease,
+    box-shadow 260ms ease;
+}
+
+.field-underline::placeholder {
+  color: color-mix(in srgb, var(--foreground) 40%, transparent);
+}
+
+.field-underline:hover {
+  border-bottom-color: color-mix(in srgb, var(--foreground) 30%, transparent);
+}
+
+.field-underline:focus-visible {
+  border-bottom-color: var(--rubric);
+  box-shadow: 0 1px 0 0 color-mix(in srgb, var(--rubric) 30%, transparent);
+}
+
+.field-underline:-webkit-autofill,
+.field-underline:-webkit-autofill:hover,
+.field-underline:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--background) inset;
+  -webkit-text-fill-color: var(--foreground);
+  caret-color: var(--foreground);
+  border-radius: 0;
+}
+
+/* Rubric outline — instant, 1px, 2px offset */
+.focus-rubric:focus-visible {
+  outline: 1px solid var(--rubric);
+  outline-offset: 2px;
+  transition: none;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ANSWER TEXT  — explicit colour inheritance guard
+   Prevents light-mode text from disappearing on theme switch
+   ───────────────────────────────────────────────────────────────────────── */
+.answer-text {
+  color: var(--foreground);
+}
+
+.answer-text * {
+  /* Re-inherit so any child that lost the cascade during hot-swap gets it back */
+  color: inherit;
+}
+
+/* Overrides for specific markdown elements that must differ */
+.answer-text strong {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.answer-text code {
+  color: var(--foreground);
+}
+
+.answer-text a {
+  color: var(--rubric);
+}
+
+.answer-text blockquote {
+  color: var(--muted-foreground);
+}
+
+.answer-text .text-muted-foreground {
+  color: var(--muted-foreground) !important;
+}
+
+.answer-text .text-primary {
+  color: var(--primary) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   COMPOSER BAR  — the chat input
+   ───────────────────────────────────────────────────────────────────────── */
+.composer-bar {
+  border-radius: 6px;
+  transition:
+    border-color 240ms ease,
+    box-shadow 240ms ease;
+}
+
+.composer-bar:focus-within {
+  border-color: color-mix(in srgb, var(--rubric) 50%, transparent) !important;
+  box-shadow:
+    0 0 0 2px var(--rubric-glow),
+    0 2px 12px color-mix(in srgb, var(--rubric) 6%, transparent);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   SIDEBAR  — flat, no glass, clean warm surface
+   ───────────────────────────────────────────────────────────────────────── */
+.sidebar-panel {
+  background: var(--sidebar);
+  border-right: 1px solid var(--border);
+}
+
+/* Active session: left Rubric marker */
+.session-row {
+  position: relative;
+  border-radius: 3px;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+.session-row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 15%;
+  bottom: 15%;
+  width: 2px;
+  background: var(--rubric);
+  border-radius: 0 1px 1px 0;
+  opacity: 0;
+  transform: scaleY(0.5);
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+.session-row.active::before,
+.session-row:hover::before {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+.session-row.active {
+  background: color-mix(in srgb, var(--rubric) 8%, var(--sidebar));
+}
+
+.session-row:not(.active):hover {
+  background: color-mix(in srgb, var(--foreground) 5%, var(--sidebar));
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   EXAMPLE CARDS  — sharp-edged, hover lifts slightly
+   ───────────────────────────────────────────────────────────────────────── */
+.example-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  transition:
+    border-color 220ms ease,
+    background-color 220ms ease,
+    transform 160ms ease,
+    box-shadow 220ms ease;
+}
+
+.example-card:hover {
+  border-color: color-mix(in srgb, var(--rubric) 40%, transparent);
+  background: color-mix(in srgb, var(--rubric) 4%, var(--card));
+  transform: translateY(-1px);
+  box-shadow: 0 3px 12px color-mix(in srgb, var(--foreground) 6%, transparent);
+}
+
+.example-card:active {
+  transform: translateY(0);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   CITATION CHIPS  — sharp, not pill
+   ───────────────────────────────────────────────────────────────────────── */
+.cite-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--rubric) 10%, var(--accent));
+  border: 1px solid color-mix(in srgb, var(--rubric) 20%, transparent);
+  font-family: var(--font-geist-mono);
+  font-size: 10px;
+  color: var(--rubric);
+  cursor: default;
+  transition: background 180ms ease, border-color 180ms ease;
+  vertical-align: middle;
+  transform: translateY(-1px);
+}
+
+.cite-chip:hover,
+button.cite-chip:hover {
+  background: color-mix(in srgb, var(--rubric) 18%, var(--accent));
+  border-color: color-mix(in srgb, var(--rubric) 40%, transparent);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   SOURCE PANEL  — the collapsible sources list
+   ───────────────────────────────────────────────────────────────────────── */
+.source-chip {
+  border-radius: 2px;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.source-chip:hover {
+  background: color-mix(in srgb, var(--rubric) 7%, var(--accent));
+  color: var(--foreground);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   EVIDENCE RAIL  — right panel (page viewer)
+   Flat, no glass, no blur, no shadow — just clean warm surface
+   ───────────────────────────────────────────────────────────────────────── */
+.evidence-panel {
+  background: var(--card);
+  border-left: 1px solid var(--border);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   SHIMMER  — loading placeholder
+   ───────────────────────────────────────────────────────────────────────── */
+.shimmer {
+  background: linear-gradient(90deg,
       var(--muted) 0%,
-      color-mix(in oklch, var(--muted) 55%, var(--foreground)) 50%,
-      var(--muted) 100%
-    );
-    background-size: 200% 100%;
-    animation: shimmer 1.4s ease-in-out infinite;
+      color-mix(in srgb, var(--muted-foreground) 30%, var(--muted)) 45%,
+      color-mix(in srgb, var(--rubric) 10%, var(--muted)) 50%,
+      color-mix(in srgb, var(--muted-foreground) 30%, var(--muted)) 55%,
+      var(--muted) 100%);
+  background-size: 300% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   COMING SOON  — holding page
+   ───────────────────────────────────────────────────────────────────────── */
+.coming-soon-field {
+  background:
+    repeating-linear-gradient(0deg,
+      transparent,
+      transparent 47px,
+      color-mix(in srgb, var(--foreground) 4%, transparent) 48px),
+    radial-gradient(70% 45% at 50% -5%, color-mix(in srgb, var(--rubric) 6%, transparent), transparent 65%),
+    var(--background);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ENTRANCE ANIMATIONS
+   ───────────────────────────────────────────────────────────────────────── */
+.turn-enter {
+  animation: turn-rise 380ms ease both;
+}
+
+.source-enter {
+  animation: source-expand 300ms ease both;
+}
+
+.suggestion-enter {
+  animation: suggestion-rise 320ms ease both;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   WELCOME VEIL
+   ───────────────────────────────────────────────────────────────────────── */
+.welcome-static {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background:
+    radial-gradient(120% 85% at 50% 115%, color-mix(in srgb, #a63c24 12%, transparent), transparent 55%),
+    #0f0d0a;
+}
+
+html:not(.axiom-welcome-pending) .welcome-static {
+  display: none;
+}
+
+html.axiom-welcome-pending:has(.welcome-veil) .welcome-static {
+  display: none;
+}
+
+.welcome-veil {
+  background:
+    radial-gradient(120% 85% at 50% 115%, color-mix(in srgb, #a63c24 12%, transparent), transparent 55%),
+    #0f0d0a;
+  animation: welcome-veil 3.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.welcome-hline {
+  transform-origin: center;
+  background: linear-gradient(90deg, transparent, rgba(232 225 211 / 0.18) 20%, rgba(232 225 211 / 0.18) 80%, transparent);
+  animation: welcome-draw-x 800ms 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.welcome-vline {
+  transform-origin: center;
+  background: linear-gradient(180deg, transparent, rgba(232 225 211 / 0.10) 20%, rgba(232 225 211 / 0.10) 80%, transparent);
+  animation: welcome-draw-y 800ms 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.welcome-word {
+  animation: welcome-word 1000ms 200ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.welcome-rule {
+  animation: welcome-rule 800ms 1050ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.welcome-meta {
+  animation: welcome-rise 700ms 1600ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.welcome-scan {
+  background: linear-gradient(180deg,
+      transparent 0%,
+      color-mix(in srgb, #a63c24 55%, transparent) 44%,
+      color-mix(in srgb, #a63c24 90%, transparent) 50%,
+      color-mix(in srgb, #a63c24 55%, transparent) 56%,
+      transparent 100%);
+  opacity: 0;
+  animation: welcome-scan 1500ms 2000ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.welcome-skip {
+  animation: welcome-rise 600ms 2700ms ease-out both;
+}
+
+.welcome-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(232 225 211 / 0.45);
+  animation: particle-float var(--dur, 4s) var(--delay, 0s) ease-in-out infinite alternate;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   KEYFRAMES
+   ───────────────────────────────────────────────────────────────────────── */
+@keyframes grain-drift {
+
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  25% {
+    transform: translate(-1%, -1%);
+  }
+
+  50% {
+    transform: translate(1%, 0);
+  }
+
+  75% {
+    transform: translate(0, 1%);
   }
 }
 
@@ -230,154 +634,177 @@
   0% {
     background-position: 200% 0;
   }
+
   100% {
     background-position: -200% 0;
   }
 }
 
-/* ─── Welcome veil ─────────────────────────────────────────────────────────
-   One entrance sequence, once per session. Opacity, draw and tracking only;
-   the veil never moves a second time during the session. */
+@keyframes turn-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
 
-/* Static veil shown during hydration/before React mounts, so the landing page
-   never flashes ahead of the welcome sequence. Removed by WelcomeGate. */
-.welcome-static {
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  background:
-    radial-gradient(
-      120% 90% at 50% 115%,
-      color-mix(in oklch, var(--rubric) 8%, transparent),
-      transparent 60%
-    ),
-    oklch(0.135 0.012 70);
-}
-html:not(.axiom-welcome-pending) .welcome-static {
-  display: none;
-}
-/* Once the animated veil has mounted, drop the static placeholder so there
-   is never a frame where neither covers the page. */
-html.axiom-welcome-pending:has(.welcome-veil) .welcome-static {
-  display: none;
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
-.welcome-veil {
-  background:
-    radial-gradient(
-      120% 90% at 50% 115%,
-      color-mix(in oklch, var(--rubric) 8%, transparent),
-      transparent 60%
-    ),
-    oklch(0.135 0.012 70);
-  animation: welcome-veil 3.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+@keyframes source-expand {
+  from {
+    opacity: 0;
+    transform: scaleX(0.97) translateX(-3px);
+    transform-origin: left;
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
-.welcome-hline {
-  transform-origin: center;
-  background: rgba(232 225 211 / 0.16);
-  animation: welcome-draw-x 700ms 350ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-.welcome-vline {
-  transform-origin: center;
-  background: rgba(232 225 211 / 0.1);
-  animation: welcome-draw-y 700ms 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-.welcome-word {
-  animation: welcome-word 900ms 250ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-.welcome-rule {
-  animation: welcome-rule 700ms 1000ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-.welcome-meta {
-  animation: welcome-rise 600ms 1500ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-.welcome-scan {
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    color-mix(in oklch, var(--rubric) 65%, transparent) 46%,
-    color-mix(in oklch, var(--rubric) 90%, transparent) 50%,
-    color-mix(in oklch, var(--rubric) 65%, transparent) 54%,
-    transparent 100%
-  );
-  opacity: 0;
-  animation: welcome-scan 1400ms 1900ms cubic-bezier(0.4, 0, 0.2, 1) both;
-}
-.welcome-skip {
-  animation: welcome-rise 600ms 2600ms ease-out both;
+
+@keyframes suggestion-rise {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 @keyframes welcome-veil {
   0% {
     opacity: 1;
   }
-  92% {
+
+  90% {
     opacity: 1;
   }
+
   100% {
     opacity: 0;
     visibility: hidden;
   }
 }
+
 @keyframes welcome-draw-x {
   from {
     transform: translateX(-50%) scaleX(0);
   }
+
   to {
     transform: translateX(-50%) scaleX(1);
   }
 }
+
 @keyframes welcome-draw-y {
   from {
     transform: scaleY(0);
   }
+
   to {
     transform: scaleY(1);
   }
 }
+
 @keyframes welcome-word {
   from {
     opacity: 0;
-    letter-spacing: 0.5em;
+    letter-spacing: 0.55em;
     transform: translateY(16px);
+    filter: blur(4px);
   }
+
   to {
     opacity: 1;
     letter-spacing: 0.06em;
     transform: none;
+    filter: blur(0);
   }
 }
+
 @keyframes welcome-rule {
   from {
     width: 0;
+    opacity: 0;
   }
+
   to {
     width: 7rem;
+    opacity: 1;
   }
 }
+
 @keyframes welcome-rise {
   from {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: none;
   }
 }
+
 @keyframes welcome-scan {
   0% {
     opacity: 0;
-    transform: translateX(-32vw);
+    transform: translateX(-36vw);
   }
-  14% {
+
+  12% {
     opacity: 1;
   }
-  86% {
+
+  88% {
     opacity: 1;
   }
+
   100% {
     opacity: 0;
-    transform: translateX(32vw);
+    transform: translateX(36vw);
+  }
+}
+
+@keyframes particle-float {
+  from {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.45;
+  }
+
+  to {
+    transform: translate(var(--tx, 8px), var(--ty, -12px)) scale(0.65);
+    opacity: 0.08;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   REDUCED MOTION
+   ───────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+
+  .welcome-veil,
+  .welcome-word,
+  .welcome-rule,
+  .welcome-meta,
+  .welcome-scan,
+  .welcome-skip,
+  .welcome-hline,
+  .welcome-vline,
+  .welcome-particle,
+  .turn-enter,
+  .source-enter,
+  .suggestion-enter,
+  .shimmer {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
   }
 }
