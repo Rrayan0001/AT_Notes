@@ -68,7 +68,22 @@ async function buildDomain(domain: string) {
   }
 
   console.log(`[${domain}] embedding ${chunks.length} chunks with ${EMBEDDING_MODEL} ...`);
-  const vectors = await embedDocuments(chunks.map((c) => c.embedText));
+  let vectors: number[][];
+  try {
+    vectors = await embedDocuments(chunks.map((c) => c.embedText));
+  } catch (error) {
+    // Embedding is a remote API and can fail transiently (quota, rate limits).
+    // When a committed bundle exists the build must not die over it — deploy
+    // with the stale index and warn loudly instead.
+    if (existsSync(out) && !force) {
+      const stale = JSON.parse(readFileSync(out, "utf8")) as IndexBundle;
+      console.error(
+        `[${domain}] embedding failed (${error instanceof Error ? error.message : String(error)}); keeping committed index built ${stale.manifest.builtAt}.`
+      );
+      return;
+    }
+    throw error;
+  }
 
   const bundle: IndexBundle = {
     manifest: {

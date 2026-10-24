@@ -8,8 +8,9 @@
 /out/
 /build
 
-# generated vector index. Rebuilt by `npm run index` (also runs on prebuild).
-/src/data/index.json
+# generated vector indexes. They ship in the repo so the prebuild skips
+# re-embedding (a fresh clone is byte-identical to what the manifest hashed).
+# Rebuild with `npm run index` after editing the transcriptions.
 
 # cached page renders, written on demand by /api/page/[n]
 /.cache
