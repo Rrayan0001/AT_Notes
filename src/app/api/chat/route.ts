@@ -10,7 +10,12 @@ import {
   fallbackSystemPrompt,
   generalSystemPrompt,
 } from "@/lib/prompt";
-import { isExplicitGeneralRequest, isMissingFromNotes, type ChatMode } from "@/lib/answers";
+import {
+  isExplicitGeneralRequest,
+  isMissingFromNotes,
+  wantsExpressiveAnswer,
+  type ChatMode,
+} from "@/lib/answers";
 import {
   resolveExplicitGeneralQuestion,
   resolveRetrievalQuestion,
@@ -130,13 +135,23 @@ export async function POST(req: Request) {
           if (explicitGeneral) {
             effectiveQuestion = resolveExplicitGeneralQuestion(question, history);
             messages = [
-              { role: "system", content: generalSystemPrompt(domainLabel) },
+              {
+                role: "system",
+                content: wantsExpressiveAnswer(effectiveQuestion)
+                  ? answerSystemPrompt(generalSystemPrompt(domainLabel))
+                  : generalSystemPrompt(domainLabel),
+              },
               { role: "user", content: buildGeneralPrompt(effectiveQuestion, []) },
             ];
           } else {
             effectiveQuestion = resolveRetrievalQuestion(question, history);
             messages = [
-              { role: "system", content: generalSystemPrompt(domainLabel) },
+              {
+                role: "system",
+                content: wantsExpressiveAnswer(effectiveQuestion)
+                  ? answerSystemPrompt(generalSystemPrompt(domainLabel))
+                  : generalSystemPrompt(domainLabel),
+              },
               { role: "user", content: buildGeneralPrompt(effectiveQuestion, history) },
             ];
           }
@@ -181,7 +196,12 @@ export async function POST(req: Request) {
             mode,
           });
           messages = [
-            { role: "system", content: answerSystemPrompt(SYSTEM_PROMPT) },
+            {
+              role: "system",
+              content: wantsExpressiveAnswer(effectiveQuestion)
+                ? answerSystemPrompt(SYSTEM_PROMPT)
+                : SYSTEM_PROMPT,
+            },
             { role: "user", content: buildUserPrompt(effectiveQuestion, sources, history) },
           ];
         }

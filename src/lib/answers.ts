@@ -1,5 +1,18 @@
 export type ChatMode = "notes" | "general";
 
+/**
+ * Only questions that explicitly ask for a long-form, expressive answer
+ * should unlock the OpenUI canvas; every other reply stays plain markdown.
+ * Kept deliberately strict — "detailed manner" (the ordinary follow-up)
+ * is plain detail, while "very detailed and expressive" is the trigger.
+ */
+const EXPRESSIVE_PATTERN =
+  /\b(?:very\s+detail(?:ed)?|detail(?:ed)?\s+and\s+expressive\b|expressive|expressively|elaborate|elaborately|in\s+(?:great|full|complete)\s+detail|exhaustively|exhaustive|highly\s+detailed|deep\s+dive|visually\s+(?:rich|detailed|appealing))\b/i;
+
+export function wantsExpressiveAnswer(question: string): boolean {
+  return EXPRESSIVE_PATTERN.test(question);
+}
+
 export const MISSING_FROM_NOTES = "That isn't in these notes.";
 
 const MISSING_PATTERN = /that\s+isn[’']t\s+in\s+these\s+notes/i;
