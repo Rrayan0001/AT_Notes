@@ -28,23 +28,99 @@ export interface ChatProps {
   maxPage: number;
   user: AppUser | null;
   domainLabel?: string;
+  sessionId: string | null;
+  onSessionChange: (id: string) => void;
 }
 
-export function Chat({ onCite, onBrowsePages, user, domainLabel }: ChatProps) {
+export function Chat({ onCite, onBrowsePages, user, domainLabel, sessionId, onSessionChange }: ChatProps) {
   const [input, setInput] = useState("");
   const [photoOpen, setPhotoOpen] = useState(false);
-  const { turns, busy, ask, stop } = useChatStream();
+  const { turns, busy, ask, stop, reset } = useChatStream();
   const bottomRef = useRef<HTMLDivElement>(null);
+  const persistedRef = useRef<Set<string>>(new Set());
 
-  const submitQuestion = (question: string) => {
+  const submitQuestion = async (question: string) => {
     if (!question.trim() || busy) return;
     setInput("");
+    let sid = sessionId;
+    if (!sid) {
+      const res = await fetch("/api/sessions", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title: question.slice(0, 60) }) });
+      if (res.ok) {
+        const j = await res.json();
+        sid = j.session?.id ?? null;
+        if (sid) onSessionChange(sid);
+      }
+    }
     ask(question, { mode: "notes", history: selectConversationMemory(turns, "notes", question) });
   };
 
   // Clear the composer as soon as its text becomes a question. Empty input is
   // left alone so an ignored Enter press does not erase whitespace being edited.
   const submitInput = submitQuestion;
+
+  // Load history when session changes.
+  useEffect(() => {
+    persistedRef.current = new Set();
+    if (!sessionId) {
+      reset([]);
+      return;
+    }
+    let cancelled = false;
+    fetch(`/api/sessions/${sessionId}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (cancelled || !d) return;
+        const msgs = d.messages ?? [];
+        const turnsBuilt: Turn[] = [];
+        let cur: Turn | null = null;
+        for (const m of msgs) {
+          if (m.role === "user") {
+            if (cur) turnsBuilt.push(cur);
+            cur = {
+              id: m.id,
+              question: m.content,
+              mode: (m.mode as "notes" | "general") ?? "notes",
+              answer: "",
+              sources: [],
+              sourcePhase: "none",
+              suggestions: [],
+              status: "done",
+            };
+          } else if (cur) {
+            cur.answer = m.content;
+          }
+        }
+        if (cur) turnsBuilt.push(cur);
+        reset(turnsBuilt);
+        turnsBuilt.forEach((t) => persistedRef.current.add(t.id));
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [sessionId, reset]);
+
+  // Persist completed turns.
+  useEffect(() => {
+    if (!sessionId) return;
+    for (const t of turns) {
+      if (t.status !== "done") continue;
+      if (persistedRef.current.has(t.id)) continue;
+      persistedRef.current.add(t.id);
+      fetch(`/api/sessions/${sessionId}/messages`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ role: "user", content: t.question, mode: t.mode }),
+      }).catch(() => {});
+      if (t.answer) {
+        fetch(`/api/sessions/${sessionId}/messages`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ role: "assistant", content: t.answer, mode: t.mode }),
+        }).catch(() => {});
+      }
+    }
+  }, [turns, sessionId]);
 
   // Keep the newest token in view as the answer streams.
   useEffect(() => {

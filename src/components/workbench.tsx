@@ -2,16 +2,10 @@
 
 import { useCallback, useState } from "react";
 import { Chat } from "@/components/chat";
+import { ChatSidebar } from "@/components/chat-sidebar";
 import { EvidenceRail } from "@/components/evidence";
 import type { AppUser } from "@/components/coming-soon";
 
-/**
- * Two-pane layout: the conversation on the left, the notebook scan plus its
- * transcription on the right. Citation clicks drive the right pane, so an answer
- * and its evidence sit side by side. Below md the rail becomes a full-screen
- * overlay instead. `shelf` names which notebook occupies which page range, for
- * domains whose corpus spans several scans.
- */
 export function Workbench({
   user,
   maxPage,
@@ -25,10 +19,12 @@ export function Workbench({
 }) {
   const [page, setPage] = useState<number | null>(null);
   const [highlight, setHighlight] = useState<string[]>([]);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sessionId, setSessionId] = useState<string | null>(null);
 
-  const openPage = useCallback((p: number, chunkIds?: string[]) => {
+  const openPage = useCallback((p: number, ids?: string[]) => {
     setPage(p);
-    setHighlight(chunkIds ?? []);
+    setHighlight(ids ?? []);
   }, []);
 
   const close = useCallback(() => {
@@ -38,7 +34,22 @@ export function Workbench({
 
   return (
     <div className="paper-field flex h-dvh overflow-hidden">
-      <Chat onCite={openPage} onBrowsePages={() => openPage(1)} maxPage={maxPage} user={user} domainLabel={domainLabel} />
+      <ChatSidebar
+        open={sidebarOpen}
+        onToggle={() => setSidebarOpen((v) => !v)}
+        activeId={sessionId}
+        onSelect={setSessionId}
+        onNew={() => setSessionId(null)}
+      />
+      <Chat
+        onCite={openPage}
+        onBrowsePages={() => openPage(1)}
+        maxPage={maxPage}
+        user={user}
+        domainLabel={domainLabel}
+        sessionId={sessionId}
+        onSessionChange={setSessionId}
+      />
       <EvidenceRail
         page={page}
         maxPage={maxPage}

@@ -147,5 +147,10 @@ export function useChatStream() {
 
   const stop = useCallback(() => abortRef.current?.abort(), []);
 
-  return { turns, busy, ask, stop };
+  const reset = useCallback((next: Turn[]) => {
+    setTurns(next);
+    setBusy(false);
+  }, []);
+
+  return { turns, busy, ask, stop, reset };
 }
