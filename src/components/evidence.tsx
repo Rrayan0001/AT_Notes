@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight, Loader2, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, FileText, Loader2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { MarkdownView } from "@/components/markdown";
@@ -48,6 +48,9 @@ export function EvidenceRail({
   // Bumped by the retry button so the image remounts and refetches instead of
   // sitting in its failed state. The nonce also defeats any cached failure.
   const [imageRetry, setImageRetry] = useState(0);
+  // The scan loads only after the reader asks for it: the rail opens with a
+  // "View PDF" button, and once pressed scans stay on for the session.
+  const [scanEnabled, setScanEnabled] = useState(false);
   const [jumpValue, setJumpValue] = useState("");
 
   // Adjusting state during render is React's documented alternative to an
@@ -191,7 +194,22 @@ export function EvidenceRail({
       <ScrollArea className="min-h-0 flex-1">
         <div className="space-y-4 p-3">
           <div className="overflow-hidden rounded-lg border bg-background shadow-sm">
-            {imageFailed ? (
+            {!scanEnabled ? (
+              <button
+                type="button"
+                onClick={() => setScanEnabled(true)}
+                className="focus-rubric flex w-full flex-col items-center gap-2 px-3 py-10 text-center"
+              >
+                <FileText className="size-6 text-rubric" />
+                <span className="text-sm font-medium">
+                  View PDF — page {page}
+                  {book ? ` (${book})` : ""}
+                </span>
+                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                  opens the scanned notebook page
+                </span>
+              </button>
+            ) : imageFailed ? (
               <div className="space-y-2 px-3 py-6 text-center">
                 <p className="text-xs text-muted-foreground">
                   Page image unavailable. It may not have deployed — try again.
