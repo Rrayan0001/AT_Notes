@@ -1,43 +1,40 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 import { DOMAINS } from "@/lib/domains";
 import { Button } from "@/components/ui/button";
 import {
   Disclaimer,
-  FIELD,
   FormError,
-  KeepSignedIn,
   LABEL,
   PRIMARY,
 } from "@/components/auth/auth-shell";
-import { PasswordField } from "@/components/auth/password-field";
-import {
-  PASSWORD_MIN,
-  STRENGTH_LABELS,
-  passwordRequirementMessage,
-  passwordStrength,
-} from "@/lib/password";
 
 const DISCLAIMER =
   "Pavan Garu is a personal study aid. Answers come from transcribed notes, not authoritative sources — check them against your own material and syllabus.";
 
-const strengthColor = (strength: 0 | 1 | 2 | 3 | 4): string =>
-  strength <= 1 ? "bg-rubric" : strength === 2 ? "bg-amber-500" : "bg-emerald-500";
+export function SignOutLink({ children }: { children: React.ReactNode }) {
+  return (
+    <button
+      type="button"
+      onClick={() => void signOut({ callbackUrl: "/login" })}
+      className="focus-rubric text-foreground underline underline-offset-4"
+    >
+      {children}
+    </button>
+  );
+}
 
-export function SignupForm({ oauthProviders }: { oauthProviders: string[] }) {
-  const router = useRouter();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
-  const [keep, setKeep] = useState(false);
+export interface AppUser {
+  name: string;
+  email: string;
+}
+
+export function OnboardingForm({ user }: { user: AppUser }) {
   const [domain, setDomain] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [created, setCreated] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,49 +43,24 @@ export function SignupForm({ oauthProviders }: { oauthProviders: string[] }) {
       setError("Choose the one domain you want to belong to — it can't be changed later.");
       return;
     }
-    const requirement = passwordRequirementMessage(password);
-    if (requirement) {
-      setError(requirement);
-      return;
-    }
-    if (confirm !== password) {
-      setError("Passwords do not match.");
-      return;
-    }
     setBusy(true);
     try {
-      const res = await fetch("/api/auth/signup", {
+      const res = await fetch("/api/onboarding", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password, domain }),
+        body: JSON.stringify({ domain }),
       });
-      const data = (await res.json().catch(() => ({}))) as { error?: string };
       if (!res.ok) {
-        setError(data.error ?? "Signup failed.");
+        const data = (await res.json().catch(() => ({}))) as { error?: string };
+        setError(data.error ?? "Sealing your domain failed.");
         return;
       }
-      setCreated(true);
-      // Then complete the login with the same credentials.
-      const signInRes = await signIn("credentials", { redirect: false, email, password });
-      if (signInRes?.error) {
-        router.push("/login?created=1");
-        return;
-      }
-      // Re-sign the session token for the chosen horizon before entering.
-      // The fetch may race the signIn response's Set-Cookie, so retry briefly.
-      for (let attempt = 0; attempt < 6; attempt++) {
-        const res = await fetch("/api/session", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ keep }),
-        }).catch(() => undefined);
-        if (res?.ok) break;
-        await new Promise((r) => setTimeout(r, 150));
-      }
-      router.push("/");
-      router.refresh();
+      // The JWT is minted at sign-in time, so it does not carry the freshly
+      // sealed domain. Re-run the Google flow — instant, no consent prompt —
+      // to land on the workbench with a complete session.
+      await signIn("google", { callbackUrl: "/" });
     } catch {
-      setError("Signup failed. Is the server running with a configured database?");
+      setError("Sealing your domain failed. Is the server running with a configured database?");
     } finally {
       setBusy(false);
     }
@@ -96,77 +68,16 @@ export function SignupForm({ oauthProviders }: { oauthProviders: string[] }) {
 
   return (
     <form onSubmit={submit} className="space-y-6" noValidate>
-      <div>
-        <label htmlFor="signup-name" className={LABEL}>
-          Name
-        </label>
-        <input
-          id="signup-name"
-          required
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className={FIELD}
-          placeholder="Your name"
-        />
-      </div>
-      <div>
-        <label htmlFor="signup-email" className={LABEL}>
-          Email
-        </label>
-        <input
-          id="signup-email"
-          type="email"
-          autoComplete="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className={FIELD}
-          placeholder="you@example.com"
-        />
-      </div>
-      <div className="space-y-2">
-        <PasswordField
-          id="signup-password"
-          label="Password"
-          autoComplete="new-password"
-          required
-          minLength={PASSWORD_MIN}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder={`${PASSWORD_MIN}+ chars, upper/lower case, digit, symbol`}
-        />
-        {/* Live strength meter: four hairline segments fill as independent
-            character classes appear — the machine voice, left aligned. */}
-        <div aria-hidden="true" className="flex gap-1">
-          {[1, 2, 3, 4].map((step) => (
-            <span
-              key={step}
-              className={
-                "h-0.5 flex-1 transition-colors duration-300 " +
-                (passwordStrength(password) >= step && password.length > 0
-                  ? strengthColor(passwordStrength(password))
-                  : "bg-foreground/10")
-              }
-            />
-          ))}
-        </div>
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-          strength: {STRENGTH_LABELS[passwordStrength(password)]}
+      <div className="border-y border-[var(--leaf)] py-4">
+        <p className={LABEL}>Sealed to</p>
+        <p className="mt-1 font-serif text-[17px] leading-snug text-foreground">
+          {user.name || "You"}
+        </p>
+        <p className="text-[13px] text-muted-foreground">{user.email}</p>
+        <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.18em] text-rubric">
+          verified by google
         </p>
       </div>
-      <PasswordField
-        id="signup-confirm"
-        label="Confirm password"
-        autoComplete="new-password"
-        required
-        value={confirm}
-        onChange={(e) => setConfirm(e.target.value)}
-        placeholder="Repeat the password"
-      />
-      {confirm.length > 0 && confirm !== password && (
-        <p className="text-[12px] text-rubric">Passwords do not match.</p>
-      )}
-      <KeepSignedIn checked={keep} onChange={setKeep} />
 
       {/* The domain contents list: a table of contents, not a card grid.
           Selection is marked the way a reader marks an authority — the row's
@@ -220,7 +131,7 @@ export function SignupForm({ oauthProviders }: { oauthProviders: string[] }) {
                       (selected ? "text-rubric" : "text-muted-foreground")
                     }
                   >
-                    {d.ingested ? "live" : "soon"}
+                    {!d.open ? "closed" : d.ingested ? "live" : "soon"}
                   </span>
                 </button>
               </div>
@@ -229,26 +140,17 @@ export function SignupForm({ oauthProviders }: { oauthProviders: string[] }) {
         </div>
         <p className="mt-2.5 flex items-start gap-1.5 text-[13px] leading-relaxed text-muted-foreground">
           <span aria-hidden="true" className="mt-[7px] size-1.5 shrink-0 bg-rubric" />
-          One email belongs to one domain. It is locked at signup and cannot be changed.
+          One email belongs to one domain. It is sealed here once and cannot be changed.
         </p>
       </fieldset>
 
-      {error && <FormError>{error}</FormError>}
       <Disclaimer>{DISCLAIMER}</Disclaimer>
 
-      <Button type="submit" disabled={busy || created} className={PRIMARY}>
-        {created ? "Signing you in…" : busy ? "Creating account…" : "Create account"}
-      </Button>
+      {error && <FormError>{error}</FormError>}
 
-      {oauthProviders.length > 0 && (
-        <p className="text-[13px] leading-relaxed text-muted-foreground">
-          Have Google? Sign in on the{" "}
-          <a href="/login" className="focus-rubric text-foreground underline underline-offset-4">
-            login page
-          </a>{" "}
-          — the email must already be registered here with a domain.
-        </p>
-      )}
+      <Button type="submit" disabled={busy} className={PRIMARY}>
+        {busy ? "Sealing…" : "Seal my domain"}
+      </Button>
     </form>
   );
 }

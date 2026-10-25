@@ -1,47 +1,34 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { LoginForm } from "@/components/login-form";
 import { AuthShell } from "@/components/auth/auth-shell";
 import { oauthProviderNames } from "@/lib/oauth";
 
 export const metadata: Metadata = { title: "Sign in — Pavan Garu" };
 
-/** The signup form lands here with ?created=1 when auto sign-in needs a retry. */
-const NOTICES: Record<string, string> = {
-  "1": "Account created — sign in to continue.",
+/** Auth.js lands here with ?error=<code> when a sign-in attempt cannot be honored. */
+const OAUTH_ERRORS: Record<string, string> = {
+  OAuthAccountNotLinked:
+    "That Google account is still tied to your previous session. The session has been cleared — sign in again with the same Google account.",
+  AccessDenied: "Sign-in was denied. Try again with the same Google account.",
+  Configuration: "Sign-in is misconfigured on the server. Check the Google keys in .env.",
+  Verification: "The sign-in link has expired. Try again.",
 };
 
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ created?: string }>;
+  searchParams: Promise<{ error?: string }>;
 }) {
-  const { created } = await searchParams;
-  const notice = created ? NOTICES[created] : undefined;
+  const { error } = await searchParams;
+  const oauthError = error ? (OAUTH_ERRORS[error] ?? "Sign-in failed. Try again.") : undefined;
 
   return (
     <AuthShell
       title="Every answer, attested."
       dust="Sign in to ask the notes a question. The answer arrives beside the scanned page it came from, with its transcription as written."
-      facts={["275 pages transcribed", "4 domains", "citations to the exact page"]}
-      next={
-        <>
-          New here?{" "}
-          <Link href="/signup" className="focus-rubric text-foreground underline underline-offset-4">
-            Create an account
-          </Link>
-        </>
-      }
+      facts={["275 pages sworn from the ink", "4 domains, one ledger", "every answer traced to its page"]}
     >
-      {notice && (
-        <p className="mb-6 border border-leaf bg-leaf/30 px-4 py-3 text-[13px] leading-relaxed text-muted-foreground">
-          <span className="mr-2 font-mono text-[10px] tracking-[0.18em] text-rubric uppercase">
-            notice
-          </span>
-          {notice}
-        </p>
-      )}
-      <LoginForm oauthProviders={oauthProviderNames()} />
+      <LoginForm googleReady={oauthProviderNames().includes("google")} oauthError={oauthError} />
     </AuthShell>
   );
 }

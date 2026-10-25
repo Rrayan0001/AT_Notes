@@ -1,12 +1,10 @@
 import NextAuth from "next-auth";
-import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import type { Provider } from "@auth/core/providers";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { eq } from "drizzle-orm";
 import { getDb, schema } from "@/db";
 import { authConfig } from "@/auth.config";
-import { verifyPassword } from "@/lib/scrypt";
 
 const providerStack: Provider[] = [...authConfig.providers];
 
@@ -21,15 +19,20 @@ if (googleId && googleSecret) {
       clientId: googleId,
       clientSecret: googleSecret,
       allowDangerousEmailAccountLinking: true,
+      // Make Google show the account chooser so a user signed in with one
+      // Google identity can never silently collide with another account row.
+      authorization: { params: { prompt: "select_account" } },
     }),
   );
 }
 
 /**
- * Node-side auth. The Drizzle adapter persists OAuth users; credentials
- * verify the scrypt hash stored at signup. Domain always comes from the
- * database row — never from the client.
+ * Node-side auth. The DrizzleAdapter persists OAuth users. Domain always
+ * comes from the database row — never from the client. First-time Google
+ * users enter with a domain-less session and pick a domain on /signup
+ * (/api/onboarding); there is no password path.
  */
+
 const OAuthProviders = googleId && googleSecret ? ["google"] : [];
 
 const adapter = process.env.DATABASE_URL
@@ -44,40 +47,17 @@ const adapter = process.env.DATABASE_URL
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
-  providers: [
-    ...providerStack,
-    Credentials({
-      credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
-      },
-      authorize: async (credentials) => {
-        const email = typeof credentials?.email === "string" ? credentials.email.trim().toLowerCase() : "";
-        const password = typeof credentials?.password === "string" ? credentials.password : "";
-        if (!email || !password) return null;
-
-        try {
-          const db = getDb();
-          const [user] = await db.select().from(schema.users).where(eq(schema.users.email, email)).limit(1);
-          if (!user || !user.passwordHash) return null;
-          if (!(await verifyPassword(password, user.passwordHash))) return null;
-          return { id: user.id, email: user.email, name: user.name, image: user.image, domain: user.domain ?? undefined };
-        } catch (error) {
-          console.error("credentials authorize failed:", error);
-          return null;
-        }
-      },
-    }),
-  ],
+  providers: providerStack,
   adapter,
-  // New OAuth users need a domain; until we offer domain linking, OAuth logins
-  // flow through the signup page which assigns one.
+  // First-time Google users enter the app with a domain-less session; the
+  // gate in auth.config.ts routes them to /signup where they pick exactly
+  // one domain. That assignment is written once and never changed.
   callbacks: {
     ...authConfig.callbacks,
     /**
-     * OAuth: a Google account may only sign in if the same email was already
-     * registered through signup and therefore owns a domain. This keeps
-     * "one email = one domain" true for OAuth as well.
+     * Google emails are verified by the provider. For rows that predate
+     * Google-only auth (password signups), record the verification we know
+     * for free — no verification codes by design.
      */
     async signIn({ user, account }) {
       if (account?.provider && OAuthProviders.includes(account.provider)) {
@@ -86,12 +66,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           const email = user.email?.trim().toLowerCase();
           if (!email) return false;
           const [row] = await db.select().from(schema.users).where(eq(schema.users.email, email)).limit(1);
-          if (!row?.domain) return "/signup?error=unlinked";
-          user.domain = row.domain;
-          // The email-verification gate now lives in the DB for every user:
-          // the provider verified the address, we are just recording a fact we
-          // know for free (no verification codes by design).
-          if (!row.emailVerified) {
+          if (row?.domain) user.domain = row.domain;
+          if (row && !row.emailVerified) {
             await db
               .update(schema.users)
               .set({ emailVerified: new Date() })

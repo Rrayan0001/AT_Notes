@@ -1,115 +1,70 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { getSession, signIn, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import {
-  Disclaimer,
-  FIELD,
-  FormError,
-  KeepSignedIn,
-  LABEL,
-  PRIMARY,
-  SECONDARY,
-} from "@/components/auth/auth-shell";
-import { PasswordField } from "@/components/auth/password-field";
+import { FormError, PRIMARY, SECONDARY } from "@/components/auth/auth-shell";
 
-const DISCLAIMER =
-  "Pavan Garu is a personal study aid. Answers come from transcribed notes, not authoritative sources — check them against your own material and syllabus.";
+/**
+ * Google-only sign-in. An active session at this page is the poison pill of
+ * the whole flow: with one present, Auth.js throws OAuthAccountNotLinked on
+ * the callback and the sign-in page loops forever. So the form clears any
+ * live session on mount and only reveals the buttons when the desk is clean.
+ */
+export function LoginForm({
+  googleReady = true,
+  oauthError,
+}: {
+  googleReady?: boolean;
+  oauthError?: string | null;
+}) {
+  const [cleared, setCleared] = useState(false);
 
-export function LoginForm({ oauthProviders }: { oauthProviders: string[] }) {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [keep, setKeep] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
-
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setBusy(true);
-    try {
-      const res = await signIn("credentials", { redirect: false, email, password });
-      if (res?.error) {
-        setError("Email or password is incorrect.");
-        return;
+  useEffect(() => {
+    let stale = false;
+    (async () => {
+      try {
+        const session = await getSession();
+        if (session && !stale) await signOut({ redirect: false });
+      } catch {
+        /* nothing to clear */
       }
-      // Re-sign the session token for the chosen horizon before entering.
-      // The fetch may race the signIn response's Set-Cookie, so retry briefly.
-      for (let attempt = 0; attempt < 6; attempt++) {
-        const res = await fetch("/api/session", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ keep }),
-        }).catch(() => undefined);
-        if (res?.ok) break;
-        await new Promise((r) => setTimeout(r, 150));
-      }
-      // Refresh so the server session (and domain) are current, then enter.
-      router.push("/");
-      router.refresh();
-    } catch {
-      setError("Sign-in failed. Is the server running with a configured database?");
-    } finally {
-      setBusy(false);
-    }
-  };
+      if (!stale) setCleared(true);
+    })();
+    return () => {
+      stale = true;
+    };
+  }, []);
 
   return (
-    <form onSubmit={submit} className="space-y-6" noValidate>
-      <div>
-        <label htmlFor="email" className={LABEL}>
-          Email
-        </label>
-        <input
-          id="email"
-          type="email"
-          autoComplete="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className={FIELD}
-          placeholder="you@example.com"
-        />
-      </div>
-      <PasswordField
-        id="password"
-        label="Password"
-        autoComplete="current-password"
-        required
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="••••••••"
-      />
-      <KeepSignedIn checked={keep} onChange={setKeep} />
+    <div className="space-y-6">
+      {oauthError && <FormError>{oauthError}</FormError>}
 
-      {error && <FormError>{error}</FormError>}
-      <Disclaimer>{DISCLAIMER}</Disclaimer>
-
-      <Button type="submit" disabled={busy} className={PRIMARY}>
-        {busy ? "Signing in…" : "Sign in"}
-      </Button>
-
-      {oauthProviders.length > 0 && (
-        <>
-          <div className="flex items-center gap-4" aria-hidden="true">
-            <span className="h-px flex-1 bg-leaf" />
-            <span className="font-mono text-[10px] tracking-[0.22em] text-muted-foreground uppercase">
-              or
-            </span>
-            <span className="h-px flex-1 bg-leaf" />
-          </div>
-          <div className="space-y-2">
-            {oauthProviders.includes("google") && (
-              <Button type="button" variant="ghost" className={SECONDARY} onClick={() => signIn("google", { callbackUrl: "/" })}>
-                Continue with Google
-              </Button>
-            )}
-          </div>
-        </>
+      {googleReady ? (
+        <div className="space-y-2.5">
+          <Button
+            disabled={!cleared}
+            onClick={() => signIn("google", { callbackUrl: "/" })}
+            className={PRIMARY}
+          >
+            {cleared ? "Continue with Google" : "Preparing sign-in…"}
+          </Button>
+          <Button
+            disabled={!cleared}
+            onClick={() => signIn("google", { callbackUrl: "/" })}
+            className={SECONDARY}
+          >
+            Sign up with Google
+          </Button>
+        </div>
+      ) : (
+        <FormError>Google sign-in is not configured on this server yet.</FormError>
       )}
-    </form>
+
+      <p className="text-[12.5px] leading-relaxed text-muted-foreground">
+        Signing up seals your one domain at the very next step — once sealed,
+        it never opens again.
+      </p>
+    </div>
   );
 }

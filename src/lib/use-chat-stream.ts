@@ -10,6 +10,13 @@ export interface Turn {
   id: string;
   question: string;
   mode: ChatMode;
+  /**
+   * The mode the turn was submitted under. A notes turn answered by the
+   * general fallback keeps notes origin here, while `mode` follows the answer
+   * — follow-up history selection and persistence must use the origin so the
+   * conversation topic is never filtered out.
+   */
+  originMode: ChatMode;
   answer: string;
   sources: RetrievedSource[];
   /** "lexical" while keyword-only results are shown and refinement is pending. */
@@ -46,6 +53,7 @@ export function useChatStream() {
         id,
         question: q,
         mode,
+        originMode: mode,
         answer: "",
         sources: [],
         sourcePhase: "none",

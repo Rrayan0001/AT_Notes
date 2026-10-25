@@ -1,45 +1,38 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { SignupForm } from "@/components/signup-form";
+import { redirect } from "next/navigation";
+import { OnboardingForm, SignOutLink } from "@/components/signup-form";
 import { AuthShell } from "@/components/auth/auth-shell";
-import { oauthProviderNames } from "@/lib/oauth";
+import { auth } from "@/auth";
 
-export const metadata: Metadata = { title: "Create account — Pavan Garu" };
+export const metadata: Metadata = { title: "Seal your domain — Pavan Garu" };
 
-const OAUTH_ERRORS: Record<string, string> = {
-  unlinked:
-    "This email isn't registered yet. Create an account below with the same email to pick your domain — then sign in with Google.",
-};
+/**
+ * Onboarding desk for first-time Google users: the session exists, the
+ * domain does not. Anyone without a session is bounced to the login page;
+ * anyone whose domain is already sealed belongs on the workbench.
+ */
+export default async function SignupPage() {
+  const session = await auth();
+  const user = session?.user;
 
-export default async function SignupPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ error?: string }>;
-}) {
-  const { error } = await searchParams;
+  if (!user?.email) redirect("/login");
+  if (user.domain) redirect("/");
+
   return (
     <AuthShell
       title="One desk, four notebooks."
-      dust="Pick the one domain your email belongs to. Access to the notes is scoped to it — permanently, and stated plainly."
-      facts={["one email · one domain", "locked at signup", "1 notebook live"]}
+      dust="Your email is verified by Google. Now seal the one domain you belong to — access to the notes is scoped to it, permanently, and stated plainly."
+      facts={["one email · one domain · sealed in the ledger", "bound once — no appeal", "this page opens once"]}
       next={
         <>
-          Already registered?{" "}
-          <Link href="/login" className="focus-rubric text-foreground underline underline-offset-4">
-            Sign in
-          </Link>
+          Wrong identity?{" "}
+          <SignOutLink>Sign in with another Google email</SignOutLink>
         </>
       }
     >
-      {error && (
-        <p className="mb-6 border border-leaf bg-leaf/30 px-4 py-3 text-[13px] leading-relaxed text-muted-foreground">
-          <span className="mr-2 font-mono text-[10px] tracking-[0.18em] text-rubric uppercase">
-            notice
-          </span>
-          {OAUTH_ERRORS[error] ?? error}
-        </p>
-      )}
-      <SignupForm oauthProviders={oauthProviderNames()} />
+      <OnboardingForm
+        user={{ name: user.name ?? "", email: user.email }}
+      />
     </AuthShell>
   );
 }

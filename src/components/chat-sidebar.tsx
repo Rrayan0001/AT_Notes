@@ -68,7 +68,7 @@ export function ChatSidebar({
       style={{ opacity: mounted ? 1 : 0, transition: "opacity 200ms ease" }}
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--leaf)]">
+      <div className="flex h-16 items-center justify-between px-4 border-b border-[var(--leaf)]">
         <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
           Sessions
         </span>
@@ -87,7 +87,7 @@ export function ChatSidebar({
       <div className="p-3">
         <button
           onClick={onNew}
-          className="group flex w-full items-center gap-2 rounded-none border border-[var(--leaf)] bg-transparent px-3 py-2 text-[13px] text-muted-foreground transition-all hover:border-rubric/40 hover:bg-rubric/5 hover:text-foreground"
+          className="side-fill group flex w-full items-center gap-2 rounded-none border border-[var(--leaf)] bg-transparent px-3 py-2 text-[13px] text-muted-foreground [--side-fill:color-mix(in_srgb,var(--foreground)_5%,transparent)] transition-all hover:border-foreground/30 hover:text-foreground"
         >
           <Plus className="size-3.5 transition-transform group-hover:rotate-90" />
           <span className="font-mono tracking-wide">New chat</span>

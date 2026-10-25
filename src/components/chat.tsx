@@ -99,6 +99,7 @@ export function Chat({ onCite, onBrowsePages, user, domainLabel, sessionId, onSe
               id: m.id,
               question: m.content,
               mode: (m.mode as "notes" | "general") ?? "notes",
+              originMode: (m.mode as "notes" | "general") ?? "notes",
               answer: "",
               sources: [],
               sourcePhase: "none",
@@ -129,13 +130,15 @@ export function Chat({ onCite, onBrowsePages, user, domainLabel, sessionId, onSe
       fetch(`/api/sessions/${sessionId}/messages`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ role: "user", content: t.question, mode: t.mode }),
+        // Fallback turns flip `mode` to "general" in the UI; persist the origin
+        // instead, or a reload would drop the turn from notes history.
+        body: JSON.stringify({ role: "user", content: t.question, mode: t.originMode }),
       }).catch(() => {});
       if (t.answer) {
         fetch(`/api/sessions/${sessionId}/messages`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ role: "assistant", content: t.answer, mode: t.mode }),
+          body: JSON.stringify({ role: "assistant", content: t.answer, mode: t.originMode }),
         }).catch(() => {});
       }
     }
@@ -177,7 +180,7 @@ export function Chat({ onCite, onBrowsePages, user, domainLabel, sessionId, onSe
   return (
     <div className="flex h-full min-w-0 flex-1 flex-col">
       {/* Header */}
-      <header className="flex items-center gap-3 border-b border-[var(--leaf)] px-5 py-3.5 bg-background/70 backdrop-blur-sm">
+      <header className="flex h-16 items-center gap-3 border-b border-[var(--leaf)] px-5 bg-background/70 backdrop-blur-sm">
         <button
           type="button"
           onClick={() => setPhotoOpen(true)}

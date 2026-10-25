@@ -19,14 +19,27 @@ export function AuthShell({
   /** machine facts, set as the contents line */
   facts: string[];
   /** footer note under the form (the "other page" link) */
-  next: ReactNode;
+  next?: ReactNode;
   children: ReactNode;
 }) {
   return (
     <main className="auth-ground min-h-dvh lg:grid lg:grid-cols-[1.15fr_1fr] lg:grid-rows-1">
       {/* The title page */}
-      <aside className="px-7 pt-10 pb-6 lg:flex lg:flex-col lg:justify-between lg:px-14 lg:py-14 turn-enter">
-        <div>
+      <aside className="relative overflow-hidden px-7 pt-10 pb-6 lg:flex lg:flex-col lg:justify-between lg:px-14 lg:py-14 turn-enter">
+        {/* Watermark — large serif "P" behind all content */}
+        <span
+          aria-hidden="true"
+          className="pointer-events-none select-none absolute -bottom-8 -right-6 font-serif font-light leading-none text-foreground"
+          style={{
+            fontSize: "clamp(14rem, 28vw, 22rem)",
+            opacity: 0.04,
+            letterSpacing: "-0.04em",
+          }}
+        >
+          P
+        </span>
+
+        <div className="relative z-10">
           <Link
             href="/"
             className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground hover:text-rubric transition-colors"
@@ -49,7 +62,7 @@ export function AuthShell({
         </div>
 
         {/* Machine facts strip */}
-        <div className="mt-10 border-t border-[var(--leaf)] pt-4 lg:mt-0" aria-label="Facts">
+        <div className="relative z-10 mt-10 border-t border-[var(--leaf)] pt-4 lg:mt-0" aria-label="Facts">
           <p className="flex flex-wrap gap-x-2 gap-y-1 font-mono text-[10px] tracking-[0.06em] text-muted-foreground">
             {facts.map((fact, i) => (
               <span key={fact} className="whitespace-nowrap">
@@ -68,8 +81,21 @@ export function AuthShell({
       >
         <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center px-7 py-12 lg:min-h-full lg:px-14 lg:py-14">
           {children}
-          <div className="mt-7 border-t border-[var(--leaf)] pt-5 text-[13px] text-muted-foreground">
-            {next}
+          {next && (
+            <div className="mt-7 border-t border-[var(--leaf)] pt-5 text-[13px] text-muted-foreground">
+              {next}
+            </div>
+          )}
+
+          {/* Trust strip */}
+          <div className="mt-10 border-t border-[var(--leaf)] pt-4" aria-label="Security assurances">
+            <p className="flex flex-wrap items-center gap-x-1 gap-y-1 font-mono text-[10px] tracking-[0.12em] text-muted-foreground uppercase">
+              <span>Secured</span>
+              <span className="opacity-30">·</span>
+              <span>Encrypted</span>
+              <span className="opacity-30">·</span>
+              <span>Private</span>
+            </p>
           </div>
         </div>
       </div>
@@ -93,45 +119,13 @@ export function FormError({ children }: { children: ReactNode }) {
 }
 
 export const PRIMARY =
-  "h-10 w-full rounded-none text-[14.5px] font-normal bg-(--rubric) text-[#F5EFE4] hover:bg-(--rubric-deep) focus-visible:ring-0 focus-visible:border-(--rubric) transition-all hover:shadow-[0_0_0_3px_var(--rubric-glow)] active:scale-[0.985]";
+  "side-fill h-10 w-full rounded-none text-[14.5px] font-normal bg-(--rubric) text-[#F5EFE4] [--side-fill:var(--rubric-deep)] focus-visible:ring-0 focus-visible:border-(--rubric) transition-all hover:shadow-[0_0_0_3px_var(--rubric-glow)] active:scale-[0.985]";
 
 export const SECONDARY =
-  "h-10 w-full rounded-none border border-[var(--leaf)] bg-transparent text-[14.5px] font-normal text-foreground hover:bg-[var(--leaf)] hover:border-rubric/30 focus-visible:ring-0 focus-visible:border-(--rubric) transition-all";
+  "side-fill h-10 w-full rounded-none border border-[var(--leaf)] bg-transparent text-[14.5px] font-normal text-foreground [--side-fill:color-mix(in_srgb,var(--foreground)_5%,transparent)] focus-visible:ring-0 focus-visible:border-(--rubric) transition-all hover:border-foreground/40 active:scale-[0.985]";
 
 export const FIELD = "field-underline focus-rubric text-[15px] text-foreground";
 export const LABEL = "text-[12px] font-mono uppercase tracking-[0.14em] text-muted-foreground";
-
-/**
- * The session horizon, stated plainly: checked = 180 days, unchecked = 24 hours.
- */
-export function KeepSignedIn({
-  checked,
-  onChange,
-}: {
-  checked: boolean;
-  onChange: (v: boolean) => void;
-}) {
-  return (
-    <label className="flex cursor-pointer items-center gap-3 border-y border-[var(--leaf)] px-1 py-2.5 transition-colors focus-within:bg-[var(--leaf)]/50 hover:bg-[var(--leaf)]/40">
-      <input
-        type="checkbox"
-        checked={checked}
-        onChange={(e) => onChange(e.target.checked)}
-        className="peer sr-only"
-      />
-      <span
-        aria-hidden="true"
-        className="peer-checked:border-(--rubric) peer-checked:bg-rubric size-3.5 shrink-0 border border-foreground/25 transition-all duration-200"
-      />
-      <span className="font-mono text-[11px] tracking-[0.16em] text-muted-foreground uppercase transition-colors peer-checked:text-foreground">
-        Keep me signed in
-      </span>
-      <span className="ml-auto font-mono text-[10px] tracking-[0.14em] text-muted-foreground/60 uppercase">
-        {checked ? "180 days" : "24 hours"}
-      </span>
-    </label>
-  );
-}
 
 /** The plain-term disclaimer, identical on both form leaves. */
 export function Disclaimer({ children }: { children: ReactNode }) {

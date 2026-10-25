@@ -6,6 +6,19 @@ export interface ConversationMemoryTurn {
   mode: ChatMode;
 }
 
+export interface MemoryCandidate {
+  question: string;
+  answer: string;
+  mode: ChatMode;
+  status: string;
+  /**
+   * The mode the turn was submitted under. A notes question that needed a
+   * general-knowledge fallback keeps notes origin, so its topic still anchors
+   * later follow-ups instead of being filtered out of notes history.
+   */
+  originMode?: ChatMode;
+}
+
 export const MEMORY_TURNS = 3;
 const MEMORY_FIELD_CHARS = 1200;
 
@@ -23,18 +36,16 @@ function clean(text: string): string {
   return text.replace(/\s+/g, " ").trim().slice(0, MEMORY_FIELD_CHARS);
 }
 
-interface MemoryCandidate {
-  question: string;
-  answer: string;
-  mode: ChatMode;
-  status: string;
-}
-
 /**
- * Keeps only completed answers, newest last. General answers are excluded from
- * notes history so outside knowledge cannot become an implicit source. Memory
- * is returned only when the current input appears to continue or refer to that
- * history; otherwise a new topic starts without older answers in the prompt.
+ * Keeps only completed answers, newest last. Turn origin decides membership:
+ * notes history keeps turns submitted in notes mode even when they were
+ * answered by the general fallback, so the conversation topic survives.
+ * Memory is at most MEMORY_TURNS turns; retrieval no longer gates it on
+ * pronoun matches — the query rewrite resolves references, and suppressing
+ * history left pronoun-free follow-ups ("What about its limitations?") to
+ * retrieve cold against the whole corpus, which sent them to unrelated
+ * chapters. General landing (explicit "forget the notes" or a pure
+ * elaboration) still returns only the latest turn to keep prompts tight.
  */
 export function selectConversationMemory(
   turns: MemoryCandidate[],
@@ -46,19 +57,18 @@ export function selectConversationMemory(
       (turn) =>
         turn.status === "done" &&
         turn.answer.trim().length > 0 &&
-        (mode === "general" || turn.mode === "notes")
+        (mode === "general" || (turn.originMode ?? turn.mode) === "notes")
     )
     .slice(-MEMORY_TURNS)
     .map((turn) => ({
       question: clean(turn.question),
       answer: clean(turn.answer),
-      mode: turn.mode,
+      mode: turn.originMode ?? turn.mode,
     }));
 
   if (recent.length === 0) return [];
   if (isExplicitGeneralRequest(currentQuestion)) return [recent[recent.length - 1]];
   if (isGenericContinuation(currentQuestion)) return [recent[recent.length - 1]];
-  if (!usesFollowUpReference(currentQuestion, recent)) return [];
   return recent;
 }
 

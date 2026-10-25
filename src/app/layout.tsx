@@ -15,7 +15,8 @@ const newsreader = Newsreader({
 
 export const metadata: Metadata = {
   title: "Automation Tools Notes",
-  description: "Ask questions about 82 pages of transcribed IT study notes.",
+  description:
+    "Two hundred seventy-five pages of handwritten ink, transcribed word for word — ask, and the exact page answers.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -26,10 +27,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} h-full antialiased`}
     >
       <head>
-        {/* Applies the stored theme before first paint to avoid a flash. */}
+        {/*
+          Applies the theme before first paint to avoid a flash. Default is the
+          device theme; an explicitly toggled theme wins until OS theme changes
+          are mirrored live while no override is stored.
+        */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var s=localStorage.getItem("pavan-notes-theme");var d=s?s==="dark":window.matchMedia("(prefers-color-scheme: dark)").matches;document.documentElement.classList.toggle("dark",d);}catch(e){}})();`,
+            __html: `(function(){try{var s=localStorage.getItem("pavan-notes-theme");var m=window.matchMedia("(prefers-color-scheme: dark)");var root=document.documentElement;var d=s?s==="dark":m.matches;root.classList.toggle("dark",d);root.style.colorScheme=d?"dark":"light";var follow=function(e){try{if(localStorage.getItem("pavan-notes-theme"))return;root.classList.toggle("dark",e.matches);root.style.colorScheme=e.matches?"dark":"light";}catch(_){}};if(m.addEventListener)m.addEventListener("change",follow);else if(m.addListener)m.addListener(follow);}catch(e){}})();`,
           }}
         />
         {/* Hides the page behind a static veil until the welcome sequence runs, so the landing page never flashes before it. */}

@@ -22,6 +22,7 @@ import {
   type ConversationMemoryTurn,
 } from "@/lib/memory";
 import { buildFollowupSuggestions } from "@/lib/suggestions";
+import { rewriteQuery } from "@/lib/rewrite";
 import type { RetrievedSource, ScoredChunk } from "@/lib/types";
 import { createOpenuiScrubber, type OpenuiScrubber } from "@/lib/openui-scrub";
 import { guardDomainAccess } from "@/lib/session-guard";
@@ -163,7 +164,12 @@ export async function POST(req: Request) {
             if (wantsExpressiveAnswer(effectiveQuestion)) openuiAllowed = true;
           }
         } else {
-          effectiveQuestion = resolveRetrievalQuestion(question, history);
+          // Follow-ups are rewritten into a standalone question before any
+          // retrieval happens: embedding, BM25 and the reranker all key off this
+          // string. Bearing history through rewriteQuery (question-only anchor
+          // on failure) replaces the old transcript concatenation, which
+          // drowned retrievals in previous answers' vocabulary.
+          effectiveQuestion = await rewriteQuery(question, history);
           const { manifest } = getIndex(guard.domainId);
 
           // BM25 needs no embedding call, so evidence can be shown immediately

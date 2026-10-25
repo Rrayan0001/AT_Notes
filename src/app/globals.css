@@ -61,6 +61,9 @@
    All other surfaces: warm tinted neutrals in the ochre / amber range
    ───────────────────────────────────────────────────────────────────────── */
 :root {
+  /* Native form controls and scrollbars follow the active theme. */
+  color-scheme: light;
+
   /* Brand accent */
   --rubric: #a63c24;
   --rubric-deep: #8f321e;
@@ -133,6 +136,8 @@
    Ground: warm charcoal #14120E — never a cold screen
    ───────────────────────────────────────────────────────────────────────── */
 .dark {
+  color-scheme: dark;
+
   --rubric: #c05a3c;
   --rubric-deep: #a84830;
   --rubric-glow: rgba(192, 90, 60, 0.18);
@@ -316,6 +321,39 @@
   outline: 1px solid var(--rubric);
   outline-offset: 2px;
   transition: none;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   SIDE FILL — a wash sweeps in from the left edge on hover.
+   The pseudo-layer sits above the element's own background but below its
+   content, so any color can be swept over any button via --side-fill.
+   ───────────────────────────────────────────────────────────────────────── */
+.side-fill {
+  position: relative;
+  isolation: isolate;
+}
+
+.side-fill::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--side-fill, color-mix(in srgb, var(--rubric) 9%, transparent));
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.side-fill:hover::before,
+.side-fill:focus-visible::before {
+  transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .side-fill::before {
+    transition: none;
+  }
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────

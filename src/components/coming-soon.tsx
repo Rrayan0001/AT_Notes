@@ -60,7 +60,7 @@ export function ComingSoon({ domainLabel, user }: { domainLabel: string; user: A
               e.preventDefault();
               void signOut({ callbackUrl: "/login" });
             }}
-            className="rounded-none border-[var(--leaf)] text-[13px] font-normal hover:border-rubric/40 hover:bg-rubric/5 hover:text-foreground transition-all"
+            className="side-fill rounded-none border-[var(--leaf)] text-[13px] font-normal [--side-fill:color-mix(in_srgb,var(--foreground)_5%,transparent)] hover:border-foreground/30 hover:text-foreground transition-all"
           >
             Change account
           </Button>

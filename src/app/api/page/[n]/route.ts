@@ -181,19 +181,30 @@ export async function GET(
   if (!resolved) {
     return Response.json({ error: `no scan for page ${page}` }, { status: 404 });
   }
-  const pdfPath = join(process.cwd(), resolved.volume.pdf);
-  if (!existsSync(pdfPath)) {
-    return Response.json(
-      { error: `notebook scan not found at ${resolved.volume.pdf}` },
-      { status: 503 }
-    );
+
+  /**
+   * Pre-rendered scans are checked before the source PDF: on Vercel a scan can
+   * be shipped while its notebook binary is deliberately untracked (automation
+   * keeps the 116MB pawan_notes.pdf out of the repo), and a missing PDF must
+   * never 503 pages that have a static image.
+   */
+  const staticBytes = staticPageBytes(guard.domainId, page, width);
+
+  let pdfPath: string | null = null;
+  if (!staticBytes) {
+    pdfPath = join(process.cwd(), resolved.volume.pdf);
+    if (!existsSync(pdfPath)) {
+      return Response.json(
+        { error: `notebook scan not found at ${resolved.volume.pdf}` },
+        { status: 503 }
+      );
+    }
   }
 
   try {
-    const staticBytes = staticPageBytes(guard.domainId, page, width);
     const bytes =
       staticBytes ??
-      (await cached(guard.domainId, pdfPath, resolved.localPage, page, width));
+      (await cached(guard.domainId, pdfPath!, resolved.localPage, page, width));
     return new Response(new Uint8Array(bytes), {
       headers: {
         "Content-Type": "image/webp",
