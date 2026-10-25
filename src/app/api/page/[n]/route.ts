@@ -192,8 +192,11 @@ export async function GET(
 
   let pdfPath: string | null = null;
   if (!staticBytes) {
-    pdfPath = join(process.cwd(), resolved.volume.pdf);
-    if (!existsSync(pdfPath)) {
+    // The volume is chosen at runtime, so this join is genuinely dynamic. The
+    // turbopackIgnore marker opts it out of whole-project tracing; the starter
+    // folders above (".cache", "public") stay statically scoped on their own.
+    pdfPath = join(/*turbopackIgnore: true*/ process.cwd(), resolved.volume.pdf);
+    if (!existsSync(/*turbopackIgnore: true*/ pdfPath)) {
       return Response.json(
         { error: `notebook scan not found at ${resolved.volume.pdf}` },
         { status: 503 }

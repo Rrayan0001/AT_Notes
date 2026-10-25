@@ -7,7 +7,6 @@
  * keeps the renderer, the cache, and the transcription aligned without any
  * hardcoded notebook names in the routes.
  */
-import { join } from "node:path";
 import { DOMAINS, DOMAIN_IDS } from "./domains";
 
 export interface ShelfVolume {
@@ -35,24 +34,30 @@ const PDFS = {
   sapNotes: "sap/SAP Notes.pdf",
 } as const;
 
+/**
+ * The `pdf` fields are plain repo-relative strings, deliberately not wrapped in
+ * node:path join(): Turbopack's tracer flags these module-level joins as
+ * dynamic filesystem access and pulls the whole project into the serverless
+ * trace. The page route resolves them against its own cwd at render time.
+ */
 export const SHELVES: Record<string, ShelfVolume[]> = {
-  automation: [{ id: "pavan", label: "Pavan Notes", pdf: join(PDFS.pavan), from: 1, to: 82 }],
+  automation: [{ id: "pavan", label: "Pavan Notes", pdf: PDFS.pavan, from: 1, to: 82 }],
   aws: [
-    { id: "cp", label: "Cloud Practitioner Notes", pdf: join(PDFS.awsCp), from: 1, to: 43 },
-    { id: "notes", label: "AWS Notes", pdf: join(PDFS.awsNotes), from: 44, to: 61 },
-    { id: "eventbridge", label: "EventBridge Notes", pdf: join(PDFS.awsEventBridge), from: 62, to: 64 },
+    { id: "cp", label: "Cloud Practitioner Notes", pdf: PDFS.awsCp, from: 1, to: 43 },
+    { id: "notes", label: "AWS Notes", pdf: PDFS.awsNotes, from: 44, to: 61 },
+    { id: "eventbridge", label: "EventBridge Notes", pdf: PDFS.awsEventBridge, from: 62, to: 64 },
   ],
   azure: [
-    { id: "ansible", label: "Ansible", pdf: join(PDFS.azureAnsible), from: 1, to: 16 },
-    { id: "dkr", label: "Docker & Kubernetes", pdf: join(PDFS.azureDkr), from: 17, to: 41 },
-    { id: "github", label: "GitHub", pdf: join(PDFS.azureGithub), from: 42, to: 51 },
-    { id: "jenkins", label: "Jenkins", pdf: join(PDFS.azureJenkins), from: 52, to: 91 },
-    { id: "maven", label: "Maven", pdf: join(PDFS.azureMaven), from: 92, to: 110 },
-    { id: "terraform", label: "Terraform", pdf: join(PDFS.azureTerraform), from: 111, to: 131 },
-    { id: "splunk", label: "Splunk (single sheet)", pdf: join(PDFS.azureSplunk), from: 132, to: 132 },
+    { id: "ansible", label: "Ansible", pdf: PDFS.azureAnsible, from: 1, to: 16 },
+    { id: "dkr", label: "Docker & Kubernetes", pdf: PDFS.azureDkr, from: 17, to: 41 },
+    { id: "github", label: "GitHub", pdf: PDFS.azureGithub, from: 42, to: 51 },
+    { id: "jenkins", label: "Jenkins", pdf: PDFS.azureJenkins, from: 52, to: 91 },
+    { id: "maven", label: "Maven", pdf: PDFS.azureMaven, from: 92, to: 110 },
+    { id: "terraform", label: "Terraform", pdf: PDFS.azureTerraform, from: 111, to: 131 },
+    { id: "splunk", label: "Splunk (single sheet)", pdf: PDFS.azureSplunk, from: 132, to: 132 },
   ],
   sap: [
-    { id: "sapNotes", label: "SAP Notes", pdf: join(PDFS.sapNotes), from: 1, to: 9 },
+    { id: "sapNotes", label: "SAP Notes", pdf: PDFS.sapNotes, from: 1, to: 9 },
   ],
 };
 
