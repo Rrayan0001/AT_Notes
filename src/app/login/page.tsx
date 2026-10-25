@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { LoginForm } from "@/components/login-form";
 import { AuthShell } from "@/components/auth/auth-shell";
 import { oauthProviderNames } from "@/lib/oauth";
+import { holdingsSummary, holdingsTotals } from "@/lib/shelf";
 
 export const metadata: Metadata = { title: "Sign in — Pavan Garu" };
 
@@ -21,12 +22,18 @@ export default async function LoginPage({
 }) {
   const { error } = await searchParams;
   const oauthError = error ? (OAUTH_ERRORS[error] ?? "Sign-in failed. Try again.") : undefined;
+  const { pageCount, domainCount } = holdingsTotals();
 
   return (
     <AuthShell
       title="Every answer, attested."
       dust="Sign in to ask the notes a question. The answer arrives beside the scanned page it came from, with its transcription as written."
-      facts={["275 pages sworn from the ink", "4 domains, one ledger", "every answer traced to its page"]}
+      holdings={holdingsSummary()}
+      facts={[
+        `${pageCount} pages sworn from the ink`,
+        `${domainCount} domains, one ledger`,
+        "every answer traced to its page",
+      ]}
     >
       <LoginForm googleReady={oauthProviderNames().includes("google")} oauthError={oauthError} />
     </AuthShell>

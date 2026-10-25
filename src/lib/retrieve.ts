@@ -4,6 +4,7 @@
 import automationBundle from "@/data/index.json";
 import awsBundle from "@/data/index-aws.json";
 import azureBundle from "@/data/index-azure.json";
+import sapBundle from "@/data/index-sap.json";
 import { Bm25Index } from "./bm25";
 import type { Chunk, IndexBundle, RetrievedSource, ScoredChunk } from "./types";
 
@@ -14,6 +15,7 @@ const BUNDLES: Record<string, IndexBundle> = {
   automation: automationBundle as unknown as IndexBundle,
   aws: awsBundle as unknown as IndexBundle,
   azure: azureBundle as unknown as IndexBundle,
+  sap: sapBundle as unknown as IndexBundle,
 };
 
 type IndexState = { chunks: Chunk[]; vectors: Float32Array; bm25: Bm25Index; dim: number };

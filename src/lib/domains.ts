@@ -45,9 +45,9 @@ export const DOMAINS: Record<string, DomainConfig> = {
   sap: {
     id: "sap",
     label: "SAP",
-    blurb: "Notes coming soon",
+    blurb: "SAP PP (Production Planning): MRP, BOM, routing, work centers",
     open: true,
-    ingested: false,
+    ingested: true,
   },
 };
 

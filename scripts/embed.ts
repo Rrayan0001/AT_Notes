@@ -27,6 +27,10 @@ const DOMAINS: Record<string, { source: string; out: string }> = {
     source: join(process.cwd(), "data", "Azure_Notes_Transcription.md"),
     out: join(process.cwd(), "src", "data", "index-azure.json"),
   },
+  sap: {
+    source: join(process.cwd(), "data", "SAP_Notes_Transcription.md"),
+    out: join(process.cwd(), "src", "data", "index-sap.json"),
+  },
 };
 
 const domainArg = (() => {

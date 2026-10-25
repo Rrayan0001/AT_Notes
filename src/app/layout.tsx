@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import { WelcomeGate } from "@/components/welcome";
+import { holdingsTotals } from "@/lib/shelf";
 import "./globals.css";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -46,7 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="flex min-h-full flex-col grain">
         <div data-welcome-static aria-hidden="true" className="welcome-static" />
-        <WelcomeGate />
+        <WelcomeGate pageCount={holdingsTotals().pageCount} />
         {children}
       </body>
     </html>

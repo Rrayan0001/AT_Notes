@@ -1,15 +1,24 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+export interface HoldingRow {
+  name: string;
+  blurb: string;
+  stat: string;
+}
+
 /**
  * The auth desk: a title page on the left, the form leaf on the right.
  * Per FRONTEND_PROMPT.md — nothing centered by default, serif = the product's
  * voice, mono = machine facts, hairline rules, one Rubric moment per screen.
+ * When `holdings` is passed, the title page also carries the corpus ledger —
+ * the index of what is on the shelf, laid out like one.
  */
 export function AuthShell({
   title,
   dust,
   facts,
+  holdings,
   next,
   children,
 }: {
@@ -18,6 +27,8 @@ export function AuthShell({
   dust: string;
   /** machine facts, set as the contents line */
   facts: string[];
+  /** the corpus ledger rendered as the title page's index */
+  holdings?: HoldingRow[];
   /** footer note under the form (the "other page" link) */
   next?: ReactNode;
   children: ReactNode;
@@ -60,6 +71,40 @@ export function AuthShell({
             {dust}
           </p>
         </div>
+
+        {/* Index of holdings — the corpus ledger, in the record's own grammar */}
+        {holdings && holdings.length > 0 && (
+          <div
+            className="relative z-10 mt-12 max-w-[26rem] lg:mt-0"
+            aria-label="Index of holdings"
+          >
+            <div className="border-t border-[var(--leaf)] pt-3">
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                Index of holdings
+              </p>
+            </div>
+            <ul className="divide-y divide-[var(--leaf)]">
+              {holdings.map((row) => (
+                <li
+                  key={row.name}
+                  className="flex items-baseline justify-between gap-4 py-3"
+                >
+                  <div className="min-w-0">
+                    <p className="font-serif text-[15px] leading-snug text-foreground">
+                      {row.name}
+                    </p>
+                    <p className="mt-0.5 truncate text-[12px] leading-snug text-muted-foreground sm:whitespace-normal">
+                      {row.blurb}
+                    </p>
+                  </div>
+                  <span className="shrink-0 font-mono text-[10px] tracking-[0.1em] text-muted-foreground">
+                    {row.stat}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* Machine facts strip */}
         <div className="relative z-10 mt-10 border-t border-[var(--leaf)] pt-4 lg:mt-0" aria-label="Facts">

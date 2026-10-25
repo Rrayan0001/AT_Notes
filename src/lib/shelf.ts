@@ -8,6 +8,7 @@
  * hardcoded notebook names in the routes.
  */
 import { join } from "node:path";
+import { DOMAINS, DOMAIN_IDS } from "./domains";
 
 export interface ShelfVolume {
   id: string;
@@ -31,6 +32,7 @@ const PDFS = {
   azureMaven: "azure/MAVEN.pdf",
   azureTerraform: "azure/TERRAFORM .pdf",
   azureSplunk: "azure/SPLUNK(2).pdf",
+  sapNotes: "sap/SAP Notes.pdf",
 } as const;
 
 export const SHELVES: Record<string, ShelfVolume[]> = {
@@ -48,6 +50,9 @@ export const SHELVES: Record<string, ShelfVolume[]> = {
     { id: "maven", label: "Maven", pdf: join(PDFS.azureMaven), from: 92, to: 110 },
     { id: "terraform", label: "Terraform", pdf: join(PDFS.azureTerraform), from: 111, to: 131 },
     { id: "splunk", label: "Splunk (single sheet)", pdf: join(PDFS.azureSplunk), from: 132, to: 132 },
+  ],
+  sap: [
+    { id: "sapNotes", label: "SAP Notes", pdf: join(PDFS.sapNotes), from: 1, to: 9 },
   ],
 };
 
@@ -67,4 +72,30 @@ export function volumeLabel(domain: string, page: number): string | null {
 
 export function shelfRanges(domain: string): { from: number; to: number; label: string }[] {
   return (SHELVES[domain] ?? []).map(({ from, to, label }) => ({ from, to, label }));
+}
+
+/**
+ * The holdings ledger: every domain's extent over the same shelf space. The
+ * auth desk (title page side) renders this as its index of holdings so the
+ * corpus is visible before anyone signs in, and the facts strip reads its
+ * totals — one source of truth for both.
+ */
+export function holdingsSummary(): { name: string; blurb: string; stat: string }[] {
+  return DOMAIN_IDS.map((id) => {
+    const domain = DOMAINS[id];
+    const pages = (SHELVES[id] ?? []).reduce(
+      (sum, v) => sum + (v.to - v.from + 1),
+      0
+    );
+    return { name: domain.label, blurb: domain.blurb, stat: `${pages} pp` };
+  });
+}
+
+export function holdingsTotals(): { pageCount: number; domainCount: number } {
+  const rows = holdingsSummary();
+  const pageCount = rows.reduce(
+    (sum, row) => sum + Number(row.stat.replace(/\D/g, "")),
+    0
+  );
+  return { pageCount, domainCount: rows.length };
 }

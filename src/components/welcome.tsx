@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
  * lines, floating dust particles, and one Rubric scan light.
  * Any key or click skips it; prefers-reduced-motion skips it outright.
  */
-export function WelcomeGate() {
+export function WelcomeGate({ pageCount }: { pageCount: number }) {
   const [phase, setPhase] = useState<"idle" | "play" | "done">("idle");
   // Generated once per mount with a lazy initializer — deterministic per
   // visit, no ref writes during render.
@@ -123,7 +123,7 @@ export function WelcomeGate() {
 
         {/* The machine line */}
         <p className="welcome-meta mt-6 flex flex-wrap items-center justify-center gap-x-4 font-mono text-[10px] uppercase tracking-[0.32em] text-[oklch(0.58_0.01_75)]">
-          <span>275 pages sworn from the ink</span>
+          <span>{pageCount} pages sworn from the ink</span>
           <span aria-hidden="true" className="opacity-30">·</span>
           <span>every word on record</span>
           <span aria-hidden="true" className="opacity-30">·</span>
