@@ -62,7 +62,7 @@ export const authConfig = {
       return true;
     },
     jwt({ token, user }) {
-      if (user?.domain) token.domain = user.domain;
+      if (user) token.domain = user.domain ?? undefined;
       return token;
     },
     session({ session, token }) {
