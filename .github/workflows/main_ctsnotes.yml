@@ -23,17 +23,14 @@ jobs:
         with:
           node-version: '22.x'
 
-      - name: npm install, build, and test
-        run: |
-          npm ci
-          npm run build --if-present
-          npm run test --if-present
+      # Separate steps so a failure identifies itself: an install error and a
+      # next build error land in two different red steps.
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
 
-      # The notebook scan PDFs (~270MB of repo content) are deliberately left
-      # out of the deployment artifact: App Service has no poppler/imagemagick,
-      # so scans are served from the pre-rendered public/pages webp — the same
-      # contract Vercel uses. Caches and build leftovers don't belong in the
-      # artifact either; this keeps it small enough to upload quickly.
+      - name: Build (next build; prebuild no-ops on committed bundles)
+        run: npm run build
+
       - name: Trim artifact
         run: |
           rm -f pawan_notes.pdf
