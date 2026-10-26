@@ -37,25 +37,33 @@ jobs:
           rm -rf AWS_notes azure sap
           rm -rf .next/cache node_modules/.cache .cache .git
 
+      # Zip on Linux so executable bits survive transit: the build runner runs
+      # bash `zip` (stores Unix modes) instead of letting the Windows-based
+      # artifact handling strip them downstream.
+      - name: Package zip
+        run: zip -qr /tmp/node-app.zip . && mkdir -p dist && mv /tmp/node-app.zip dist/node-app.zip
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: .
+          path: dist/node-app.zip
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
     permissions:
       id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
+      contents: write # commit captured boot logs if the deploy is unhealthy
 
     steps:
+      - uses: actions/checkout@v4
+
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: node-app
-      
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -64,12 +72,43 @@ jobs:
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_79204694B62F42C292B3CF529FC73D95 }}
 
       - name: 'Deploy to Azure Web App'
-        id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'CTSNOTES'
           slot-name: 'Production'
-          package: .
+          package: node-app.zip
+
+      # CTSNOTES is public, so its HTTP code is the deploy's health check.
+      - name: Wait for app to respond (up to 5 min)
+        run: |
+          URL=https://ctsnotes-atdae6cra2grbqh2.westus3-01.azurewebsites.net/
+          healthy=0
+          for i in $(seq 1 30); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 "$URL" || true)
+            echo "attempt $i: HTTP $code"
+            case "$code" in 200|302|307) healthy=1; break;; esac
+            sleep 10
+          done
+          echo "healthy=$healthy" >> "$GITHUB_ENV"
+          [ "$healthy" = "1" ]
+
+      # On cold start, capture why the container is not serving so the log can
+      # be read from the repo without Azure management access.
+      - name: If unhealthy, capture boot logs and commit them
+        if: env.healthy != '1'
+        run: |
+          az webapp log config --name CTSNOTES --resource-group LabsKraft208 \
+            --docker-container-logging filesystem --level verbose -o none
+          az webapp restart --name CTSNOTES --resource-group LabsKraft208 -o none
+          sleep 45
+          timeout 90 az webapp log tail --name CTSNOTES --resource-group LabsKraft208 > tail.log || true
+          mkdir -p azure-debug
+          cp tail.log azure-debug/last-tail.log
+          git config user.name "ci-debug"
+          git config user.email "ci-debug@users.noreply.github.com"
+          git add azure-debug/last-tail.log
+          git commit -m "debug: capture CTSNOTES boot log after unhealthy deploy [skip ci]" || echo nothing to commit
+          git push
 
   # Manual-only: restarts the app, captures its boot logs, and commits them to
   # azure-debug/ so they can be read without Azure management access.
@@ -93,11 +132,26 @@ jobs:
       - name: Enable container logging, restart, capture boot log
         run: |
           set -o pipefail
-          az webapp log config --name CTSNOTES --resource-group LabsKraft208 \
-            --docker-container-logging filesystem --level verbose -o none
-          az webapp restart --name CTSNOTES --resource-group LabsKraft208 -o none
-          sleep 45
-          timeout 90 az webapp log tail --name CTSNOTES --resource-group LabsKraft208 > tail.log || true
+          {
+            az webapp log config --name CTSNOTES --resource-group LabsKraft208 \
+              --docker-container-logging filesystem --level verbose -o none
+            az webapp restart --name CTSNOTES --resource-group LabsKraft208 -o none
+            sleep 45
+            timeout 120 az webapp log tail --name CTSNOTES --resource-group LabsKraft208
+          } > tail.log || true
+          {
+            echo '--- app settings (names only, no values) ---'
+            az webapp config appsettings list --name CTSNOTES --resource-group LabsKraft208 |
+              grep '"name"' || true
+            echo '--- site config ---'
+            az webapp config show --name CTSNOTES --resource-group LabsKraft208 --query '{
+              linuxFxVersion: linuxFxVersion,
+              startupCommand: appCommandLine,
+              nodeVersion: properties.nodeVersion,
+              alwaysOn: alwaysOn,
+              http20Enabled: http20Enabled
+            }'
+          } >> tail.log 2>&1 || true
           wc -c tail.log
 
       - name: Commit captured logs for offline reading

@@ -15,7 +15,7 @@
     "openui:spec": "npx @openuidev/cli@latest generate src/lib/openui.tsx --spec --out src/lib/openui.spec.json",
     "prebuild": "tsx scripts/embed.ts",
     "build": "next build",
-    "start": "next start",
+    "start": "node node_modules/next/dist/bin/next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit"
   },
