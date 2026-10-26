@@ -17,7 +17,7 @@ import {
   type ConversationMemoryTurn,
 } from "@/lib/memory";
 import { buildFollowupSuggestions } from "@/lib/suggestions";
-import { syllabusAnswer, syllabusFor } from "@/lib/syllabus";
+import { syllabusAnswer, syllabusFor, type DomainSyllabus } from "@/lib/syllabus";
 import { rewriteQuery } from "@/lib/rewrite";
 import type { RetrievedSource, ScoredChunk } from "@/lib/types";
 import { createOpenuiScrubber, type OpenuiScrubber } from "@/lib/openui-scrub";
@@ -37,6 +37,31 @@ const MAX_MEMORY_TURNS = 3;
 const MAX_MEMORY_CHARS = 1200;
 /** Tokens are coalesced into frames this often instead of one SSE frame per token. */
 const FLUSH_INTERVAL_MS = 40;
+
+/**
+ * Builds the authored syllabus reply for a curriculum question ("what's the
+ * first topic", "walk me through the syllabus"): course order is ground truth
+ * in the module graph, while the model over retrieval blocks can only guess.
+ * The cited landing pages map to their chunks as a `rankedSeed`, so the
+ * follow-up suggestions stem from the same graph edge the answer ended on.
+ */
+function buildSyllabusReply(
+  question: string,
+  domain: string,
+  domainLabel: string,
+  domainSyllabus: DomainSyllabus
+): { text: string; rankedSeed: ScoredChunk[] } {
+  const { chunks } = getIndex(domain);
+  const answer = syllabusAnswer(question, domain, domainLabel, domainSyllabus, chunks);
+
+  const byPage = new Map(chunks.map((chunk) => [chunk.page, chunk]));
+  const rankedSeed = [...new Set(answer.landingPages)].flatMap((page) => {
+    const chunk = byPage.get(page);
+    return chunk ? [{ chunk, denseScore: 0, bm25Score: 0, rrfScore: 1 }] : [];
+  });
+
+  return { text: answer.text, rankedSeed };
+}
 
 function parseHistory(value: unknown, mode: ChatMode): ConversationMemoryTurn[] {
   if (!Array.isArray(value)) return [];
@@ -93,7 +118,11 @@ export async function POST(req: Request) {
 
   const stream = new ReadableStream({
     async start(controller) {
+      // set before close() so a late flush timer is a no-op instead of an
+      // ERR_INVALID_STATE crash on the closed controller
+      let closed = false;
       const send = (data: unknown) => {
+        if (closed) return;
         controller.enqueue(encoder.encode(`data: ${JSON.stringify(data)}\n\n`));
       };
 
@@ -161,27 +190,21 @@ export async function POST(req: Request) {
             if (wantsExpressiveAnswer(effectiveQuestion)) openuiAllowed = true;
           }
         } else {
-          // Curriculum questions ("syllabus", "what's the first topic") are
-          // answered deterministically from the authored module graph — the
-          // model over retrieval would only guess at course order.
           const domainSyllabus = syllabusFor(guard.domainId);
           if (domainSyllabus && isSyllabusRequest(question)) {
+            // Curriculum questions ("syllabus", "what's the first topic") are
+            // answered deterministically from the authored module graph — the
+            // model over retrieval would only guess at course order.
             syllabusHandled = true;
             effectiveQuestion = question;
-            const { manifest, chunks } = getIndex(guard.domainId);
-            const answer = syllabusAnswer(
+            const reply = buildSyllabusReply(
               effectiveQuestion,
               guard.domainId,
               domainLabel,
-              domainSyllabus,
-              chunks
+              domainSyllabus
             );
-            // Seed the suggestions graph with the landing pages the answer cites.
-            const byPage = new Map(chunks.map((chunk) => [chunk.page, chunk]));
-            ranked = [...new Set(answer.landingPages)].flatMap((page) => {
-              const chunk = byPage.get(page);
-              return chunk ? [{ chunk, denseScore: 0, bm25Score: 0, rrfScore: 1 }] : [];
-            });
+            const { manifest } = getIndex(guard.domainId);
+            ranked = reply.rankedSeed;
             send({
               type: "sources",
               phase: "semantic",
@@ -189,11 +212,8 @@ export async function POST(req: Request) {
               totalChunks: manifest.count,
               mode,
             });
-            emit(answer.text);
+            emit(reply.text);
             flush();
-          }
-          if (syllabusHandled) {
-            // Handled: skip rewrite/retrieval/model entirely.
           } else {
             // Follow-ups are rewritten into a standalone question before any
             // retrieval happens: embedding, BM25 and the reranker all key off
@@ -203,53 +223,53 @@ export async function POST(req: Request) {
             effectiveQuestion = await rewriteQuery(question, history);
             const { manifest } = getIndex(guard.domainId);
 
-          // BM25 needs no embedding call, so evidence can be shown immediately
-          // while the ~600ms query embedding is still in flight. Skipped when the
-          // query shares no vocabulary with the notes, since an empty panel is
-          // worse than none.
-          const lexical = retrieveSparse(guard.domainId, effectiveQuestion, LEXICAL_TOP_K);
-          if (lexical.length > 0) {
+            // BM25 needs no embedding call, so evidence can be shown immediately
+            // while the ~600ms query embedding is still in flight. Skipped when the
+            // query shares no vocabulary with the notes, since an empty panel is
+            // worse than none.
+            const lexical = retrieveSparse(guard.domainId, effectiveQuestion, LEXICAL_TOP_K);
+            if (lexical.length > 0) {
+              send({
+                type: "sources",
+                phase: "lexical",
+                sources: toSources(lexical),
+                totalChunks: manifest.count,
+                mode,
+              });
+            }
+
+            const qVec = await embedQuery(effectiveQuestion);
+            candidates = retrieveHybrid(guard.domainId, effectiveQuestion, qVec, TOP_K_FETCH);
+            // rerankWithStatus always returns `topK` chunks, falling back to the
+            // head of the pool it was given, so the context window never shrinks.
+            ranked = (
+              await rerankWithStatus(
+                effectiveQuestion,
+                candidates.slice(0, TOP_K_RERANK),
+                TOP_K_CONTEXT
+              )
+            ).chunks;
+
+            if (wantsExpressiveAnswer(effectiveQuestion)) openuiAllowed = true;
+
+            const sources: RetrievedSource[] = toSources(ranked);
+
             send({
               type: "sources",
-              phase: "lexical",
-              sources: toSources(lexical),
+              phase: "semantic",
+              sources,
               totalChunks: manifest.count,
               mode,
             });
-          }
-
-          const qVec = await embedQuery(effectiveQuestion);
-          candidates = retrieveHybrid(guard.domainId, effectiveQuestion, qVec, TOP_K_FETCH);
-          // rerankWithStatus always returns `topK` chunks, falling back to the
-          // head of the pool it was given, so the context window never shrinks.
-          ranked = (
-            await rerankWithStatus(
-              effectiveQuestion,
-              candidates.slice(0, TOP_K_RERANK),
-              TOP_K_CONTEXT
-            )
-          ).chunks;
-
-          if (wantsExpressiveAnswer(effectiveQuestion)) openuiAllowed = true;
-
-          const sources: RetrievedSource[] = toSources(ranked);
-
-          send({
-            type: "sources",
-            phase: "semantic",
-            sources,
-            totalChunks: manifest.count,
-            mode,
-          });
-          messages = [
-            {
-              role: "system",
-              content: wantsExpressiveAnswer(effectiveQuestion)
-                ? answerSystemPrompt(SYSTEM_PROMPT)
-                : SYSTEM_PROMPT,
-            },
-            { role: "user", content: buildUserPrompt(effectiveQuestion, sources, history) },
-          ];
+            messages = [
+              {
+                role: "system",
+                content: wantsExpressiveAnswer(effectiveQuestion)
+                  ? answerSystemPrompt(SYSTEM_PROMPT)
+                  : SYSTEM_PROMPT,
+              },
+              { role: "user", content: buildUserPrompt(effectiveQuestion, sources, history) },
+            ];
           }
         }
 
@@ -280,11 +300,11 @@ export async function POST(req: Request) {
         // The exact missing-note response is the automatic fallback trigger. It
         // is streamed above, then followed by a labeled general explanation.
         if (
-  mode === "notes" &&
-  notesAnswer !== null &&
-  isMissingFromNotes(notesAnswer) &&
-  candidates.length > 0
-) {
+          mode === "notes" &&
+          notesAnswer !== null &&
+          isMissingFromNotes(notesAnswer) &&
+          candidates.length > 0
+        ) {
           hadFallback = true;
           send({ type: "fallback", mode: "general" });
           const fallback = await gateway.chat.completions.create({
@@ -329,6 +349,7 @@ export async function POST(req: Request) {
         // SSE event rather than relying on the HTTP status code.
         send({ type: "error", error: err instanceof Error ? err.message : "request failed" });
       } finally {
+        closed = true;
         controller.close();
       }
     },

@@ -38,7 +38,7 @@ export function isExplicitGeneralRequest(question: string): boolean {
 }
 
 const SYLLABUS_STRONG_PATTERN =
-  /\b(?:syllabu?s|curriculum|road ?map|course (?:outline|plan)|module list|table of contents)\b/i;
+  /\b(?:syllabus|curriculum|road ?map|course (?:outline|plan)|module list|table of contents)\b/i;
 
 const SYLLABUS_SOFT_PATTERN =
   /\b(?:first|opening|starting)\b[^.?!]{0,20}\b(?:topic|module|chapter|unit|lesson)\b|\bwhere\b[^.?!]{0,12}\b(?:to|should we|do we)\b[^.?!]{0,8}\b(?:start|begin)\b|\bwhat\b[^.?!]{0,24}\btopics?\b[^.?!]{0,24}\b(?:covers?|covered|include[sd]?|study|learn)\b/i;
