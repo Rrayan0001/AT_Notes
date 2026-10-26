@@ -10,9 +10,11 @@ import {
 import type { AdapterAccount } from "next-auth/adapters";
 
 /**
- * The user's `domain` is chosen at signup and is intentionally immutable:
- * nothing in the application ever updates it. It is the single source of
- * truth for which corpus the user is allowed to read.
+ * The user's `domain` is chosen at signup. Changing it later is possible but
+ * rate-limited: the first switch is free, afterwards a cooldown applies and
+ * `domain_changed_at` records when the switch was made. An admin can clear
+ * this column to grant a fresh free switch. The domain is the single source
+ * of truth for which corpus the user is allowed to read.
  *
  * Nullable because the NextAuth adapter stub-creates a row for any OAuth email
  * before the signIn callback runs; such stubs have no domain yet and are only
@@ -28,6 +30,7 @@ export const users = pgTable("users", {
   image: text("image"),
   passwordHash: text("password_hash"),
   domain: text("domain"),
+  domainChangedAt: timestamp("domain_changed_at", { mode: "date" }),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
 });
 

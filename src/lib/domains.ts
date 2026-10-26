@@ -1,6 +1,7 @@
 /**
  * Registry of platform domains. A user is assigned exactly one domain at
- * signup; the assignment is never changed by any code path.
+ * signup; changing it later is rate-limited (3-day cooldown / admin unlock,
+ * see src/app/api/onboarding/switch).
  *
  * `ingested` marks whether this domain's scanned notes have been through the
  * chunk + embed pipeline (src/data/index-<domain>.json). The chat API refuses

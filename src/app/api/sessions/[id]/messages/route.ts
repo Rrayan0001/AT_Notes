@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { eq } from "drizzle-orm";
-import { auth } from "@/auth";
+import { and, eq } from "drizzle-orm";
 import { getDb, schema } from "@/db";
+import { guardDomainAccess } from "@/lib/session-guard";
 
 const msgSchema = z.object({
   role: z.enum(["user", "assistant"]),
@@ -11,12 +11,16 @@ const msgSchema = z.object({
 });
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
-  const session = await auth();
-  if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const guard = await guardDomainAccess();
+  if (!guard.ok) return guard.response;
   const { id } = await params;
   const db = getDb();
-  const [s] = await db.select().from(schema.chatSessions).where(eq(schema.chatSessions.id, id)).limit(1);
-  if (!s || s.userId !== session.user.id) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  const [s] = await db
+    .select()
+    .from(schema.chatSessions)
+    .where(and(eq(schema.chatSessions.id, id), eq(schema.chatSessions.userId, guard.userId), eq(schema.chatSessions.domain, guard.domainId)))
+    .limit(1);
+  if (!s) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   let body: unknown;
   try { body = await request.json(); } catch {
