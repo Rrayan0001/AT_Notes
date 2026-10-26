@@ -119,3 +119,69 @@ export function bestModuleForAnswer(
   void domain;
   return current;
 }
+
+export interface SyllabusAnswer {
+  text: string;
+  /** Landing pages of the modules the answer walks through, in order. */
+  landingPages: number[];
+}
+
+const FIRST_TOPIC_PATTERN = /\b(?:first|start(?:ing|s)?|begins?|beginning|opening)\b/i;
+
+function moduleLine(
+  domain: string,
+  module: SyllabusModule,
+  chunks: Chunk[],
+  opts: { stage: boolean } = { stage: true }
+): { line: string; page: number | null } {
+  const page = modulePages(domain, module, chunks)[0] ?? null;
+  const pageRef = page === null ? "" : ` [page ${page}]`;
+  const note = page === null ? " *(not transcribed in these notes)*" : "";
+  const stage = module.stage && opts.stage ? ` · ${module.stage}` : "";
+  return {
+    line: `**${module.title}**${stage}${pageRef}${note} — ${module.topics.join("; ")}.`,
+    page,
+  };
+}
+
+/**
+ * Renders a syllabus/curriculum question ("what's the first topic", "walk me
+ * through the syllabus") straight from the authored module graph. The syllabus
+ * is the ground truth for these questions — the model over retrieved blocks
+ * only guesses at course order.
+ */
+export function syllabusAnswer(
+  question: string,
+  domain: string,
+  domainLabel: string,
+  domainSyllabus: DomainSyllabus,
+  chunks: Chunk[]
+): SyllabusAnswer {
+  const landingPages: number[] = [];
+
+  if (FIRST_TOPIC_PATTERN.test(question)) {
+    const opening = domainSyllabus.modules[0];
+    const openingLine = moduleLine(domain, opening, chunks, { stage: false });
+    if (openingLine.page !== null) landingPages.push(openingLine.page);
+    const lines = [`The ${domainLabel} syllabus opens with ${openingLine.line}`];
+    const next = opening.leadsTo[0] ? moduleById(domainSyllabus, opening.leadsTo[0]) : null;
+    if (next) {
+      const nextLine = moduleLine(domain, next, chunks, { stage: false });
+      if (nextLine.page !== null) landingPages.push(nextLine.page);
+      lines.push(`From there the track steps into ${nextLine.line}`);
+    }
+    return { text: lines.join("\n\n"), landingPages };
+  }
+
+  const lines = [`Here is the full ${domainLabel} syllabus in order:`];
+  domainSyllabus.modules.forEach((module, index) => {
+    const { line, page } = moduleLine(domain, module, chunks);
+    if (page !== null) landingPages.push(page);
+    lines.push(`${index + 1}. ${line}`);
+  });
+  lines.push(
+    "",
+    "Work through them in that order; each page reference marks where these notes pick up the module."
+  );
+  return { text: lines.join("\n"), landingPages };
+}

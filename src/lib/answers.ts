@@ -36,3 +36,28 @@ const EXPLICIT_GENERAL_PATTERN =
 export function isExplicitGeneralRequest(question: string): boolean {
   return EXPLICIT_GENERAL_PATTERN.test(question);
 }
+
+const SYLLABUS_STRONG_PATTERN =
+  /\b(?:syllabu?s|curriculum|road ?map|course (?:outline|plan)|module list|table of contents)\b/i;
+
+const SYLLABUS_SOFT_PATTERN =
+  /\b(?:first|opening|starting)\b[^.?!]{0,20}\b(?:topic|module|chapter|unit|lesson)\b|\bwhere\b[^.?!]{0,12}\b(?:to|should we|do we)\b[^.?!]{0,8}\b(?:start|begin)\b|\bwhat\b[^.?!]{0,24}\btopics?\b[^.?!]{0,24}\b(?:covers?|covered|include[sd]?|study|learn)\b/i;
+
+/** Words that anchor a soft syllabus question to the domain as a whole. */
+const SYLLABUS_DOMAIN_PATTERN =
+  /\b(?:domain|course|track|training|programme?|syllabus|curriculum)\b/i;
+
+/**
+ * Curriculum questions ("syllabus", "what's the first topic of this domain")
+ * are answered from the authored module graph, not the model over retrieval.
+ * Strong markers answer anywhere; soft markers ("first topic", "where do we
+ * start") need a domain-level anchor to avoid hijacking "first topic on page
+ * 5" style retrieval questions.
+ */
+export function isSyllabusRequest(question: string): boolean {
+  if (SYLLABUS_STRONG_PATTERN.test(question)) return true;
+  return (
+    SYLLABUS_SOFT_PATTERN.test(question) &&
+    SYLLABUS_DOMAIN_PATTERN.test(question)
+  );
+}

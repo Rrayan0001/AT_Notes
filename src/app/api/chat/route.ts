@@ -10,18 +10,14 @@ import {
   fallbackSystemPrompt,
   generalSystemPrompt,
 } from "@/lib/prompt";
-import {
-  isExplicitGeneralRequest,
-  isMissingFromNotes,
-  wantsExpressiveAnswer,
-  type ChatMode,
-} from "@/lib/answers";
+import { isExplicitGeneralRequest, isSyllabusRequest, isMissingFromNotes, wantsExpressiveAnswer, type ChatMode } from "@/lib/answers";
 import {
   resolveExplicitGeneralQuestion,
   resolveRetrievalQuestion,
   type ConversationMemoryTurn,
 } from "@/lib/memory";
 import { buildFollowupSuggestions } from "@/lib/suggestions";
+import { syllabusAnswer, syllabusFor } from "@/lib/syllabus";
 import { rewriteQuery } from "@/lib/rewrite";
 import type { RetrievedSource, ScoredChunk } from "@/lib/types";
 import { createOpenuiScrubber, type OpenuiScrubber } from "@/lib/openui-scrub";
@@ -123,12 +119,13 @@ export async function POST(req: Request) {
       };
 
       try {
-        let messages: { role: "system" | "user"; content: string }[];
+        let messages: { role: "system" | "user"; content: string }[] = [];
         let effectiveQuestion = question;
         // The OpenUI canvas streams through the same answer channel; when the
         // user did not explicitly ask for a detailed output, a scrubber strips
         // any DSL the model produces anyway.
         let openuiAllowed = false;
+        let syllabusHandled = false;
         let candidates: ScoredChunk[] = [];
         let ranked: ScoredChunk[] = [];
         let hadFallback = false;
@@ -164,13 +161,47 @@ export async function POST(req: Request) {
             if (wantsExpressiveAnswer(effectiveQuestion)) openuiAllowed = true;
           }
         } else {
-          // Follow-ups are rewritten into a standalone question before any
-          // retrieval happens: embedding, BM25 and the reranker all key off this
-          // string. Bearing history through rewriteQuery (question-only anchor
-          // on failure) replaces the old transcript concatenation, which
-          // drowned retrievals in previous answers' vocabulary.
-          effectiveQuestion = await rewriteQuery(question, history);
-          const { manifest } = getIndex(guard.domainId);
+          // Curriculum questions ("syllabus", "what's the first topic") are
+          // answered deterministically from the authored module graph — the
+          // model over retrieval would only guess at course order.
+          const domainSyllabus = syllabusFor(guard.domainId);
+          if (domainSyllabus && isSyllabusRequest(question)) {
+            syllabusHandled = true;
+            effectiveQuestion = question;
+            const { manifest, chunks } = getIndex(guard.domainId);
+            const answer = syllabusAnswer(
+              effectiveQuestion,
+              guard.domainId,
+              domainLabel,
+              domainSyllabus,
+              chunks
+            );
+            // Seed the suggestions graph with the landing pages the answer cites.
+            const byPage = new Map(chunks.map((chunk) => [chunk.page, chunk]));
+            ranked = [...new Set(answer.landingPages)].flatMap((page) => {
+              const chunk = byPage.get(page);
+              return chunk ? [{ chunk, denseScore: 0, bm25Score: 0, rrfScore: 1 }] : [];
+            });
+            send({
+              type: "sources",
+              phase: "semantic",
+              sources: toSources(ranked),
+              totalChunks: manifest.count,
+              mode,
+            });
+            emit(answer.text);
+            flush();
+          }
+          if (syllabusHandled) {
+            // Handled: skip rewrite/retrieval/model entirely.
+          } else {
+            // Follow-ups are rewritten into a standalone question before any
+            // retrieval happens: embedding, BM25 and the reranker all key off
+            // this string. Bearing history through rewriteQuery (question-only
+            // anchor on failure) replaces the old transcript concatenation,
+            // which drowned retrievals in previous answers' vocabulary.
+            effectiveQuestion = await rewriteQuery(question, history);
+            const { manifest } = getIndex(guard.domainId);
 
           // BM25 needs no embedding call, so evidence can be shown immediately
           // while the ~600ms query embedding is still in flight. Skipped when the
@@ -219,21 +250,24 @@ export async function POST(req: Request) {
             },
             { role: "user", content: buildUserPrompt(effectiveQuestion, sources, history) },
           ];
+          }
         }
 
         const gateway = getGateway();
-        const completion = await gateway.chat.completions.create({
-          model: GATEWAY_MODEL,
-          temperature: 0,
-          stream: true,
-          messages,
-        });
+        const completion = syllabusHandled
+          ? null
+          : await gateway.chat.completions.create({
+              model: GATEWAY_MODEL,
+              temperature: 0,
+              stream: true,
+              messages,
+            });
 
         const scrubber: OpenuiScrubber | null = openuiAllowed ? null : createOpenuiScrubber();
         const passthrough = (text: string) => (scrubber ? scrubber.push(text) : text);
 
-        let notesAnswer: string | null = mode === "notes" ? "" : null;
-        for await (const part of completion) {
+        let notesAnswer: string | null = mode === "notes" && !syllabusHandled ? "" : null;
+        for await (const part of completion ?? []) {
           const delta = part.choices[0]?.delta?.content;
           if (delta) {
             if (notesAnswer !== null) notesAnswer += delta;
