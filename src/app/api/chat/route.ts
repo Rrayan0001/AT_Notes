@@ -245,7 +245,12 @@ export async function POST(req: Request) {
 
         // The exact missing-note response is the automatic fallback trigger. It
         // is streamed above, then followed by a labeled general explanation.
-        if (mode === "notes" && notesAnswer !== null && isMissingFromNotes(notesAnswer)) {
+        if (
+  mode === "notes" &&
+  notesAnswer !== null &&
+  isMissingFromNotes(notesAnswer) &&
+  candidates.length > 0
+) {
           hadFallback = true;
           send({ type: "fallback", mode: "general" });
           const fallback = await gateway.chat.completions.create({

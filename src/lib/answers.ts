@@ -27,7 +27,7 @@ export function isMissingFromNotes(answer: string): boolean {
 }
 
 const EXPLICIT_GENERAL_PATTERN =
-  /\b(?:forget|ignore|skip|set aside|leave aside)\b[^.?!]{0,80}\bnotes?\b|\bwithout\b[^.?!]{0,80}\bnotes?\b|\boutside\b[^.?!]{0,80}\bnotes?\b|\bnot\b[^.?!]{0,20}\bfrom\b[^.?!]{0,20}\bnotes?\b|\bfrom\b[^.?!]{0,20}\bgeneral knowledge\b|\bgeneral (?:answer|example|explanation)\b/i;
+  /\b(?:forget|ignore|skip|set aside|leave aside)\b[^.?!]{0,80}\bnotes?\b|\bwithout\b[^.?!]{0,80}\bnotes?\b|\boutside\b[^.?!]{0,80}\bnotes?\b|\boutside\b[^.?!]{0,40}\bsources?\b|\bexternal\b[^.?!]{0,40}\bsources?\b|\bnot\b[^.?!]{0,20}\bfrom\b[^.?!]{0,20}\bnotes?\b|\bfrom\b[^.?!]{0,20}\bgeneral knowledge\b|\bgeneral (?:answer|example|explanation)\b/i;
 
 /**
  * Detects an instruction to bypass the notebook, such as "forget about the

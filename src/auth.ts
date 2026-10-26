@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import type { Provider } from "@auth/core/providers";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { getDb, schema } from "@/db";
 import { authConfig } from "@/auth.config";
 
@@ -65,7 +65,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           const db = getDb();
           const email = user.email?.trim().toLowerCase();
           if (!email) return false;
-          const [row] = await db.select().from(schema.users).where(eq(schema.users.email, email)).limit(1);
+          const [row] = await db
+  .select()
+  .from(schema.users)
+  .where(sql`lower(${schema.users.email}) = ${email}`)
+  .limit(1);
           if (row?.domain) user.domain = row.domain;
           if (row && !row.emailVerified) {
             await db
