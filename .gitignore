@@ -38,3 +38,7 @@ yarn-error.log*
 
 # OAuth client secret (never commit)
 client_secret_*.json
+
+# NIIT curriculum spreadsheets — binary sources for the markdown maps
+# alongside them; the maps are the durable artifacts
+/curriculum_maps/source/
