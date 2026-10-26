@@ -70,4 +70,42 @@ jobs:
           app-name: 'CTSNOTES'
           slot-name: 'Production'
           package: .
-          
+
+  # Manual-only: restarts the app, captures its boot logs, and commits them to
+  # azure-debug/ so they can be read without Azure management access.
+  diagnose:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_9A4FD8ABA6EA49128BE9CA8243C31F43 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_C527A92963074A76BACE80EBAC496B57 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_79204694B62F42C292B3CF529FC73D95 }}
+
+      - name: Enable container logging, restart, capture boot log
+        run: |
+          set -o pipefail
+          az webapp log config --name CTSNOTES --resource-group LabsKraft208 \
+            --docker-container-logging filesystem --level verbose -o none
+          az webapp restart --name CTSNOTES --resource-group LabsKraft208 -o none
+          sleep 45
+          timeout 90 az webapp log tail --name CTSNOTES --resource-group LabsKraft208 > tail.log || true
+          wc -c tail.log
+
+      - name: Commit captured logs for offline reading
+        run: |
+          mkdir -p azure-debug
+          cp tail.log azure-debug/last-tail.log
+          git config user.name "ci-debug"
+          git config user.email "ci-debug@users.noreply.github.com"
+          git add azure-debug/last-tail.log
+          git commit -m "debug: capture CTSNOTES boot log [skip ci]" || echo nothing to commit
+          git push          
