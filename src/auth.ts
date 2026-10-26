@@ -19,9 +19,6 @@ if (googleId && googleSecret) {
       clientId: googleId,
       clientSecret: googleSecret,
       allowDangerousEmailAccountLinking: true,
-      // Make Google show the account chooser so a user signed in with one
-      // Google identity can never silently collide with another account row.
-      authorization: { params: { prompt: "select_account" } },
     }),
   );
 }
