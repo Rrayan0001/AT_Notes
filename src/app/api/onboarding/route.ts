@@ -1,9 +1,15 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { z } from "zod";
 import { and, eq, isNull } from "drizzle-orm";
 import { auth } from "@/auth";
+import { decode, encode } from "next-auth/jwt";
 import { getDb, schema } from "@/db";
 import { isRegistrableDomain, DOMAINS } from "@/lib/domains";
+
+// Cookie name depends on the deployment being https or not, exactly as
+// NextAuth names it; see /api/session which re-signs the same way.
+const COOKIE_NAMES = ["__Secure-authjs.session-token", "authjs.session-token"];
 
 const booking = z.object({
   domain: z.string().refine((value) => value in DOMAINS, "Unknown domain"),
@@ -54,6 +60,35 @@ export async function POST(request: Request) {
       // user is unknown to the database. Either way there is nothing to do.
       return NextResponse.json({ error: "This session already belongs to a domain." }, { status: 409 });
     }
+
+    // The session JWT was minted at sign-in, before a domain existed, so it
+    // carries none. Bake the freshly sealed domain straight into the token
+    // (same re-signing the /api/session route uses) so the client can walk
+    // directly to the workbench — no second Google round-trip to mint the
+    // domain into the session.
+    const jar = await cookies();
+    const name = COOKIE_NAMES.find((n) => jar.get(n)?.value);
+    const raw = name ? jar.get(name)?.value : undefined;
+    const secret = process.env.AUTH_SECRET;
+    if (name && raw && secret) {
+      const token = await decode({ secret, salt: name, token: raw }).catch(() => null);
+      if (token) {
+        const refreshed = await encode({
+          secret,
+          salt: name,
+          maxAge: token.exp && token.iat ? token.exp - token.iat : undefined,
+          token: { ...token, domain },
+        });
+        jar.set(name, refreshed, {
+          httpOnly: true,
+          secure: name.startsWith("__Secure-"),
+          sameSite: "lax",
+          path: "/",
+          maxAge: token.exp && token.iat ? token.exp - token.iat : undefined,
+        });
+      }
+    }
+
     return NextResponse.json({ ok: true }, { status: 200 });
   } catch (error) {
     console.error("onboarding failed:", error);

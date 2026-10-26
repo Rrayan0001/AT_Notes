@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { signIn, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 import { DOMAINS } from "@/lib/domains";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,6 +33,7 @@ export interface AppUser {
 }
 
 export function OnboardingForm({ user }: { user: AppUser }) {
+  const router = useRouter();
   const [domain, setDomain] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -55,10 +57,11 @@ export function OnboardingForm({ user }: { user: AppUser }) {
         setError(data.error ?? "Sealing your domain failed.");
         return;
       }
-      // The JWT is minted at sign-in time, so it does not carry the freshly
-      // sealed domain. Re-run the Google flow — instant, no consent prompt —
-      // to land on the workbench with a complete session.
-      await signIn("google", { callbackUrl: "/" });
+      // The onboarding route bakes the freshly sealed domain straight into
+      // the session token, so the workbench is one client-side hop away —
+      // no second Google round-trip.
+      router.push("/");
+      router.refresh();
     } catch {
       setError("Sealing your domain failed. Is the server running with a configured database?");
     } finally {
